@@ -1,11 +1,18 @@
 <?php
 
 // the facebook client library
-include_once 'client/facebook.php';
+include_once 'php4client/facebook.php';
 
 // Get these from http://developers.facebook.com
-$api_key = get_option('fb_api_key');
-$secret  = get_option('fb_secret');
+$wpbookOptions = get_option('wpbookAdminOptions');
+
+if (!empty($wpbookOptions)) {
+	foreach ($wpbookOptions as $key => $option)
+		$wpbookAdminOptions[$key] = $option;
+	}
+
+$api_key = $wpbookAdminOptions['fb_api_key'];
+$secret  = $wpbookAdminOptions['fb_secret'];
 
 $facebook = new Facebook($api_key, $secret);
 $facebook->require_frame();

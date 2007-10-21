@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: WPBook
-Plugin URI: http://www.davelester.org/
+Plugin URI: http://www.scholarpress.net
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform.
-Date: 2007, September, 23
+Date: 2007, October, 21
 Author: Dave Lester
 Author URI: http://www.davelester.org
-Version: 0.4
+Version: 0.5
 */
 
 /*  Copyright 2007  Dave Lester
@@ -41,6 +41,25 @@ function is_authorized() {
 	}
 }
 
+function getAdminOptions() {
+	$wpbookOptions = get_option('wpbookAdminOptions');
+
+	if (!empty($wpbookOptions)) {
+		foreach ($wpbookOptions as $key => $option)
+			$wpbookAdminOptions[$key] = $option;
+		}
+	return $wpbookAdminOptions;
+}
+
+function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret) {
+	$wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
+		'fb_api_key' => $fb_api_key,
+		'fb_secret' => $fb_secret);
+		
+	update_option('wpbookAdminOptions', $wpbookAdminOptions);
+}
+
+
 function wpbook_options_page() {
 	if (function_exists('add_options_page')) {
 		add_options_page('WPBook', 'WPBook', 8, basename(__FILE__), 'wpbook_subpanel');
@@ -53,8 +72,7 @@ function wpbook_subpanel() {
 		if (isset($_POST['fb_api_key']) && isset($_POST['fb_secret'])) { 
 			$fb_api_key = $_POST['fb_api_key'];
 			$fb_secret = $_POST['fb_secret'];
-			update_option('fb_api_key',$fb_api_key);
-			update_option('fb_secret',$fb_secret);
+			setAdminOptions(null, $fb_api_key, $fb_secret);
 			$flash = "Your settings have been saved.";
 		} else {
 			$flash = "You must complete all fields completely";
@@ -63,8 +81,12 @@ function wpbook_subpanel() {
 		$flash = "You don't have enough access rights.";
 	}
 	
+	$wpbookAdminOptions = getAdminOptions();
+
+	;
+	
 	if (is_authorized()) {
-		if (get_option('wpbook_installation') != 1) {
+		if ($wpbookAdminOptions['wpbook_installation'] != 1) {
 			global $wpdb;
 		
 		$title = "WPBook";
@@ -91,7 +113,7 @@ function wpbook_subpanel() {
 		// feed object to wp_insert_post
 		wp_insert_post($myobject);
 
-	    update_option('wpbook_installation', '1');
+		setAdminOptions(1, null, null);
 		}
 		
 	if ($flash != '') echo '<div id="message"class="updated fade"><p>' . $flash . '</p></div>';
@@ -103,8 +125,8 @@ function wpbook_subpanel() {
 		<input type="hidden" name="redirect" value="true" />
 		<ol>
 		<li>To use this app, you must register for an API key at <a href="http://www.facebook.com/developers/">http://www.facebook.com/developers/</a>.  Follow the link and click "set up a new application."  After you\'ve obtained the necessary info, fill in both your application\'s API and Secret keys.</li>
-		<li>Enter Your Facebook Application\'s API Key:<br /><input type="text" name="fb_api_key" value="' . htmlentities(get_option('fb_api_key')) . '" size="45" /></li>
-		<li>Enter Your Facebook Application\'s API Key:<br /><input type="text" name="fb_secret" value="' . htmlentities(get_option('fb_secret')) . '" size="45" />
+		<li>Enter Your Facebook Application\'s API Key:<br /><input type="text" name="fb_api_key" value="' . htmlentities($wpbookAdminOptions['fb_api_key']) . '" size="45" /></li>
+		<li>Enter Your Facebook Application\'s API Key:<br /><input type="text" name="fb_secret" value="' . htmlentities($wpbookAdminOptions['fb_secret']) . '" size="45" />
 		</ol>
 		<p><input type="submit" value="Save" /></p></form>';
 		echo '</div>';
