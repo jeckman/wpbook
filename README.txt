@@ -32,6 +32,9 @@ The /wpbook/ directory is an automatically generated page the plugin generates (
 
 == Version History ==
 
+= Version 0.5.1 =
+* Changes function and class names to avoid conflicts with other WP plugins
+
 = Version 0.5 =
 * Added support for PHP4 Facebook Client Library
 * Options combined into associative array to speed-up and remove interference w/ other plugins
