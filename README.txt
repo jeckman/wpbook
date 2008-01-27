@@ -15,8 +15,7 @@ Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform.
 
 3. Login to Wordpress Admin and activate the plugin
 
-4. Using the WPBook menu, (located under the options tag, "WPBook") fill in the appropriate information including Facebook
-   application secret and API keys
+4. Using the WPBook menu, (located under the options tag, "WPBook") fill in the appropriate information including Facebook application secret and API keys
 
 == Frequently Asked Questions ==
 = How do I edit the way my Facebook Application (mirrored blog) looks? =
