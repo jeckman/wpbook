@@ -26,13 +26,13 @@ Version: 0.5
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-class mypost {
+class wpbook_mypost {
 	var $post_content;
 	var $post_title;    
 	var $post_status;    
 }
 
-function is_authorized() {
+function wpbook_is_authorized() {
 	global $user_level;
 	if (function_exists("current_user_can")) {
 		return current_user_can('activate_plugins');
@@ -41,7 +41,7 @@ function is_authorized() {
 	}
 }
 
-function getAdminOptions() {
+function wpbook_getAdminOptions() {
 	$wpbookOptions = get_option('wpbookAdminOptions');
 
 	if (!empty($wpbookOptions)) {
@@ -51,7 +51,7 @@ function getAdminOptions() {
 	return $wpbookAdminOptions;
 }
 
-function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret) {
+function wpbook_setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret) {
 	$wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
 		'fb_api_key' => $fb_api_key,
 		'fb_secret' => $fb_secret);
@@ -68,7 +68,7 @@ function wpbook_options_page() {
 
 function wpbook_subpanel() {
 	global $flash, $fb_api_key, $fb_secret, $_POST, $wp_rewrite;
-	if (is_authorized()) {
+	if (wpbook_is_authorized()) {
 		if (isset($_POST['fb_api_key']) && isset($_POST['fb_secret'])) { 
 			$fb_api_key = $_POST['fb_api_key'];
 			$fb_secret = $_POST['fb_secret'];
@@ -81,11 +81,11 @@ function wpbook_subpanel() {
 		$flash = "You don't have enough access rights.";
 	}
 	
-	$wpbookAdminOptions = getAdminOptions();
+	$wpbookAdminOptions = wpbook_getAdminOptions();
 
 	;
 	
-	if (is_authorized()) {
+	if (wpbook_is_authorized()) {
 		if ($wpbookAdminOptions['wpbook_installation'] != 1) {
 			global $wpdb;
 		
@@ -99,7 +99,7 @@ function wpbook_subpanel() {
 		$post_category = array( 'post_category' => $parent_id );
 
 		// create the object
-		$myobject = new mypost();
+		$myobject = new wpbook_mypost();
 
 		// fill object
 		$myobject->post_title = $title;
@@ -113,7 +113,7 @@ function wpbook_subpanel() {
 		// feed object to wp_insert_post
 		wp_insert_post($myobject);
 
-		setAdminOptions(1, null, null);
+		wpbook_setAdminOptions(1, null, null);
 		}
 		
 	if ($flash != '') echo '<div id="message"class="updated fade"><p>' . $flash . '</p></div>';
