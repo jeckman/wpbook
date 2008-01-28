@@ -2,7 +2,7 @@
 Contributors: davelester
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.5.1
+Stable tag: 0.5
 
 Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform.
 

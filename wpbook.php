@@ -6,7 +6,7 @@ Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Faceb
 Date: 2008, January 26
 Author: Dave Lester
 Author URI: http://www.davelester.org
-Version: 0.5.1
+Version: 0.5
 */
 
 /*  Copyright 2007  Dave Lester
@@ -72,7 +72,7 @@ function wpbook_subpanel() {
 		if (isset($_POST['fb_api_key']) && isset($_POST['fb_secret'])) { 
 			$fb_api_key = $_POST['fb_api_key'];
 			$fb_secret = $_POST['fb_secret'];
-			setAdminOptions(null, $fb_api_key, $fb_secret);
+			wpbook_setAdminOptions(null, $fb_api_key, $fb_secret);
 			$flash = "Your settings have been saved.";
 		} else {
 			$flash = "You must complete all fields completely";
@@ -82,9 +82,28 @@ function wpbook_subpanel() {
 	}
 	
 	$wpbookAdminOptions = wpbook_getAdminOptions();
-
-	;
+		
+	if ($flash != '') echo '<div id="message"class="updated fade"><p>' . $flash . '</p></div>';
 	
+		echo '<div class="wrap">';
+		echo '<h2>Set Up Your Facebook Application</h2>';
+		echo '<p>This plugin allows you to embed your blog into the Facebook canvas, and in future versions - users who have installed the app will be able to receive notifications upon new blog posts.  Note that this is the pre-beta version, so there are bound to be some quirks.</p>
+		<form action="" method="post">
+		<input type="hidden" name="redirect" value="true" />
+		<ol>
+		<li>To use this app, you must register for an API key at <a href="http://www.facebook.com/developers/">http://www.facebook.com/developers/</a>.  Follow the link and click "set up a new application."  After you\'ve obtained the necessary info, fill in both your application\'s API and Secret keys.</li>
+		<li>Enter Your Facebook Application\'s API Key:<br /><input type="text" name="fb_api_key" value="' . htmlentities($wpbookAdminOptions['fb_api_key']) . '" size="45" /></li>
+		<li>Enter Your Facebook Application\'s API Key:<br /><input type="text" name="fb_secret" value="' . htmlentities($wpbookAdminOptions['fb_secret']) . '" size="45" />
+		</ol>
+		<p><input type="submit" value="Save" /></p></form>';
+		echo '</div>';
+	} else {
+		echo '<div class="wrap"><p>Sorry, you are not allowed to access this page.</p></div>';
+	}
+
+}
+
+function wpbook_install() {
 	if (wpbook_is_authorized()) {
 		if ($wpbookAdminOptions['wpbook_installation'] != 1) {
 			global $wpdb;
@@ -115,25 +134,11 @@ function wpbook_subpanel() {
 
 		wpbook_setAdminOptions(1, null, null);
 		}
-		
-	if ($flash != '') echo '<div id="message"class="updated fade"><p>' . $flash . '</p></div>';
-	
-		echo '<div class="wrap">';
-		echo '<h2>Set Up Your Facebook Application</h2>';
-		echo '<p>This plugin allows you to embed your blog into the Facebook canvas, and in future versions - users who have installed the app will be able to receive notifications upon new blog posts.  Note that this is the pre-beta version, so there are bound to be some quirks.</p>
-		<form action="" method="post">
-		<input type="hidden" name="redirect" value="true" />
-		<ol>
-		<li>To use this app, you must register for an API key at <a href="http://www.facebook.com/developers/">http://www.facebook.com/developers/</a>.  Follow the link and click "set up a new application."  After you\'ve obtained the necessary info, fill in both your application\'s API and Secret keys.</li>
-		<li>Enter Your Facebook Application\'s API Key:<br /><input type="text" name="fb_api_key" value="' . htmlentities($wpbookAdminOptions['fb_api_key']) . '" size="45" /></li>
-		<li>Enter Your Facebook Application\'s API Key:<br /><input type="text" name="fb_secret" value="' . htmlentities($wpbookAdminOptions['fb_secret']) . '" size="45" />
-		</ol>
-		<p><input type="submit" value="Save" /></p></form>';
-		echo '</div>';
-	} else {
-		echo '<div class="wrap"><p>Sorry, you are not allowed to access this page.</p></div>';
-	}
+}
 
+if (isset($_GET['activate']) && $_GET['activate'] == 'true')
+{
+	add_action('init', 'wpbook_install');
 }
 
 add_action('admin_menu', 'wpbook_options_page');
