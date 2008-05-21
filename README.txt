@@ -2,7 +2,7 @@
 Contributors: davelester, johneckman
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.7
+Stable tag: 0.7.1
 
 Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform.
 
@@ -36,6 +36,11 @@ There's also a style.css which basically mimics Facebook's styles, as well as so
 other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.7.1 =
+* bug fix
+* comments_facebook.php was not being found
+* created fb_comments_template function instead
 
 = Version 0.7 =
 * Major architecture changes

@@ -7,7 +7,7 @@ Date: 2008, May 14
 Author: Dave Lester, John Eckman
 Author URI: http://www.davelester.org
 Author URI: http://www.johneckman.com/
-Version: 0.7
+Version: 0.7.1
 */
 
 /*
@@ -216,6 +216,19 @@ function fb_filter_postlink($postlink) {
 	}
 }
 
+// point to the comments template in my dir, not active theme
+function fb_comments_template($file ='comments_facebook.php') {
+	$my_file = TEMPLATEPATH . '/comments_facebook.php';
+	if ($file == $my_file){
+		$my_file = ABSPATH . '/wp-content/themes/wp-facebook/comments_facebook.php';
+		return $my_file;
+	}
+	else {
+		return $file; 
+	}
+}
+
+add_filter('comments_template','fb_comments_template',1,1);
 add_filter('post_link','fb_filter_postlink',1,1);
 add_action('admin_menu', 'wpbook_options_page');
 
