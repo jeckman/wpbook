@@ -3,11 +3,11 @@
 Plugin Name: WPBook
 Plugin URI: http://www.scholarpress.net
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform.
-Date: 2008, May 14
+Date: 2008, May 27
 Author: Dave Lester, John Eckman
 Author URI: http://www.davelester.org
 Author URI: http://www.johneckman.com/
-Version: 0.7.1
+Version: 0.7.2
 */
 
 /*
