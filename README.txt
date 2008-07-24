@@ -37,6 +37,10 @@ other files for processing comments and the like.
 
 == Version History ==
 
+= Version 0.7.3 =
+* bug fix
+* adding namespacing to all plugin functions
+
 = Version 0.7.2 =
 * bug fix
 * no try { } catch {} in PHP4

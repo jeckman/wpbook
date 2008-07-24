@@ -3,15 +3,15 @@
 Plugin Name: WPBook
 Plugin URI: http://www.scholarpress.net
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform.
-Date: 2008, May 27
+Date: 2008, July 24
 Author: Dave Lester, John Eckman
 Author URI: http://www.davelester.org
 Author URI: http://www.johneckman.com/
-Version: 0.7.2
+Version: 0.7.3
 */
 
 /*
-	Note: As od version 0.7, this plugin draws inspiration (and code) from Alex King's
+	Note: As of version 0.7, this plugin draws inspiration (and code) from Alex King's
 	WP-Mobile plugin (http://alexking.org/projects/wordpress) adapted by John Eckman for Facebook context.
 */
 
@@ -48,7 +48,7 @@ if (!function_exists('is_admin_page')) {
 
 $_SERVER['REQUEST_URI'] = ( isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'] . (( isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '')));
 
-function is_authorized() {
+function wpbook_is_authorized() {
 	global $user_level;
 	if (function_exists("current_user_can")) {
 		return current_user_can('activate_plugins');
@@ -57,7 +57,7 @@ function is_authorized() {
 	}
 }
 
-function getAdminOptions() {
+function wpbook_getAdminOptions() {
 	$wpbookOptions = get_option('wpbookAdminOptions');
 	if (!empty($wpbookOptions)) {
 		foreach ($wpbookOptions as $key => $option)
@@ -66,7 +66,7 @@ function getAdminOptions() {
 	return $wpbookAdminOptions;
 }
 
-function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, $fb_app_url) {
+function wpbook_setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, $fb_app_url) {
 	$wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
 		'fb_api_key' => $fb_api_key,
 		'fb_secret' => $fb_secret,
@@ -83,12 +83,12 @@ function wpbook_options_page() {
 }
 
 function wpbook_subpanel() {
-	if (is_authorized()) {
+	if (wpbook_is_authorized()) {
 		if (isset($_POST['fb_api_key']) && isset($_POST['fb_secret'])) { 
 			$fb_api_key = $_POST['fb_api_key'];
 			$fb_secret = $_POST['fb_secret'];
 			$fb_app_url = $_POST['fb_app_url'];
-			setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url);
+			wpbook_setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url);
 			$flash = "Your settings have been saved. ";
 		} else {
 			$flash = "You must complete all fields completely";
@@ -97,10 +97,10 @@ function wpbook_subpanel() {
 		$flash = "You don't have enough access rights.";
 	}
 	
-	if (is_authorized()) {
-		$wpbookAdminOptions = getAdminOptions();
+	if (wpbook_is_authorized()) {
+		$wpbookAdminOptions = wpbook_getAdminOptions();
 		if ($wpbookAdminOptions['wpbook_installation'] != 1) {   // fires every time, since get fails. 
-			setAdminOptions(1, null,null,null);
+			wpbook_setAdminOptions(1, null,null,null);
 		}
 		
 		if ($flash != '') echo '<div id="message"class="updated fade"><p>' . $flash . '</p></div>';
@@ -162,7 +162,7 @@ if (!function_exists('wp_recent_posts')) {
 
 
 // this checks to see if we are in facebook
-function check_facebook() {
+function wpbook_check_facebook() {
 	if (!isset($_SERVER["HTTP_USER_AGENT"])) {
 		return false;
 	}
@@ -196,7 +196,7 @@ if (is_admin_page() && !wpbook_installed()) {
 }
 
 // this is the function which adds to the template and stylesheet hooks the call to wpbook_template∑
-if (check_facebook()) {
+if (wpbook_check_facebook()) {
 	add_action('template', 'wpbook_template');
 	add_action('option_template', 'wpbook_template');
 	add_action('option_stylesheet', 'wpbook_template');
@@ -204,10 +204,10 @@ if (check_facebook()) {
 
 // also have to change permalinks and next/prev links and more links
 function fb_filter_postlink($postlink) {
-	if (check_facebook()) {
+	if (wpbook_check_facebook()) {
 		$my_fullurl = get_option('home');
 		$my_offset = 30;
-		$my_options = getAdminOptions();
+		$my_options = wpbook_getAdminOptions();
 		$app_url = $my_options['fb_app_url'];
 		$my_link = 'http://apps.facebook.com/' . $app_url . substr($postlink,30); 
 		return $my_link;
