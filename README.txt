@@ -2,7 +2,7 @@
 Contributors: davelester, johneckman
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.7.2
+Stable tag: 0.7.3
 Tested up to: 2.6
 Requires at least: 2.5
 
@@ -41,7 +41,8 @@ other files for processing comments and the like.
 
 = Version 0.7.3 =
 * bug fix
-* adding namespacing to all plugin functions
+* adding namespacing to plugin function
+* anded min version to readme
 
 = Version 0.7.2 =
 * bug fix
