@@ -2,12 +2,11 @@
 /*
 Plugin Name: WPBook
 Plugin URI: http://www.scholarpress.net
-Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform.
-Date: 2008, Aug 2
-Author: Dave Lester, John Eckman
+Date: 2008, Aug 13
+Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. <em>By <a href="http://johneckman.com/">John Eckman</a> and</em> 
+Author: Dave Lester
 Author URI: http://www.davelester.org
-Author URI: http://www.johneckman.com/
-Version: 0.7.3
+Version: 0.7.4
 */
 
 /*
@@ -99,14 +98,14 @@ function wpbook_subpanel() {
 	
 	if (is_authorized()) {
 		$wpbookAdminOptions = wpbook_getAdminOptions();
-		if ($wpbookAdminOptions['wpbook_installation'] != 1) {   // fires every time, since get fails. 
+		if ($wpbookAdminOptions['wpbook_installation'] != 1) {  
 			setAdminOptions(1, null,null,null);
 		}
 		
 		if ($flash != '') echo '<div id="message"class="updated fade"><p>' . $flash . '</p></div>';
 		echo '<div class="wrap">';
 		echo '<h2>Set Up Your Facebook Application</h2>';
-		echo '<p>This plugin allows you to embed your blog into the Facebook canvas, and in future versions - users who have installed the app will be able to receive notifications upon new blog posts.  Note that this is the pre-beta version, so there are bound to be some quirks.</p>';
+		echo '<p>This plugin allows you to embed your blog into the Facebook canvas, and in future versions - users who have installed the app will be able to receive notifications upon new blog posts.  Note that this is the pre-1.0 version, so there are bound to be some quirks.</p>';
 		echo '<form action="';
 		echo $_SERVER["REQUEST_URI"];
 		echo '" method="post">';
@@ -114,7 +113,7 @@ function wpbook_subpanel() {
 		echo '<li>To use this app, you must register for an API key at <a href="http://www.facebook.com/developers/">http://www.facebook.com/developers/</a>.  Follow the link and click "set up a new application."  After you\'ve obtained the necessary info, fill in both your application\'s API and Secret keys.</li>';
 		echo '<li>Enter Your Facebook Application\'s API Key:<br /><input type="text" name="fb_api_key" value="' . htmlentities($wpbookAdminOptions['fb_api_key']) . '" size="45" /></li>';
 		echo '<li>Enter Your Facebook Application\'s Secret:<br /><input type="text" name="fb_secret" value="' . htmlentities($wpbookAdminOptions['fb_secret']) . '" size="45" /></li>';
-		echo '<li>Enter Your Facebook Application\'s Canvas Page URL: ( http://apps.facebook.com/<just this bit> )<br /><input type="text" name="fb_app_url" value="' . htmlentities($wpbookAdminOptions['fb_app_url']) . '" size="45" /></li>';		
+		echo '<li>Enter Your Facebook Application\'s Canvas Page URL: ( http://apps.facebook.com/[enter just this bit] )<br /><input type="text" name="fb_app_url" value="' . htmlentities($wpbookAdminOptions['fb_app_url']) . '" size="45" /></li>';		
 		echo '</ol>';
 		echo '<p><input type="submit" value="Save" /></p></form>';
 		echo '</div>';
@@ -184,18 +183,18 @@ function wpbook_template($theme) {
 
 // this just checks whether the theme is installed
 function wpbook_installed() {
-	return is_dir(ABSPATH.'/wp-content/themes/wp-facebook');
+	return is_dir(ABSPATH.'wp-content/themes/wp-facebook');
 }
 
 // this alerts user if the theme is deleted
 if (is_admin_page() && !wpbook_installed()) {
 	global $wp_version;
 	if (isset($wp_version) && version_compare($wp_version, '2.5', '>=')) {
-		add_action('admin_notices', create_function( '', "echo '<div class=\"error\">WPBook is incorrectly installed. Please check the <a href=\"http://alexking.org/projects/wordpress/readme?project=wordpress-mobile-edition\">README</a>.</div>';" ) );
+		add_action('admin_notices', create_function( '', "echo '<div class=\"error\">WPBook is incorrectly installed. Please check the README.</div>';" ) );
 	}
 }
 
-// this is the function which adds to the template and stylesheet hooks the call to wpbook_template∑
+// this is the function which adds to the template and stylesheet hooks the call to wpbook_template
 if (check_facebook()) {
 	add_action('template', 'wpbook_template');
 	add_action('option_template', 'wpbook_template');
@@ -205,11 +204,10 @@ if (check_facebook()) {
 // also have to change permalinks and next/prev links and more links
 function fb_filter_postlink($postlink) {
 	if (check_facebook()) {
-		$my_fullurl = get_option('home');
-		$my_offset = 30;
+		$my_offset = strlen(get_option('home'));
 		$my_options = wpbook_getAdminOptions();
 		$app_url = $my_options['fb_app_url'];
-		$my_link = 'http://apps.facebook.com/' . $app_url . substr($postlink,30); 
+		$my_link = 'http://apps.facebook.com/' . $app_url . substr($postlink,$my_offset); 
 		return $my_link;
 	} else {
 		return $postlink; 
@@ -218,9 +216,9 @@ function fb_filter_postlink($postlink) {
 
 // point to the comments template in my dir, not active theme
 function fb_comments_template($file ='comments_facebook.php') {
-	$my_file = TEMPLATEPATH . '/comments_facebook.php';
+	$my_file = TEMPLATEPATH . 'comments_facebook.php';
 	if ($file == $my_file){
-		$my_file = ABSPATH . '/wp-content/themes/wp-facebook/comments_facebook.php';
+		$my_file = ABSPATH . 'wp-content/themes/wp-facebook/comments_facebook.php';
 		return $my_file;
 	}
 	else {

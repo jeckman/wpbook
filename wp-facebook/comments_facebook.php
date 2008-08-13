@@ -1,10 +1,10 @@
 <?php
 
 if (version_compare(PHP_VERSION,'5','>=')) {
-	include_once('client/facebook.php');  // php5
+	include_once(ABSPATH.'wp-content/themes/wp-facebook/client/facebook.php');  // php5
 } else {
- include_once('php4client/facebook.php');
- include_once('php4client/facebookapi_php4_restlib.php');
+ include_once(ABSPATH.'wp-content/themes/wp-facebook/php4client/facebook.php');
+ include_once(ABSPATH.'wp-content/themes/wp-facebook/php4client/facebookapi_php4_restlib.php');
 }
 
 $wpbookOptions = get_option('wpbookAdminOptions');
@@ -22,7 +22,7 @@ $facebook = new Facebook($api_key, $secret);
 $user = $facebook->require_login(); 
 
 $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = ".$user); 
-//echo $rs[0]['name'];
+//echo $rs[0]['name']; // debug only
 
 ?>
 <div class="comments-post">
@@ -31,7 +31,13 @@ $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = "
 	<div id="commentlist">
 		<?php foreach ($comments as $comment) : ?>
 		<div class="acomment">
-		<?php MyAvatarsNew(); ?> <?php comment_author_link(); ?> Says: 
+		<?php 
+			if(function_exists(MyAvatarsNew)) {
+				MyAvatarsNew();
+			} else {
+				echo get_avatar( $comment, 32 ); 
+			} 
+		?> <?php comment_author_link(); ?> Says: 
 				<?php if ($comment->comment_approved == '0') : ?>
 					<em>Your comment is awaiting moderation.</em>
 				<?php endif; ?>

@@ -2,7 +2,7 @@
 Contributors: davelester, johneckman
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.7.3
+Stable tag: 0.7.4
 Tested up to: 2.6
 Requires at least: 2.5
 
@@ -14,7 +14,10 @@ Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform.
 
 2. Copy the wp-facebook.php directory into your themes folder, normally
    located in /wp-content/themes/
- 
+
+   Note that if you use the "automated update" of plugins feature, you will need
+   to recopy the theme to the appropriate location each time an update is issued.  
+
 3. Set up a New Application at http://www.facebook.com/developers/, obtaining
    a secret and API key.  Set the callback url to your blog url. 
 	(http://www.yourblogurl.com/)
@@ -38,6 +41,16 @@ There's also a style.css which basically mimics Facebook's styles, as well as so
 other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.7.4 =
+* bug fix for subdirectory based blogs
+* fixed hardcoded offset of permalinks
+* added note to readme to update theme when updating plugin
+* Updated javascript in theme to reflect "new" facebook js 0.4
+  (See http://wiki.developers.facebook.com/index.php/Resizable_IFrame#New_Profile_Update)
+* Fixed erroneous link in "theme not installed" check
+* Added ABSPATH as appropriate to catch the right includes
+* Removed hard dependency on specific Avatars plugin, now uses default gravatar
 
 = Version 0.7.3 =
 * bug fix

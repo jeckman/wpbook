@@ -1,5 +1,4 @@
 <?php
-
 // the facebook client library
 include_once 'config.php';
 ?>
@@ -13,12 +12,12 @@ include_once 'config.php';
 	<BASE TARGET="_top">
 </head>
 <body>
-<script src="http://static.ak.facebook.com/js/api_lib/v0.3/FeatureLoader.js" type="text/javascript"></script>
+<script src="<?= $_REQUEST['fb_sig_in_new_facebook'] ? 'http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php' : 'http://static.ak.facebook.com/js/api_lib/v0.3/FeatureLoader.js' ?> " type="text/javascript"> </script>
 <script type="text/javascript">
 	FB_RequireFeatures(["CanvasUtil"], function() {
 		FB.FBDebug.isEnabled=true;
 		FB.FBDebug.logLevel = 4;
-		FB.XdComm.Server.init("/wp-content/themes/wp-facebook/xd_reciever.html");
+		FB.XdComm.Server.init("<?php echo get_option('home');?>/wp-content/themes/wp-facebook/xd_reciever.html");
 		FB.CanvasClient.startTimerToSizeToContent();
 		});
 </script>	
@@ -43,7 +42,7 @@ include_once 'config.php';
 				<?php the_content(); ?>	
 				</div>
 				<?php
-				comments_template('/comments_facebook.php'); 
+				comments_template('comments_facebook.php'); 
 				?>
 	</div>
 	<?php
