@@ -6,9 +6,7 @@ include_once 'config.php';
 <head>
 	<title>Facebook Blog Application</title>
 	<?php wp_head(); // in case any plugins rely on this hook ?>
-	<style type="text/css" media="screen">
-		@import url( <?php echo get_option('home'); ?>/wp-content/themes/wp-facebook/style.css);
-	</style>
+    <link rel="stylesheet" href="<?php bloginfo('stylesheet_url'); ?>" type="text/css" media="screen" />
 	<BASE TARGET="_top">
 </head>
 <body>
@@ -17,7 +15,7 @@ include_once 'config.php';
 	FB_RequireFeatures(["CanvasUtil"], function() {
 		FB.FBDebug.isEnabled=true;
 		FB.FBDebug.logLevel = 4;
-		FB.XdComm.Server.init("<?php echo get_option('home');?>/wp-content/themes/wp-facebook/xd_reciever.html");
+		FB.XdComm.Server.init("<?php echo get_bloginfo('template_directory');?>/xd_reciever.html");
 		FB.CanvasClient.startTimerToSizeToContent();
 		});
 </script>	

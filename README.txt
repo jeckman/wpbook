@@ -2,7 +2,7 @@
 Contributors: davelester, johneckman
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.7.4
+Stable tag: 0.7.5
 Tested up to: 2.6
 Requires at least: 2.5
 
@@ -41,6 +41,11 @@ There's also a style.css which basically mimics Facebook's styles, as well as so
 other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.7.5 = 
+* bug fix: style.css is in template directory, not necessarily
+  based on /wp-content/themes/wp-facebook - account for subdirs
+* Same goes for the FB.XdComm.Server.init call
 
 = Version 0.7.4 =
 * bug fix for subdirectory based blogs
