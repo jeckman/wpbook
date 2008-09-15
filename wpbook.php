@@ -2,11 +2,11 @@
 /*
 Plugin Name: WPBook
 Plugin URI: http://www.scholarpress.net
-Date: 2008, Aug 13
+Date: 2008, Sep 15
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. <b>If you update via automatic update, be sure to copy theme to appropriate directory!</b> <em>By <a href="http://johneckman.com/">John Eckman</a>.</em> 
 Author: Dave Lester
 Author URI: http://www.davelester.org
-Version: 0.7.5
+Version: 0.8.0
 */
 
 /*
@@ -65,11 +65,13 @@ function wpbook_getAdminOptions() {
 	return $wpbookAdminOptions;
 }
 
-function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, $fb_app_url) {
+function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,$invite_friends) {
 	$wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
 		'fb_api_key' => $fb_api_key,
-		'fb_secret' => $fb_secret,
-		'fb_app_url' => $fb_app_url);
+		'fb_secret'  => $fb_secret,
+		'fb_app_url' => $fb_app_url,
+		'fb_app_name'=> $fb_app_name,
+		'invite_friends' => $invite_friends);
 	update_option('wpbookAdminOptions', $wpbookAdminOptions);
 	
 }
@@ -87,7 +89,9 @@ function wpbook_subpanel() {
 			$fb_api_key = $_POST['fb_api_key'];
 			$fb_secret = $_POST['fb_secret'];
 			$fb_app_url = $_POST['fb_app_url'];
-			setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url);
+			$fb_app_name = $_POST['fb_app_name'];
+			$invite_friends = $_POST['invite_friends'];
+			setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,$invite_friends);
 			$flash = "Your settings have been saved. ";
 		} else {
 			$flash = "You must complete all fields completely";
@@ -113,8 +117,16 @@ function wpbook_subpanel() {
 		echo '<li>To use this app, you must register for an API key at <a href="http://www.facebook.com/developers/">http://www.facebook.com/developers/</a>.  Follow the link and click "set up a new application."  After you\'ve obtained the necessary info, fill in both your application\'s API and Secret keys.</li>';
 		echo '<li>Enter Your Facebook Application\'s API Key:<br /><input type="text" name="fb_api_key" value="' . htmlentities($wpbookAdminOptions['fb_api_key']) . '" size="45" /></li>';
 		echo '<li>Enter Your Facebook Application\'s Secret:<br /><input type="text" name="fb_secret" value="' . htmlentities($wpbookAdminOptions['fb_secret']) . '" size="45" /></li>';
-		echo '<li>Enter Your Facebook Application\'s Canvas Page URL: ( http://apps.facebook.com/[enter just this bit] )<br /><input type="text" name="fb_app_url" value="' . htmlentities($wpbookAdminOptions['fb_app_url']) . '" size="45" /></li>';		
+		echo '<li>Enter Your Facebook Application\'s Canvas Page URL: ( http://apps.facebook.com/[enter just this bit] )<br /><input type="text" name="fb_app_url" value="' . htmlentities($wpbookAdminOptions['fb_app_url']) . '" size="45" /></li>';
+		echo'<li><input type="checkbox" name="invite_friends" onclick="document.getElementById(\'invite_options\').style.display=(document.getElementById(\'invite_options\').style.display== \'none\')?\'block\':\'none\';" value = "true"';
+		 if( htmlentities($wpbookAdminOptions['invite_friends']) == "true"){ echo("checked");}
+		 echo '>Show Invite Friends Link
+		<div id="invite_options" style="display:';
+		if( htmlentities($wpbookAdminOptions['invite_friends']) == "true"){ echo("block");}else{ echo("none");}
+		echo';margin-top:15px;">Enter Your Application\'s Name:<br /><input type="text" name="fb_app_name" value="' . htmlentities($wpbookAdminOptions['fb_app_name']) . '" size="45" /> (no trailing spaces) </div> </li>';
+				
 		echo '</ol>';
+
 		echo '<p><input type="submit" value="Save" /></p></form>';
 		echo '</div>';
 	} else {
@@ -165,7 +177,7 @@ function check_facebook() {
 	if (!isset($_SERVER["HTTP_USER_AGENT"])) {
 		return false;
 	}
-	if (isset($_GET['fb_sig_in_iframe'])) {  // this just checks a simple thing
+	if (isset($_GET['fb_sig_in_iframe']) || isset($_GET['fb_force_mode'])) {  // this just checks a simple thing
 		return true;
 	}
 	return false;
@@ -219,6 +231,18 @@ function fb_comments_template($file ='comments_facebook.php') {
 	$my_file = TEMPLATEPATH . 'comments_facebook.php';
 	if ($file == $my_file){
 		$my_file = ABSPATH . 'wp-content/themes/wp-facebook/comments_facebook.php';
+		return $my_file;
+	}
+	else {
+		return $file; 
+	}
+}
+
+// point to the comments template in my dir, not active theme
+function fb_invite_template($file ='invite.php') {
+	$my_file = TEMPLATEPATH . 'invite.php';
+	if ($file == $my_file){
+		$my_file = ABSPATH . 'wp-content/themes/wp-facebook/invite.php';
 		return $my_file;
 	}
 	else {

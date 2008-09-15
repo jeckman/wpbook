@@ -2,7 +2,7 @@
 Contributors: davelester, johneckman
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.7.5
+Stable tag: 0.8
 Tested up to: 2.6
 Requires at least: 2.5
 
@@ -51,6 +51,12 @@ There's also a style.css which basically mimics Facebook's styles, as well
 as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.8 =
+* Thanks to Brandon Randon for contributing facebook invites - if you
+  select 'display invite friends link' checkbox in the wp-admin 
+  settings for WPBook, you can invite facebook friends!
+* Display email box for commentors (optional)
 
 = Version 0.7.5 = 
 * bug fix: style.css is in template directory, not necessarily
@@ -107,6 +113,6 @@ as some other files for processing comments and the like.
 
 == To Do ==
 
-= Version 0.8 =
+= Ongoing =
 * Option for comments or no comments in admin section
 * Better accompanying documentation

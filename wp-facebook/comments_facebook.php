@@ -63,14 +63,14 @@ $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = "
 <?php if ('open' == $post-> comment_status) : ?>
 <strong>Comment from your Facebook Profile, <?php echo $rs[0]['name']; ?></strong>
 	<div id="commentform-container">
+		<p><input type="text"" name="email" id="email" value="" size="22" />
+		<label for="email"><small> email address (will not be published)</small></label></p>
 		<form action="<?php echo get_option('home'); ?>/wp-content/themes/wp-facebook/fb-comments-post.php" method="post" id="commentform">
 		<p><textarea name="comment" id="comment" cols="50" rows="5" tabindex="4"></textarea></p>
 		<p><input name="submit" type="submit" id="submit" tabindex="5" value="Submit Comment" class="inputsubmit" />
 		<input type="hidden" name="author" id="author" value="<?php echo $rs[0][name]; ?>" />
 		<input type="hidden" name="comment_post_ID" value="<?php echo $id; ?>" />
 		<input type="hidden" name="url" id="url" value="<?php echo 'http://www.facebook.com/profile.php?id=' . $user; ?>" />
-		<input type="hidden" name="email" id="email" value="<?php echo $rs[0][pic]; ?>" />
-		</p>
 		<?php do_action('comment_form', $post->ID); ?>
 		</form>
 	</div><!-- close commentform-container -->
