@@ -2,8 +2,8 @@
 Contributors: davelester, johneckman
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.8
-Tested up to: 2.6
+Stable tag: 0.8.1
+Tested up to: 2.6.2
 Requires at least: 2.5
 
 Plugin to embed Wordpress Blog into Facebook Platform.
@@ -39,9 +39,18 @@ Plugin to embed Wordpress Blog into Facebook Platform.
 
 5. Using the WPBook menu, (located under the options tag, "WPBook") fill 
    in the appropriate information including Facebook application secret 
-   and API keys, as well as your application canvas url
+   and API keys, as well as your application canvas url. 
+
+   Enabling the "Show Invite Friends Link" will show a link inside 
+   Facebook when viewing your application which allows users to send
+   invites to their friends. 
+
+NOTE: If you update using the "automatic update" feature, you will
+      need to copy the theme files (in the wp-facebook subdirectory) 
+      over to wp-content/themes/ for the plugin updates to work. 
 
 == Frequently Asked Questions ==
+
 = How do I edit the way my Facebook Application (mirrored blog) looks? =
 
 In the wp-facebook theme directory, there is an index.php file.  Most of 
@@ -52,8 +61,14 @@ as some other files for processing comments and the like.
 
 == Version History ==
 
+= Version 0.8.1 =
+* Oops. Typo in README.txt - Brandon Dukes.
+* Issue with some text not being displayed
+  on the invite form
+* Tested with Wordpress 2.6.2
+
 = Version 0.8 =
-* Thanks to Brandon Randon for contributing facebook invites - if you
+* Thanks to Brandon Dukes for contributing facebook invites - if you
   select 'display invite friends link' checkbox in the wp-admin 
   settings for WPBook, you can invite facebook friends!
 * Display email box for commentors (optional)

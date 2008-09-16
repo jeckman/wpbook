@@ -14,7 +14,7 @@ include_once 'config.php';
 			$friends = array(); if (is_array($_friends) && count($_friends)) { foreach ($_friends as $friend) { $friends[] = $friend['uid']; } } // Convert the array of friends into a comma-delimeted string. 
 			$friends = implode(',', $friends); 
 			// Prepare the invitation text that all invited users will receive. 
-			$content = "<fb:name uid=\"".$user."\" firstnameonly=\"true\" shownetwork=\"false\"/> has started using <a href=\"http://apps.facebook.com/".$app_url."/\">".$app_name."</a> and thought it's <u>so cool even you should try it out</u>!\n". "<fb:req-choice url=\"".$facebook->get_add_url()."\" label=\"Add ".$app_name." to your profile\"/>"; 
+			$content = "<fb:name uid=\"".$user."\" firstnameonly=\"true\" shownetwork=\"false\"/> has started using <a href=\"http://apps.facebook.com/".$app_url."/\">".$app_name."</a> and thought you should try it out!\n". "<fb:req-choice url=\"".$facebook->get_add_url()."\" label=\"Add ".$app_name." to your profile\"/>"; 
 	?>
 			<fb:request-form action="http://apps.facebook.com/<?php echo $app_url ?>" method="post" type="<? echo $app_name; ?>" content="<? echo htmlentities($content); ?>" image="<? echo $app_image; ?>"> 
 			<fb:multi-friend-selector actiontext="Here are your friends who don't have <? echo $app_name; ?> yet. Invite whoever you want -it's free!" exclude_ids="<? echo $friends; ?>" bypass="cancel" />
