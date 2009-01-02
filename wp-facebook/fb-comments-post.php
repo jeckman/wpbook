@@ -33,8 +33,16 @@ $comment_content      = trim($_POST['comment']);
 
 $comment_type = '';
 
+if(($require_email == "true") && ('' == $comment_author_email)){
+	wp_die( __('Error: please enter an e-mail.'));}
+	
+if($comment_author_email != ''){
+if(!preg_match('/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|biz|info|name|aero|biz|info|jobs|museum|name|edu)$/i', $comment_author_email)){
+	wp_die( __('Error: please enter a valid e-mail.'));}}
+
 if ( '' == $comment_content )
 	wp_die( __('Error: please type a comment.') );
+
 
 $commentdata = compact('comment_post_ID', 'comment_author', 'comment_author_email', 'comment_author_url', 'comment_content', 'comment_type', 'user_ID');
 

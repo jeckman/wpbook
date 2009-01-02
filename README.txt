@@ -2,8 +2,8 @@
 Contributors: davelester, johneckman
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.8.1
-Tested up to: 2.6.2
+Stable tag: 0.8.2
+Tested up to: 2.7
 Requires at least: 2.5
 
 Plugin to embed Wordpress Blog into Facebook Platform.
@@ -12,7 +12,7 @@ Plugin to embed Wordpress Blog into Facebook Platform.
 1. Copy wpbook.php into your wordpress plugins folder, normally located
    in /wp-content/plugins/
 
-2. Copy the wp-facebook.php directory into your themes folder, normally
+2. Copy the wp-facebook directory into your themes folder, normally
    located in /wp-content/themes/
 
    Note that if you use the "automated update" of plugins feature, you will 
@@ -60,6 +60,11 @@ There's also a style.css which basically mimics Facebook's styles, as well
 as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.8.2 =
+* Added option to require email address of comment author
+* Can be set separately only for Facebook comment authors
+* Functionality added by Brandon Dukes. 
 
 = Version 0.8.1 =
 * Oops. Typo in README.txt - Brandon Dukes.

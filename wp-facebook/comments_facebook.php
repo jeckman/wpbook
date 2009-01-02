@@ -17,27 +17,22 @@ if (!empty($wpbookOptions)) {
 $api_key = $wpbookAdminOptions['fb_api_key'];
 $secret  = $wpbookAdminOptions['fb_secret'];
 $app_url = $wpbookAdminOpriona['fb_app_url'];
+$require_email = $wpbookAdminOptions['require_email']; // see if require comment author e-mail is set to true.
 
 $facebook = new Facebook($api_key, $secret);
 $user = $facebook->require_login(); 
 
 $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = ".$user); 
-//echo $rs[0]['name']; // debug only
 
 ?>
 <div class="comments-post">
 <?php if ($comments) : ?>
-	<span class="comments"><?php comments_number('no comment yet, be the first !', '1 Comment for this post', '% Comments for this post' );?></span>
+	<span class="comments"><?php comments_number('no comment yet, be the first!', '1 Comment for this post', '% Comments for this post' );?></span>
 	<div id="commentlist">
 		<?php foreach ($comments as $comment) : ?>
 		<div class="acomment">
-		<?php 
-			if(function_exists(MyAvatarsNew)) {
-				MyAvatarsNew();
-			} else {
-				echo get_avatar( $comment, 32 ); 
-			} 
-		?> <?php comment_author_link(); ?> Says: 
+		<?php echo get_avatar( $comment, 32 ); ?> 
+		<?php comment_author_link(); ?> Says: 
 				<?php if ($comment->comment_approved == '0') : ?>
 					<em>Your comment is awaiting moderation.</em>
 				<?php endif; ?>
@@ -63,9 +58,9 @@ $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = "
 <?php if ('open' == $post-> comment_status) : ?>
 <strong>Comment from your Facebook Profile, <?php echo $rs[0]['name']; ?></strong>
 	<div id="commentform-container">
-		<p><input type="text"" name="email" id="email" value="" size="22" />
-		<label for="email"><small> email address (will not be published)</small></label></p>
 		<form action="<?php echo get_option('home'); ?>/wp-content/themes/wp-facebook/fb-comments-post.php" method="post" id="commentform">
+        <p><input type="text"" name="email" id="email" value="" size="22" />
+		<label for="email"><small> Email Address (<?php if($require_email == "true"){ echo("Required. ");} ?>Will not be published)</small></label></p>
 		<p><textarea name="comment" id="comment" cols="50" rows="5" tabindex="4"></textarea></p>
 		<p><input name="submit" type="submit" id="submit" tabindex="5" value="Submit Comment" class="inputsubmit" />
 		<input type="hidden" name="author" id="author" value="<?php echo $rs[0][name]; ?>" />
@@ -73,7 +68,8 @@ $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = "
 		<input type="hidden" name="url" id="url" value="<?php echo 'http://www.facebook.com/profile.php?id=' . $user; ?>" />
 		<?php do_action('comment_form', $post->ID); ?>
 		</form>
-	</div><!-- close commentform-container -->
+	</div>
+     <!-- close commentform-container -->
 </div><!-- close COMMENTS-POST -->
 
 <?php endif; // end of included comments ?> 

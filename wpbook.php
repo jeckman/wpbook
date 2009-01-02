@@ -2,11 +2,11 @@
 /*
 Plugin Name: WPBook
 Plugin URI: http://www.scholarpress.net
-Date: 2008, Sep 16
+Date: 2009, January 2
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. <b>If you update via automatic update, be sure to copy theme to appropriate directory!</b> <em>By <a href="http://johneckman.com/">John Eckman</a>.</em> 
 Author: Dave Lester
 Author URI: http://www.davelester.org
-Version: 0.8.1
+Version: 0.8.2
 */
 
 /*
@@ -65,13 +65,14 @@ function wpbook_getAdminOptions() {
 	return $wpbookAdminOptions;
 }
 
-function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,$invite_friends) {
+function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,$invite_friends,$require_email) {
 	$wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
 		'fb_api_key' => $fb_api_key,
 		'fb_secret'  => $fb_secret,
 		'fb_app_url' => $fb_app_url,
 		'fb_app_name'=> $fb_app_name,
-		'invite_friends' => $invite_friends);
+		'invite_friends' => $invite_friends,
+		'require_email' => $require_email);
 	update_option('wpbookAdminOptions', $wpbookAdminOptions);
 	
 }
@@ -91,10 +92,11 @@ function wpbook_subpanel() {
 			$fb_app_url = $_POST['fb_app_url'];
 			$fb_app_name = $_POST['fb_app_name'];
 			$invite_friends = $_POST['invite_friends'];
-			setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,$invite_friends);
+			$require_email = $_POST['require_email'];
+			setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,$invite_friends,$require_email);
 			$flash = "Your settings have been saved. ";
 		} else {
-			$flash = "You must complete all fields completely";
+			$flash = "Please complete all necessary fields";
 		}
 	} else {
 		$flash = "You don't have enough access rights.";
@@ -120,10 +122,13 @@ function wpbook_subpanel() {
 		echo '<li>Enter Your Facebook Application\'s Canvas Page URL: ( http://apps.facebook.com/[enter just this bit] )<br /><input type="text" name="fb_app_url" value="' . htmlentities($wpbookAdminOptions['fb_app_url']) . '" size="45" /></li>';
 		echo'<li><input type="checkbox" name="invite_friends" onclick="document.getElementById(\'invite_options\').style.display=(document.getElementById(\'invite_options\').style.display== \'none\')?\'block\':\'none\';" value = "true"';
 		 if( htmlentities($wpbookAdminOptions['invite_friends']) == "true"){ echo("checked");}
-		 echo '>Show Invite Friends Link
+		 echo '> Show Invite Friends Link
 		<div id="invite_options" style="display:';
 		if( htmlentities($wpbookAdminOptions['invite_friends']) == "true"){ echo("block");}else{ echo("none");}
 		echo';margin-top:15px;">Enter Your Application\'s Name:<br /><input type="text" name="fb_app_name" value="' . htmlentities($wpbookAdminOptions['fb_app_name']) . '" size="45" /> (no trailing spaces) </div> </li>';
+		echo'<li><input type="checkbox" name="require_email" value = "true"';
+		 if( htmlentities($wpbookAdminOptions['require_email']) == "true"){ echo("checked");}
+		 echo '> Require Comment Authors E-mail Address</li>';
 				
 		echo '</ol>';
 
