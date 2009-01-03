@@ -51,9 +51,9 @@ include_once 'config.php';
 			while (have_posts()) : 
 				the_post();
 				if (is_single() || $wp_query->is_single || $wp_query->is_singular) {
-				?>	
-				<p>&laquo; <?php next_post('%', 'Next: ', 'yes'); ?> | <?php previous_post('%', 'Previous: ', 'yes'); ?> &raquo;</p>				
-				<?php } ?>
+					previous_post_link('&laquo; Previous Post: %link <br />','%title',FALSE,'');
+					next_post_link('Next Post: %link &raquo;<br />','%title',FALSE,'');
+				} ?>
 				<div class="box_head clearfix" style="padding: 5px 0 0 0;"id="post-<?php the_ID(); ?>">
 				<h3 style="padding: 1px 6px 0px 8px; border-top: solid 1px #3B5998; background: #d8dfea;">
 					<a href="<?php the_permalink(); ?>" target="_top"><?php the_title(); ?></a></h3>
