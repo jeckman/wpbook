@@ -41,7 +41,6 @@ include_once 'config.php';
 		FB.CanvasClient.startTimerToSizeToContent();
 		});
 </script>	
-
 <div>
 	<h3><a href="http://apps.facebook.com/<?php echo $app_url; ?>/" target="_top"><?php bloginfo('name'); ?></a></h3>
 	<div id="content">
