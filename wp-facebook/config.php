@@ -39,5 +39,7 @@ $facebook->api_client->call_method('facebook.profile.setFBML',
 											 'profile' => '<fb:wide><fb:ref url="'. $url .'"/></fb:wide><fb:narrow><fb:ref url="'. $url .'"/></fb:narrow>',
 											 'profile_main' => '<fb:ref url="'. $url .'"/>'
 											 )
-								   );  	
+								   );  
+// could just enable this to always refresh the profile boxes
+$facebook->api_client->fbml_refreshRefUrl($url);	
 ?>
