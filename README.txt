@@ -1,8 +1,8 @@
 === WPBook ===
-Contributors: davelester, johneckman
+Contributors: davelester, johneckman, bandonrandon
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.8.2
+Stable tag: 0.9b
 Tested up to: 2.7
 Requires at least: 2.5
 
@@ -45,6 +45,23 @@ Plugin to embed Wordpress Blog into Facebook Platform.
    Facebook when viewing your application which allows users to send
    invites to their friends. 
 
+Additional notes for "Add to Profile" Box:
+
+WPBook enables Facebook users, once they "allow" the application access,
+to add a profile box to their profile, using the "add to profile" button
+at the top of the default canvas page. 
+
+That profile box shows the 5 most recent posts from your blog, as links. 
+
+However, in order to update the contents of the profile box, WPBook
+needs an "inifinite session" key - basically needs your permission to
+make some calls to facebook to refresh the recent posts even while 
+you are not logged in. 
+
+In the WPBook configuration page inside WordPress, there are some 
+directions which try to make clear what you need to do to get your
+infinite session key - please let us know if they are not clear. 
+
 NOTE: If you update using the "automatic update" feature, you will
       need to copy the theme files (in the wp-facebook subdirectory) 
       over to wp-content/themes/ for the plugin updates to work. 
@@ -60,6 +77,17 @@ There's also a style.css which basically mimics Facebook's styles, as well
 as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.9 beta = 
+* First attempt at profile boxes. Works, but process is a bit hectic. 
+* Shows 5 most recent posts in profile box
+* Possible to get and set infinite session key from inside admin?
+   Could open FB page in a jQuery popup, perhaps?
+   When the user hits inifinitesession.php, couldn't I just set the option
+   right then?
+* Do we need an option to not show the "add to profile" box?
+* Do I also need to direct user to set default fbml for the "pages" box,
+  or is that handled automagically?
 
 = Version 0.8.2 =
 * Added option to require email address of comment author
