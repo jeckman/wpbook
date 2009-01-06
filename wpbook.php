@@ -130,7 +130,7 @@ function wpbook_subpanel() {
 		 if( htmlentities($wpbookAdminOptions['require_email']) == "true"){ echo("checked");}
 		 echo '> Require Comment Authors E-mail Address</li>';
 		echo '</ol>';
-		echo '<p><input type="submit" value="Save" /></p></form>';
+		echo '<p><input type="submit" value="Save" class="button" name="wpbook_save_button" /></p></form>';
 		echo '</div>';
 	} else {
 		echo '<div class="wrap"><p>Sorry, you are not allowed to access this page.</p></div>';
