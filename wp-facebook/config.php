@@ -32,7 +32,6 @@ $user_id = $params[user];
 $url = 	get_bloginfo('wpurl') . "/wp-content/themes/wp-facebook/recent_posts.php?fb_sig_in_iframe";
 
 // This sets the default FBML for the users profile, so that it is available for the "add to profile" button	
-	
 $facebook->api_client->call_method('facebook.profile.setFBML',
 									   array(
 											 'uid' => $user,
@@ -40,6 +39,5 @@ $facebook->api_client->call_method('facebook.profile.setFBML',
 											 'profile_main' => '<fb:ref url="'. $url .'"/>'
 											 )
 								   );  
-// could just enable this to always refresh the profile boxes
-$facebook->api_client->fbml_refreshRefUrl($url);	
+
 ?>
