@@ -42,12 +42,7 @@ FB_RequireFeatures(["CanvasUtil"], function() {
 	FB.CanvasClient.startTimerToSizeToContent();
 });
 </script>		
-
-<div align="center">
-<div id="addProfileButton" align="center">
-</div>
-</div>
-
+<div><div id="addProfileButton" style="float:right"></div></div>
 <div>
 	<h3><a href="http://apps.facebook.com/<?php echo $app_url; ?>/" target="_top"><?php bloginfo('name'); ?></a></h3>
 	<div id="content">
@@ -59,7 +54,8 @@ FB_RequireFeatures(["CanvasUtil"], function() {
 				if (is_single() || $wp_query->is_single || $wp_query->is_singular) {
 					previous_post_link('&laquo; Previous Post: %link <br />','%title',FALSE,'');
 					next_post_link('Next Post: %link &raquo;<br />','%title',FALSE,'');
-				} ?>
+?>
+				<?php } ?> <!-- end if single -->
 				<div class="box_head clearfix" style="padding: 5px 0 0 0;"id="post-<?php the_ID(); ?>">
 				<h3 style="padding: 1px 6px 0px 8px; border-top: solid 1px #3B5998; background: #d8dfea;">
 					<a href="<?php the_permalink(); ?>" target="_top"><?php the_title(); ?></a></h3>
@@ -93,9 +89,9 @@ FB_RequireFeatures(["CanvasUtil"], function() {
 </div>
 <script type="text/javascript">
 	FB_RequireFeatures(["XFBML"],function() {
-					   FB.Facebook.init('<?php echo $api_key; ?>','<?php echo get_bloginfo('template_directory');?>/xd_receiver.html', null);
-		FB.Connect.showAddSectionButton('profile',document.getElementById('addProfileButton'))
-	});   
+		FB.Facebook.init('<?php echo $api_key; ?>','<?php echo get_bloginfo('template_directory');?>/xd_receiver.html', null);
+		FB.Connect.showAddSectionButton('profile',document.getElementById('addProfileButton'));
+});   
 </script>
 </body>
 <?php	 
