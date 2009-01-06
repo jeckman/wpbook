@@ -24,23 +24,30 @@ include_once 'config.php';
 	} 
 	else {  // this is the regular blog page
 	?>
-		<html>
+		<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+		<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml" >
 		<head>
 		<title>Facebook Blog Application</title>
 			<?php wp_head(); // in case any plugins rely on this hook ?>
 		<link rel="stylesheet" href="<?php bloginfo('stylesheet_url'); ?>" type="text/css" media="screen" />
-		<BASE TARGET="_top">
+		<BASE TARGET="_top">	
 		</head>
 		<body>
-<script src="<?= $_REQUEST['fb_sig_in_new_facebook'] ? 'http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php' : 'http://static.ak.facebook.com/js/api_lib/v0.3/FeatureLoader.js' ?> " type="text/javascript"> </script>
+<script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
 <script type="text/javascript">
-	FB_RequireFeatures(["CanvasUtil"], function() {
-		FB.FBDebug.isEnabled=true;
-		FB.FBDebug.logLevel = 4;
-		FB.XdComm.Server.init("<?php echo get_bloginfo('template_directory');?>/xd_reciever.html");
-		FB.CanvasClient.startTimerToSizeToContent();
-		});
-</script>	
+FB_RequireFeatures(["CanvasUtil"], function() {
+	FB.FBDebug.isEnabled=true;
+	FB.FBDebug.logLevel = 4;
+	FB.XdComm.Server.init("<?php echo get_bloginfo('template_directory');?>/xd_receiver.html");
+	FB.CanvasClient.startTimerToSizeToContent();
+});
+</script>		
+
+<div align="center">
+<div id="addProfileButton" align="center">
+</div>
+</div>
+
 <div>
 	<h3><a href="http://apps.facebook.com/<?php echo $app_url; ?>/" target="_top"><?php bloginfo('name'); ?></a></h3>
 	<div id="content">
@@ -84,6 +91,12 @@ include_once 'config.php';
 	}
 ?>
 </div>
+<script type="text/javascript">
+	FB_RequireFeatures(["XFBML"],function() {
+					   FB.Facebook.init('<?php echo $api_key; ?>','<?php echo get_bloginfo('template_directory');?>/xd_receiver.html', null);
+		FB.Connect.showAddSectionButton('profile',document.getElementById('addProfileButton'))
+	});   
+</script>
 </body>
 <?php	 
 }

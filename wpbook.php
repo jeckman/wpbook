@@ -65,14 +65,15 @@ function wpbook_getAdminOptions() {
 	return $wpbookAdminOptions;
 }
 
-function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,$invite_friends,$require_email) {
+function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,$invite_friends,$require_email,$infinite_session) {
 	$wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
 		'fb_api_key' => $fb_api_key,
 		'fb_secret'  => $fb_secret,
 		'fb_app_url' => $fb_app_url,
 		'fb_app_name'=> $fb_app_name,
 		'invite_friends' => $invite_friends,
-		'require_email' => $require_email);
+		'require_email' => $require_email,
+		'infinite_session' => $infinite_session);
 	update_option('wpbookAdminOptions', $wpbookAdminOptions);
 	
 }
@@ -93,7 +94,8 @@ function wpbook_subpanel() {
 			$fb_app_name = $_POST['fb_app_name'];
 			$invite_friends = $_POST['invite_friends'];
 			$require_email = $_POST['require_email'];
-			setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,$invite_friends,$require_email);
+			$infinite_session = $_POST['infinite_session'];
+			setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,$invite_friends,$require_email,$infinite_session);
 			$flash = "Your settings have been saved. ";
 		} else {
 			$flash = "Please complete all necessary fields";
@@ -129,9 +131,8 @@ function wpbook_subpanel() {
 		echo'<li><input type="checkbox" name="require_email" value = "true"';
 		 if( htmlentities($wpbookAdminOptions['require_email']) == "true"){ echo("checked");}
 		 echo '> Require Comment Authors E-mail Address</li>';
-				
+		echo '<li>Enter Your Facebook Application Infinite Session Key: (to get one, follow <a href="/wp-content/plugins/wpbook/infinite-session-directions.html">these directions</a>)<br /><input type="text" name="infinite_session" value="' . htmlentities($wpbookAdminOptions['infinite_session']) . '" size="45" /></li>';
 		echo '</ol>';
-
 		echo '<p><input type="submit" value="Save" /></p></form>';
 		echo '</div>';
 	} else {
@@ -242,21 +243,44 @@ function fb_comments_template($file ='comments_facebook.php') {
 		return $file; 
 	}
 }
-
-// point to the comments template in my dir, not active theme
-function fb_invite_template($file ='invite.php') {
-	$my_file = TEMPLATEPATH . 'invite.php';
-	if ($file == $my_file){
-		$my_file = ABSPATH . 'wp-content/themes/wp-facebook/invite.php';
-		return $my_file;
+	
+function wp_update_profile_boxes() {
+	// don't want to call update_profile.php on cron, want to do it when posts are posted
+	if (version_compare(PHP_VERSION,'5','>=')) {
+		include_once(ABSPATH. 'wp-content/themes/wp-facebook/client/facebook.php');  // php5
+	} else {
+		include_once(ABSPATH . 'wp-content/themes/wp-facebook/php4client/facebook.php');
+		include_once(ABSPATH . 'wp-content/themes/wp-facebook/php4client/facebookapi_php4_restlib.php');
+	}	
+	$wpbookOptions = get_option('wpbookAdminOptions');
+	
+	if (!empty($wpbookOptions)) {
+		foreach ($wpbookOptions as $key => $option)
+		$wpbookAdminOptions[$key] = $option;
 	}
-	else {
-		return $file; 
+	
+	$api_key = $wpbookAdminOptions['fb_api_key'];
+	$secret  = $wpbookAdminOptions['fb_secret'];
+	$app_url = $wpbookAdminOptions['app_url'];
+	$infinite_session = $wpbookAdminOptions['infinite_session'];  
+	
+	if($infinite_session) {
+		$facebook = new Facebook($api_key, $secret);
+		$facebook->api_client->session_key = $infinite_session;
+	
+		$url = get_bloginfo('wpurl') . "/wp-content/themes/wp-facebook/recent_posts.php?fb_sig_in_iframe";
+		// Now you can update FBML pages, update your fb:ref tags, etc.
+		$facebook->api_client->fbml_refreshRefUrl($url);	
 	}
 }
-
+	
+	
+	
 add_filter('comments_template','fb_comments_template',1,1);
 add_filter('post_link','fb_filter_postlink',1,1);
 add_action('admin_menu', 'wpbook_options_page');
 
+// these capture new posts, not edits of previous posts	
+add_action('future_to_publish','wp_update_profile_boxes');	
+add_action('new_to_publish','wp_update_profile_boxes');
 ?>
