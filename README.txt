@@ -2,7 +2,7 @@
 Contributors: davelester, johneckman, bandonrandon
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.9
+Stable tag: 0.9.1
 Tested up to: 2.7
 Requires at least: 2.5
 
@@ -76,6 +76,10 @@ There's also a style.css which basically mimics Facebook's styles, as well
 as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.9.1 =
+* Fixed xd_reciever.html versus xd_receiver.html issue
+* (You'd think a guy with a PhD in English would know how to spell.) 
 
 = Version 0.9  = 
 * Added profile boxes
