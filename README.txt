@@ -2,7 +2,7 @@
 Contributors: davelester, johneckman, bandonrandon
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.9.1
+Stable tag: 0.9.2
 Tested up to: 2.7
 Requires at least: 2.5
 
@@ -76,6 +76,10 @@ There's also a style.css which basically mimics Facebook's styles, as well
 as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.9.2 =
+* Didn't realize I had set default FBML inside Facebook, masked a bug
+* Should now set profile FBML before calling add profile box
 
 = Version 0.9.1 =
 * Fixed xd_reciever.html versus xd_receiver.html issue
