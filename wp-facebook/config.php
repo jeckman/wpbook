@@ -34,7 +34,7 @@ $url = 	get_bloginfo('wpurl') . "/wp-content/themes/wp-facebook/recent_posts.php
 // This sets the default FBML for the users profile, so that it is available for the "add to profile" button	
 $facebook->api_client->call_method('facebook.profile.setFBML',
 									   array(
-											 'uid' => $user,
+											 'uid' => $user_id,
 											 'profile' => '<fb:wide><fb:ref url="'. $url .'"/></fb:wide><fb:narrow><fb:ref url="'. $url .'"/></fb:narrow>',
 											 'profile_main' => '<fb:ref url="'. $url .'"/>'
 											 )
