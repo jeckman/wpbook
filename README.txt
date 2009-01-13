@@ -2,7 +2,7 @@
 Contributors: davelester, johneckman, bandonrandon
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.9.2
+Stable tag: 0.9.3
 Tested up to: 2.7
 Requires at least: 2.5
 
@@ -47,9 +47,7 @@ NOTE: If you update using the "automatic update" feature, you will
    no trailing slash. Remember it. 
    
    Set the application type to "website"
-   
-   Set the sidenav url to your canvas url
-   
+      
    Set the application to use an iFrame, not fbml, and to "resizable"
    (Using iFrames lets you use javascript, objects, and other tags 
     not allowed in FBML inside blog posts)
@@ -64,7 +62,6 @@ NOTE: If you update using the "automatic update" feature, you will
    Facebook when viewing your application which allows users to send
    invites to their friends. 
 
-
 == Frequently Asked Questions ==
 
 = How do I edit the way my Facebook Application (mirrored blog) looks? =
@@ -76,6 +73,10 @@ There's also a style.css which basically mimics Facebook's styles, as well
 as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.9.3 =
+* Bug in commenting inside Facebook due to $facebook->redirect
+* Now redirects to the post on which the user commented
 
 = Version 0.9.2 =
 * Didn't realize I had set default FBML inside Facebook, masked a bug
