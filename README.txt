@@ -10,9 +10,9 @@ Plugin to embed Wordpress Blog into Facebook Platform.
 
 == Overview ==
 
-WPBook enables users to add your (self-hosted, not wordpress.com) wordpress blog 
-as a Facebook application. Facebook users will see your posts in a Facebook
-looks and feel, and can leave comments with their Facebook identity. 
+WPBook enables users to add your (self-hosted, not wordpress.com) wordpress 
+blog as a Facebook application. Facebook users will see your posts in a 
+Facebook look and feel, and can leave comments with their Facebook identity. 
 
 Comments are shared - meaning comments made by users on your blog at its 
 regular domain and comments made by users inside Facebook are all shown to 
@@ -28,10 +28,10 @@ NOTE: If you update using the "automatic update" feature, you will
       over to wp-content/themes/ for the plugin updates to work. 
 
 == Installation ==
-1. Copy wpbook.php into your wordpress plugins folder, normally located
-   in /wp-content/plugins/
+1. Copy the entire WPBook directory into your wordpress plugins folder,
+   /wp-content/plugins/
 
-2. Copy the wp-facebook directory into your themes folder, normally
+2. Copy the wp-facebook subdirectory into your themes folder, normally
    located in /wp-content/themes/
 
    Note that if you use the "automated update" of plugins feature, you will 
@@ -62,6 +62,12 @@ NOTE: If you update using the "automatic update" feature, you will
    Facebook when viewing your application which allows users to send
    invites to their friends. 
 
+6. If you wish to enable users to add your blog application to Facebook
+   Pages, not just individual user profiles, get the default FBML by 
+   visiting the settings page inside Wordpress, and enter that in the 
+   appropriate place (default FBML) within the Facebook Application Settings
+   page, using the Facebook Developer Application. 
+
 == Frequently Asked Questions ==
 
 = How do I edit the way my Facebook Application (mirrored blog) looks? =
@@ -77,6 +83,7 @@ as some other files for processing comments and the like.
 = Version 0.9.3 =
 * Bug in commenting inside Facebook due to $facebook->redirect
 * Now redirects to the post on which the user commented
+* Added instruction for adding to FB Pages to settings page in WordPress
 
 = Version 0.9.2 =
 * Didn't realize I had set default FBML inside Facebook, masked a bug
@@ -166,3 +173,6 @@ as some other files for processing comments and the like.
 = Ongoing =
 * Option for comments or no comments in admin section
 * Better accompanying documentation
+* Share button on individual posts
+* Move wp-facebook theme to a subdirectory of plugin directory
+  to enable auto-update
