@@ -127,7 +127,7 @@ FB_RequireFeatures(["CanvasUtil"], function() {
 	FB_RequireFeatures(["XFBML"],function() {
 		FB.Facebook.init('<?php echo $api_key; ?>',
                      '<?php echo $receiver_url; ?>',
-          NULL);
+          null);
 		FB.Connect.showAddSectionButton('profile',
                                   document.getElementById('addProfileButton'));
 });   
