@@ -2,7 +2,7 @@
 Contributors: davelester, johneckman, bandonrandon
 Donate link: http://www.davelester.org
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.9.3
+Stable tag: 0.9.4
 Tested up to: 2.7
 Requires at least: 2.5
 
@@ -79,6 +79,9 @@ There's also a style.css which basically mimics Facebook's styles, as well
 as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.9.4 =
+* Bug in javascript (NULL isn't the same as null) for profile
 
 = Version 0.9.3 =
 * Bug in commenting inside Facebook due to $facebook->redirect

@@ -9,7 +9,7 @@ to copy theme to appropriate directory!</b> <em>By
 <a href="http://johneckman.com/">John Eckman</a>.</em> 
 Author: Dave Lester
 Author URI: http://www.davelester.org
-Version: 0.9.3
+Version: 0.9.4
 */
 
 /*
