@@ -1,6 +1,5 @@
 === WPBook ===
-Contributors: davelester, johneckman, bandonrandon
-Donate link: http://www.davelester.org
+Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
 Stable tag: 0.9.6
 Tested up to: 2.7
