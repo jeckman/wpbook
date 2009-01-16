@@ -9,7 +9,7 @@ to copy theme to appropriate directory!</b> <em>By
 <a href="http://johneckman.com/">John Eckman</a>.</em> 
 Author: Dave Lester
 Author URI: http://www.davelester.org
-Version: 0.9.5b
+Version: 0.9.4
 */
 
 /*
@@ -167,7 +167,7 @@ function wpbook_subpanel() {
     echo 'Facebook <strong>Pages</strong> as well as individual user ';
     echo 'profiles, you\'ll need to enable &quot;add to pages&quot; in ';
     echo 'your application settings in Facebook, and set the ';
-    echo '&quot;default FBML&quot; on both the <strong>Pages</strong> tab and '
+    echo '&quot;default FBML&quot; on both the <strong>Pages</strong> tab and ';
     echo '<strong>User Profiles</strong> tabs to the following: <br /><code>';
     echo '&lt;fb:ref url="' . get_bloginfo('wpurl');
     echo '/wp-content/plugins/wpbook/theme/recent_posts.php?fb_sig_in_iframe"';
