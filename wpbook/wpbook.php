@@ -291,7 +291,7 @@ function fb_filter_postlink($postlink) {
 }
 	
 function wp_update_profile_boxes() {
-  if(!class(FacebookRestClient)) {
+  if(!class_exists('FacebookRestClient')) {
     if (version_compare(PHP_VERSION,'5','>=')) {
       include_once(ABSPATH.'wp-content/plugins/wpbook/client/facebook.php');
 	  } else {

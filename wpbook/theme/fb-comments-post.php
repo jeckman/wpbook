@@ -7,17 +7,6 @@ if ( 'POST' != $_SERVER['REQUEST_METHOD'] ) {
 }
 require('../../../../wp-config.php' );
 		
-$wpbookOptions = get_option('wpbookAdminOptions');
-	
-if (!empty($wpbookOptions)) {
-	foreach ($wpbookOptions as $key => $option)
-	$wpbookAdminOptions[$key] = $option;
-}
-	
-$app_url = $wpbookAdminOptions['fb_app_url'];
-$app_name = $wpbookAdminOptions['fb_app_name']; 
-  // get the application name from the wpbook settings. 
-	
 nocache_headers();
 
 $comment_post_ID = (int) $_POST['comment_post_ID'];
