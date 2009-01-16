@@ -163,11 +163,12 @@ function wpbook_subpanel() {
     }
     echo '> Require Comment Authors E-mail Address</li>';
 		echo '</ol>';
-    echo '<p>If you\'d like to enable users to add your application to ';
+    echo '<p>Note!: If you\'d like to enable users to add your application to ';
     echo 'Facebook <strong>Pages</strong> as well as individual user ';
     echo 'profiles, you\'ll need to enable &quot;add to pages&quot; in ';
     echo 'your application settings in Facebook, and set the ';
-    echo '&quot;default FBML&quot; to the following: <br /><code>';
+    echo '&quot;default FBML&quot; on both the <strong>Pages</strong> tab and '
+    echo '<strong>User Profiles</strong> tabs to the following: <br /><code>';
     echo '&lt;fb:ref url="' . get_bloginfo('wpurl');
     echo '/wp-content/plugins/wpbook/theme/recent_posts.php?fb_sig_in_iframe"';
     echo '/&gt;</code>';		
