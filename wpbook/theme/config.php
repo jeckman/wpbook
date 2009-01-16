@@ -2,10 +2,10 @@
 // the facebook client library
 if(!class_exists('FacebookRestClient')) {
   if (version_compare(PHP_VERSION,'5','>=')) {
-    include_once(ABSPATH.'wp-content/plugins/wpbook/client/facebook.php');
+    include_once(ABSPATH . 'wp-content/plugins/wpbook/client/facebook.php');
   } else {
-    include_once(ABSPATH .'wp-content/plugins/wpbook/php4client/facebook.php');
-    include_once(ABSPATH .'wp-content/plugins/wpbook/php4client/facebookapi_php4_restlib.php');
+    include_once(ABSPATH . 'wp-content/plugins/wpbook/php4client/facebook.php');
+    include_once(ABSPATH . 'wp-content/plugins/wpbook/php4client/facebookapi_php4_restlib.php');
   }
 }
 

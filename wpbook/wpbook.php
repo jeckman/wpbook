@@ -169,7 +169,7 @@ function wpbook_subpanel() {
     echo 'your application settings in Facebook, and set the ';
     echo '&quot;default FBML&quot; to the following: <br /><code>';
     echo '&lt;fb:ref url="' . get_bloginfo('wpurl');
-    echo '/wp-content/themes/wp-facebook/recent_posts.php?fb_sig_in_iframe"';
+    echo '/wp-content/plugins/wpbook/theme/recent_posts.php?fb_sig_in_iframe"';
     echo '/&gt;</code>';		
 
     echo '<p><input type="submit" value="Save" class="button"';
@@ -238,16 +238,6 @@ function check_facebook() {
 	return false;
 }
 
-// Sets wp-facebook as the theme name
-function wpbook_template($theme) {
-		return apply_filters('wpbook_template', 'wp-facebook');
-}
-
-// this just checks whether the theme is installed
-function wpbook_installed() {
-	return is_dir(ABSPATH.'wp-content/themes/wp-facebook');
-}
-
 function wpbook_theme_root($path) {
 	$theme_root = dirname(__FILE__);
 	if (check_facebook()) {
@@ -271,9 +261,6 @@ function wpbook_theme_root_uri($url) {
 if (check_facebook()) {
 	add_filter('theme_root', 'wpbook_theme_root');
   add_filter('theme_root_uri', 'wpbook_theme_root_uri');
-  //add_action('template', 'wpbook_template');
-	//add_action('option_template', 'wpbook_template');
-	//add_action('option_stylesheet', 'wpbook_template');
 }
              
 // also have to change permalinks and next/prev links and more links
