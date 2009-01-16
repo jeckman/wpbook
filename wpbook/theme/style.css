@@ -1,0 +1,64 @@
+/*  
+Styles for Facebook, as part of WP-Book plugin
+Based on acebok styles
+*/
+
+html,body{
+	margin: 0;
+	padding: 0;
+	background: #FFFFFF;
+}
+
+body {
+	background:#fff;
+	font-family:"lucida grande", tahoma, verdana, arial, sans-serif;
+	font-size:11px;
+	margin:10px;
+	padding:0px;
+	text-align:left;
+}
+
+blockquote {
+	border-left: 5px solid #ccc;
+	margin-left: 1.5em;
+	padding-left: 5px;
+}
+
+h1, h2, h3, h4, h5 {
+	font-size:13px;
+	color:#333;
+	margin:0px;
+	padding:0px;
+}
+
+a {
+	color:#3b5998;
+	text-decoration:none;
+}
+
+a:hover {
+	text-decoration:underline;
+}
+
+img {
+	border:0px;
+}
+
+.inputsubmit {
+	padding:2px 15px 3px 15px;
+	border-style:solid;
+	border-top-width:1px;
+	border-left-width:1px;
+	border-bottom-width:1px;
+	border-right-width:1px;
+	border-top-color:#D9DFEA;
+	border-left-color:#D9DFEA;
+	border-bottom-color:#0e1f5b;
+	border-right-color:#0e1f5b;
+	background-color:#3b5998;
+	color:#FFFFFF;
+	font-size:11px;
+	font-family:"lucida grande", tahoma, verdana, arial, sans-serif;
+	text-align:center;
+}
+

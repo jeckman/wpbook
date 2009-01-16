@@ -9,13 +9,13 @@ to copy theme to appropriate directory!</b> <em>By
 <a href="http://johneckman.com/">John Eckman</a>.</em> 
 Author: Dave Lester
 Author URI: http://www.davelester.org
-Version: 0.9.4
+Version: 0.9.5b
 */
 
 /*
-Note: As od version 0.7, this plugin draws inspiration (and code) from 
-Alex King's WP-Mobile plugin (http://alexking.org/projects/wordpress) 
-adapted by John Eckman for Facebook context.
+Note: As od version 0.7, this plugin draws inspiration (and code) from: 
+   Alex King's WP-Mobile plugin (http://alexking.org/projects/wordpress ) 
+   BraveNewCode's WPTouch (http://www.bravenewcode.com/wptouch/ )
 */
 
 /*  
@@ -238,14 +238,9 @@ function check_facebook() {
 	return false;
 }
 
-// this checks if wpbook is installed and if so returns that as the theme name
+// Sets wp-facebook as the theme name
 function wpbook_template($theme) {
-	if (wpbook_installed()) {
 		return apply_filters('wpbook_template', 'wp-facebook');
-	}
-	else {
-		return $theme;
-	}
 }
 
 // this just checks whether the theme is installed
@@ -253,24 +248,34 @@ function wpbook_installed() {
 	return is_dir(ABSPATH.'wp-content/themes/wp-facebook');
 }
 
-// this alerts user if the theme is deleted
-if (is_admin_page() && !wpbook_installed()) {
-	global $wp_version;
-	if (isset($wp_version) && version_compare($wp_version, '2.5', '>=')) {
-		add_action('admin_notices', create_function( '', 
-      "echo '<div class=\"error\">WPBook is incorrectly installed."
-      . "Please check the README.</div>';" ) );
+function wpbook_theme_root($path) {
+	$theme_root = dirname(__FILE__);
+	if (check_facebook()) {
+		return $theme_root . '/theme'; 
+	} else {
+		return $path;
+	}
+}	
+
+function wpbook_theme_root_uri($url) {
+	if (check_facebook()) {
+		$dir = get_bloginfo('wpurl') . "/wp-content/plugins/wpbook/theme";
+		return $dir;
+	} else {
+		return $url;
 	}
 }
-
+	
 // this is the function which adds to the template and stylesheet hooks
 // the call to wpbook_template
 if (check_facebook()) {
-	add_action('template', 'wpbook_template');
-	add_action('option_template', 'wpbook_template');
-	add_action('option_stylesheet', 'wpbook_template');
+	add_filter('theme_root', 'wpbook_theme_root');
+  add_filter('theme_root_uri', 'wpbook_theme_root_uri');
+  //add_action('template', 'wpbook_template');
+	//add_action('option_template', 'wpbook_template');
+	//add_action('option_stylesheet', 'wpbook_template');
 }
-
+             
 // also have to change permalinks and next/prev links and more links
 function fb_filter_postlink($postlink) {
 	if (check_facebook()) {
@@ -284,30 +289,18 @@ function fb_filter_postlink($postlink) {
 		return $postlink; 
 	}
 }
-
-// point to the comments template in my dir, not active theme
-function fb_comments_template($file ='comments_facebook.php') {
-	$my_file = TEMPLATEPATH . 'comments_facebook.php';
-	if ($file == $my_file){
-		$my_file = ABSPATH . 'wp-content/themes/wp-facebook/comments_facebook.php';
-		return $my_file;
-	}
-	else {
-		return $file; 
-	}
-}
 	
 function wp_update_profile_boxes() {
-	// don't want to call update_profile.php on cron, want to do it when posts
-  // are posted
-	if (version_compare(PHP_VERSION,'5','>=')) {
-		include_once(ABSPATH.'wp-content/themes/wp-facebook/client/facebook.php');
-	} else {
-		include_once(ABSPATH.'wp-content/themes/wp-facebook/php4client/'
-      . 'facebook.php');
-		include_once(ABSPATH.'wp-content/themes/wp-facebook/php4client/'
-      . 'facebookapi_php4_restlib.php');
-	}	
+  if(!class(FacebookRestClient)) {
+    if (version_compare(PHP_VERSION,'5','>=')) {
+      include_once(ABSPATH.'wp-content/plugins/wpbook/client/facebook.php');
+	  } else {
+		  include_once(ABSPATH.'wp-content/plugins/wpbook/php4client/'
+        . 'facebook.php');
+		  include_once(ABSPATH.'wp-content/plugins/wpbook/php4client/'
+        . 'facebookapi_php4_restlib.php');
+	  }
+  }           
 	$wpbookOptions = get_option('wpbookAdminOptions');
 	
 	if (!empty($wpbookOptions)) {
@@ -321,18 +314,17 @@ function wp_update_profile_boxes() {
 	$facebook = new Facebook($api_key, $secret);
 	
 	$url = 	get_bloginfo('wpurl')
-    . "/wp-content/themes/wp-facebook/recent_posts.php?fb_sig_in_iframe";
+    . "/wp-content/plugins/wpbook/theme/recent_posts.php?fb_sig_in_iframe";
 	// Now you can update FBML pages, update your fb:ref tags, etc.
 	$facebook->api_client->fbml_refreshRefUrl($url);	
 }
 	
-	
-	
-add_filter('comments_template','fb_comments_template',1,1);
+//add_filter('comments_template','fb_comments_template',1,1);
 add_filter('post_link','fb_filter_postlink',1,1);
 add_action('admin_menu', 'wpbook_options_page');
 	
 // these capture new posts, not edits of previous posts	
 add_action('future_to_publish','wp_update_profile_boxes');	
 add_action('new_to_publish','wp_update_profile_boxes');
+add_action('draft_to_publish','wp_update_profile_boxes');  
 ?>
