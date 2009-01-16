@@ -106,7 +106,7 @@ FB_RequireFeatures(["CanvasUtil"], function() {
 				<?php the_content(); ?>	
 				</div>
 				<?php
-				comments_template('comments_facebook.php'); 
+				comments_template(); 
 			endwhile; // while have posts
 		endif; // if have posts	
 ?>
