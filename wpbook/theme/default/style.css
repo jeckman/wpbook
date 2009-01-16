@@ -62,3 +62,32 @@ img {
 	text-align:center;
 }
 
+.wpbook_share_button {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.wpbook_share_button a { 
+    background-color: white;
+    background-image: url(share_icon_small.gif);
+    background-repeat: repeat-y;
+    background-attachment: scroll;
+    background-position: right center;
+    border: 1px solid #7F93BC;
+    line-height: 11px;
+    padding-top: 0pt;
+    padding-right: 14px;
+    padding-bottom: 1px;
+    padding-left: 4px;
+} 
+  
+.wpbook_share_button a:hover {
+    color: #ffffff;
+    border: 1px solid #3B5998;
+    text-decoration: none;
+    background-color: #3b5998;
+    background-image: url(share_icon_small_hover.gif);
+    background-repeat: repeat-y;
+    background-attachment: scroll;
+    background-position: right center;
+}  

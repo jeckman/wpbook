@@ -91,17 +91,18 @@ FB_RequireFeatures(["CanvasUtil"], function() {
           background: #d8dfea;">
 					<a href="<?php the_permalink(); ?>" target="_top">
             <?php the_title(); ?></a></h3>
-<?php 
-/* Todo: implement sharing for each post
- * onclick window.open with this url:
- * http://www.facebook.com/sharer.php
- * ?s=100    (Size?)
- * &p[title]=URL encoded title
- * &p[summary]=Url encoded summary
- * &p[url]=url encoded url
- */ 
+<div class="wpbook_share_button">
+<?php
+  echo '<a onclick="window.open(\'http://www.facebook.com/sharer.php?s=100&amp;p[title]=';
+  echo urlencode(get_the_title());
+  echo '&amp;p[summary]=';
+  echo urlencode(get_the_excerpt());
+  echo '&amp;p[url]=';
+  echo urlencode(get_permalink());
+  echo "','sharer','toolbar=0,status=0,width=626,height=436'); return false;\""; 
+  echo ' class="share" title="Send this to friends or post it on your profile.">Share This Post</a>';
 ?>
-
+</div>
 
 				<?php the_content(); ?>	
 				</div>
