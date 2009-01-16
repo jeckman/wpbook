@@ -256,9 +256,19 @@ function wpbook_theme_root_uri($url) {
 	}
 }
 	
-// this is the function which adds to the template and stylesheet hooks
+function wpbook_template_directory($value) {
+  if (check_facebook())  {
+    $theme_root = dirname(__FILE__);
+    return $theme_root . '/theme';
+  } else {
+    return $value;
+  }
+}
+  
+  // this is the function which adds to the template and stylesheet hooks
 // the call to wpbook_template
 if (check_facebook()) {
+  add_filter('template_directory', 'wpbook_template_directory');
 	add_filter('theme_root', 'wpbook_theme_root');
   add_filter('theme_root_uri', 'wpbook_theme_root_uri');
 }

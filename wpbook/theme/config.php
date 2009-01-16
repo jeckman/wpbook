@@ -1,4 +1,6 @@
 <?php
+//require('~/icanhastofu.com/blog/wordpress/wp-config.php');
+  
 // the facebook client library
 if(!class_exists('FacebookRestClient')) {
   if (version_compare(PHP_VERSION,'5','>=')) {
