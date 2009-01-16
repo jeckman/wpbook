@@ -11,9 +11,9 @@ Version: 0.9.6
 */
 
 /*
-Note: As od version 0.7, this plugin draws inspiration (and code) from: 
+Note: This plugin draws from: 
    Alex King's WP-Mobile plugin (http://alexking.org/projects/wordpress ) 
-   BraveNewCode's WPTouch (http://www.bravenewcode.com/wptouch/ )
+   and BraveNewCode's WPTouch (http://www.bravenewcode.com/wptouch/ )
 */
 
 /*  
