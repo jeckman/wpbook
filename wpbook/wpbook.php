@@ -2,14 +2,12 @@
 /*
 Plugin Name: WPBook
 Plugin URI: http://www.scholarpress.net
-Date: 2009, January 13
+Date: 2009, January 16
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using 
-the Facebook Platform. <b>If you update via automatic update, be sure 
-to copy theme to appropriate directory!</b> <em>By 
-<a href="http://johneckman.com/">John Eckman</a>.</em> 
-Author: Dave Lester
-Author URI: http://www.davelester.org
-Version: 0.9.4
+the Facebook Platform. 
+Author: John Eckman
+Author URI: http://johneckman.com
+Version: 0.9.6
 */
 
 /*
@@ -266,7 +264,7 @@ function wpbook_template_directory($value) {
   }
 }
   
-  // this is the function which adds to the template and stylesheet hooks
+// this is the function which adds to the template and stylesheet hooks
 // the call to wpbook_template
 if (check_facebook()) {
   add_filter('template_directory', 'wpbook_template_directory');
@@ -317,7 +315,6 @@ function wp_update_profile_boxes() {
 	$facebook->api_client->fbml_refreshRefUrl($url);	
 }
 	
-//add_filter('comments_template','fb_comments_template',1,1);
 add_filter('post_link','fb_filter_postlink',1,1);
 add_action('admin_menu', 'wpbook_options_page');
 	
