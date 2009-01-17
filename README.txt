@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.9.6
+Stable tag: 0.9.7
 Tested up to: 2.7
 Requires at least: 2.5
 
@@ -83,6 +83,9 @@ There's also a default/style.css which basically mimics Facebook's styles, as we
 as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 0.9.7 =
+* template_directory deprecated in 2.7, use bloginfo('wpurl') instead
 
 = Version 0.9.6 = 
 * Clean up from moving plugin in to directory

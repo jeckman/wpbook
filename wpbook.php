@@ -7,7 +7,7 @@ Description: Plugin to embed Wordpress Blog into Facebook Canvas using
 the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 0.9.6
+Version: 0.9.7
 */
 
 /*
@@ -254,15 +254,17 @@ function wpbook_theme_root_uri($url) {
 		return $url;
 	}
 }
-	
+
+// this function seems to be required by WP 2.6
 function wpbook_template_directory($value) {
   if (check_facebook())  {
     $theme_root = dirname(__FILE__);
-    return $theme_root . '/theme';
-  } else {
-    return $value;
-  }
+      return $theme_root . '/theme';
+    } else {
+      return $value;
+    }
 }
+ 
   
 // this is the function which adds to the template and stylesheet hooks
 // the call to wpbook_template
