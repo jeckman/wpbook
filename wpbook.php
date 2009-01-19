@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WPBook
-Plugin URI: http://www.scholarpress.net/ 
+Plugin URI: http://www.openparenthesis.org/code/wp
 Date: 2009, January 19
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using 
 the Facebook Platform. 
