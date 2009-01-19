@@ -15,5 +15,7 @@ $app_name = $wpbookAdminOptions['fb_app_name'];
 ?>	
 <h3>Recent posts</h3>
 <div style="margin:0 10px 0 10px;">
+<ul>
 <?php echo wp_recent_posts(5); ?>
+</ul>
 </div>

@@ -68,6 +68,14 @@ FB_RequireFeatures(["CanvasUtil"], function() {
 	FB.CanvasClient.startTimerToSizeToContent();
 });
 </script>		
+
+<?php if($invite_friends == "true"){
+	$invite_link = 'http://apps.facebook.com/' . $app_url 
+  ."/index.php?is_invite=true&fb_force_mode=fbml";
+  ?>
+<div style="float:right"><a href="<?php echo("$invite_link") ?>">Invite Friends to
+<?php echo("$app_name") ?></a></div>				
+<?php } ?>
 <div><div id="addProfileButton" style="float:right"></div></div>
 <div>
 	<h3><a href="http://apps.facebook.com/<?php echo $app_url; ?>/" 
@@ -91,6 +99,7 @@ FB_RequireFeatures(["CanvasUtil"], function() {
           background: #d8dfea;">
 					<a href="<?php the_permalink(); ?>" target="_top">
             <?php the_title(); ?></a></h3>
+<?php if($enable_share == "true") { ?>
 <div class="wpbook_share_button">
 <?php
   echo '<a onclick="window.open(\'http://www.facebook.com/sharer.php?s=100&amp;p[title]=';
@@ -103,7 +112,7 @@ FB_RequireFeatures(["CanvasUtil"], function() {
   echo ' class="share" title="Send this to friends or post it on your profile.">Share This Post</a>';
 ?>
 </div>
-
+<?php } ?>
 				<?php the_content(); ?>	
 				</div>
 				<?php
@@ -116,33 +125,26 @@ FB_RequireFeatures(["CanvasUtil"], function() {
 				<h3 style="padding: 1px 6px 0px 8px; border-top: solid 1px #3B5998; 
           background: #d8dfea;">
 					<?php _e('Recent Posts'); ?></h3>
+      <ul>
 				<?php wp_recent_posts(10); ?>
-				</div>
-
-<?php if($invite_friends == "true"){
-	$invite_link = 'http://apps.facebook.com/' . $app_url 
-    ."/index.php?is_invite=true&fb_force_mode=fbml";
-
- ?>
-
-<div class="box_head clearfix" style="padding: 5px 0 0 0;">
-				<h3 style="padding: 1px 6px 0px 8px; border-top: solid 1px #3B5998; 
-          background: #d8dfea;">
-					<a href="<?php echo("$invite_link") ?>">Invite Friends</a></h3>
-				<a href="<?php echo("$invite_link") ?>">Invite friends to 
-          <?php echo("$app_name") ?>! </a>
-				</div>				
-				<?php 
-	}
-?>
+      </ul>
 </div>
+<?php if($give_credit == "true"){ ?>
+<div class="box_head clearfix" style="padding: 5px 0 0 0;">
+<p><small>
+  This Facebook Application powered by 
+  <a href="http://www.wordpress.org/extend/plugins/wpbook/">the WPBook plugin</a>
+  for <a href="http://www.wordpress.org/">WordPress</a>.
+</small></p>
+</div>
+<?php } ?>
 <script type="text/javascript">
 	FB_RequireFeatures(["XFBML"],function() {
 		FB.Facebook.init('<?php echo $api_key; ?>',
                      '<?php echo $receiver_url; ?>',
           null);
 		FB.Connect.showAddSectionButton('profile',
-                                  document.getElementById('addProfileButton'));
+        document.getElementById('addProfileButton'));
 });   
 </script>
 </body>

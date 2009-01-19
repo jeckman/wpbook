@@ -21,7 +21,7 @@ $api_key = $wpbookAdminOptions['fb_api_key'];
 $secret  = $wpbookAdminOptions['fb_secret'];
 $app_url = $wpbookAdminOpriona['fb_app_url'];
 $require_email = $wpbookAdminOptions['require_email']; 
-// see if require comment author e-mail is set to true.
+$allow_comments = $wpbookAdminOptions['allow_comments'];
 
 $facebook = new Facebook($api_key, $secret);
 $user = $facebook->require_login(); 
@@ -67,7 +67,7 @@ $rs = $facebook->api_client->fql_query("SELECT name,
 <?php endif; ?>
 
 
-<?php if ('open' == $post-> comment_status) : ?>
+<?php if (('open' == $post-> comment_status) && ($allow_comments == "true")) : ?>
 <strong>Comment from your Facebook Profile, 
   <?php echo $rs[0]['name']; ?>
 </strong>

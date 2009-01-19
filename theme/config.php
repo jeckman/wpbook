@@ -21,11 +21,11 @@ $api_key = $wpbookAdminOptions['fb_api_key'];
 $secret  = $wpbookAdminOptions['fb_secret'];
 $app_url = $wpbookAdminOptions['fb_app_url'];
 $app_name = $wpbookAdminOptions['fb_app_name']; 
-  // get the application name from the wpbook settings. 
 $invite_friends = $wpbookAdminOptions['invite_friends']; 
-  // see if invite friends is set to true. 
 $require_email = $wpbookAdminOptions['require_email']; 
-  // see if require comment author e-mail is set to true. 
+$allow_comments = $wpbookAdminOptions['allow_comments'];
+$give_credit = $wpbookAdminOptions['give_credit'];
+$enable_share = $wpbookAdminOptions['enable_share'];
 
 $facebook = new Facebook($api_key, $secret);
 $user = $facebook->require_login(); 

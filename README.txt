@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 0.9.7
+Stable tag: 1.0
 Tested up to: 2.7
 Requires at least: 2.5
 
@@ -23,6 +23,7 @@ using the "add to profile" button at the top of the default canvas page.
 That profile box shows the 5 most recent posts from your blog, as links. 
 
 == Installation ==
+
 1. Copy the entire wpbook directory into your wordpress plugins folder,
    /wp-content/plugins/
 
@@ -44,8 +45,8 @@ That profile box shows the 5 most recent posts from your blog, as links.
 
    Set the callback url to your blog url, including  a trailing slash. 
        (http://www.yourblogurl.com/)
-   For canvas url, you just need something unique, with no spaces, and 
-   no trailing slash. Remember it. 
+   For canvas url, you just need something all lower case, unique, with
+   no spaces, and no trailing slash. Remember it. 
    
    Set the application type to "website"
       
@@ -55,7 +56,7 @@ That profile box shows the 5 most recent posts from your blog, as links.
 
 3. Login to Wordpress Admin and activate the plugin
 
-4. Using the WPBook menu, (located under the options tag, "WPBook") fill 
+4. Using the WPBook menu, (Dashboard->Settings->WPBook) fill 
    in the appropriate information including Facebook application secret 
    and API keys, as well as your application canvas url. 
 
@@ -63,11 +64,27 @@ That profile box shows the 5 most recent posts from your blog, as links.
    Facebook when viewing your application which allows users to send
    invites to their friends. 
 
+   Comments inside Facebook can be enabled or disabled without any impact
+   on comments when your blog is viewed outside Facebook. If you have comments
+   enabled, you can optionally require users to provide their email address. 
+   (Facebook does not allow access to the user's email address, so you can 
+   really only ask users to provide one, not prefill it automatically). 
+
+   The "Share this post" links can also be enabled or disabled. If they are
+   enabled, they will allow the user to "share" your blog posts using the 
+   built in Facebook Share mechanism, including sending a message to friends
+   or posting in their profile. 
+
+   The "Give WPBook credit" option adds a line at the bottom of your Facebook
+   application pages which says "This Facebook application powered by the 
+   WPBook plugin for Wordpress" - I'd love it if you would leave this enabled
+   but it is not required.  
+
 5. If you wish to enable users to add your blog application to Facebook
    Pages, not just individual user profiles, get the default FBML by 
-   visiting the settings page inside Wordpress, and enter that in the 
-   appropriate place (default FBML) within the Facebook Application Settings
-   page, using the Facebook Developer Application. 
+   visiting the settings page inside Wordpress (Dashboard->Settings->WPBook)
+   and enter the provided FBML in the appropriate place (default FBML) in
+   the Facebook Application Setting ppage, using the Facebook Developer Application. 
 
    Note that this currently has to be entered in two places: in the
    "User Profiles" tab AND in the "Pages" tab. Not sure why. 
@@ -79,10 +96,21 @@ That profile box shows the 5 most recent posts from your blog, as links.
 In the wpbook/theme directory, there is an index.php file.  Most of 
 what you want is there.  
 
-There's also a default/style.css which basically mimics Facebook's styles, as well 
-as some other files for processing comments and the like.  
+There's also a default/style.css which basically mimics Facebook's styles, 
+as well as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 1.0 =
+* Added simplexml44 library (BSD Licensed) for php4client
+* Added option for "Give Credit" 
+* Added option for "Enable Share"
+* Added option for "Allow Comments"
+* Moved "Invite Friends" to top of page
+* Cleaned up CSS for "recent posts" in main page
+* Added fix to facebookapi_php5_restlib.php which affected hosts where
+  curl libraries were not present or enabled
+* Jumped version to 1.0 - functionally complete
 
 = Version 0.9.7 =
 * template_directory deprecated in 2.7, use bloginfo('wpurl') instead
@@ -191,8 +219,15 @@ as some other files for processing comments and the like.
 * First push to WP-Plugins Directory
 
 == To Do ==
+* Capture Facebook Profile picture of user commenting in
+  Facebook, display instead of Gravatar. (I think this 
+  will require actually fetching and storing the picture,
+  not just its url, as it may not be available outside
+  Facebook, and may change). 
+* Deal with non-standard front pages (where user has set
+  a static page in WordPress options)
 
 = Ongoing =
-* Option for comments or no comments in admin section
 * Better accompanying documentation
-* Option to enable/disable "share" button
+  (Screenshots of examples, clarity on what's required
+   where, all the facebook option pages, etc)

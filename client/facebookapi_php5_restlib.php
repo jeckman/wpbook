@@ -2610,7 +2610,7 @@ function toggleDisplay(id, type) {
     } else {
       $content_type = 'application/x-www-form-urlencoded';
       $content = $post_string;
-      $this->run_http_post_transaction($content_type, $content);
+      $result = $this->run_http_post_transaction($content_type, $content);
     }
     return $result;
   }
