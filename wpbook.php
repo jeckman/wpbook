@@ -2,12 +2,12 @@
 /*
 Plugin Name: WPBook
 Plugin URI: http://www.openparenthesis.org/code/wp
-Date: 2009, January 19
+Date: 2009, February 9
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using 
 the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 1.0
+Version: 1.1
 */
 
 /*
@@ -69,24 +69,25 @@ function wpbook_getAdminOptions() {
 		}
 	return $wpbookAdminOptions;
 }
-
+  
 function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, 
-  $fb_app_url, $fb_app_name,$invite_friends,$require_email,$give_credit,
-  $enable_share, $allow_comments) {
-	$wpbookAdminOptions = array(
-		'wpbook_installation' => $wpbook_installation,
-		'fb_api_key' => $fb_api_key,
-		'fb_secret'  => $fb_secret,
-		'fb_app_url' => $fb_app_url,
-		'fb_app_name'=> $fb_app_name,
-		'invite_friends' => $invite_friends,
-		'require_email' => $require_email,
-    'give_credit' => $give_credit,
-    'enable_share' => $enable_share,
-    'allow_comments' => $allow_comments);
-	update_option('wpbookAdminOptions', $wpbookAdminOptions);
+                           $fb_app_url,$invite_friends,$require_email,$give_credit,
+                           $enable_share, $allow_comments,$links_position,$enable_external_link,$enable_profile_link) {
+  $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
+                              'fb_api_key' => $fb_api_key,
+                              'fb_secret'  => $fb_secret,
+                              'fb_app_url' => $fb_app_url,
+                              'invite_friends' => $invite_friends,
+                              'require_email' => $require_email,
+                              'give_credit' => $give_credit,
+                              'enable_share' => $enable_share,
+                              'allow_comments' => $allow_comments,
+                              'links_position' => $links_position,
+                              'enable_external_link' => $enable_external_link,
+                              'enable_profile_link' => $enable_profile_link);
+  update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
-
+  
 function wpbook_options_page() {
 	if (function_exists('add_options_page')) {
 		add_options_page('WPBook', 'WPBook', 8, 
@@ -95,80 +96,68 @@ function wpbook_options_page() {
 }
 
 function wpbook_subpanel() {
-	if (is_authorized()) {
-		if (isset($_POST['fb_api_key']) 
-		  && isset($_POST['fb_secret'])) { 
-			$fb_api_key = $_POST['fb_api_key'];
-			$fb_secret = $_POST['fb_secret'];
-			$fb_app_url = $_POST['fb_app_url'];
-			$fb_app_name = $_POST['fb_app_name'];
-			$invite_friends = $_POST['invite_friends'];
-			$require_email = $_POST['require_email'];
+  if (is_authorized()) {
+    if (isset($_POST['fb_api_key']) 
+        && isset($_POST['fb_secret'])) { 
+      $fb_api_key = $_POST['fb_api_key'];
+      $fb_secret = $_POST['fb_secret'];
+      $fb_app_url = $_POST['fb_app_url'];
+      $invite_friends = $_POST['invite_friends'];
+      $require_email = $_POST['require_email'];
       $give_credit = $_POST['give_credit'];
       $enable_share = $_POST['enable_share'];
       $allow_comments = $_POST['allow_comments'];
-			setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url, $fb_app_name,
-        $invite_friends,$require_email,$give_credit,$enable_share,
-        $allow_comments);
-			$flash = "Your settings have been saved. ";
-		} else {
-			$flash = "Please complete all necessary fields";
-		}
-	} else {
-		$flash = "You don't have enough access rights.";
-	}
-	
-	if (is_authorized()) {
-		$wpbookAdminOptions = wpbook_getAdminOptions();
-		if ($wpbookAdminOptions['wpbook_installation'] != 1) {  
-			setAdminOptions(1, null,null,null);
-		}
-		
-		if ($flash != '') echo '<div id="message"class="updated fade">'
-			. '<p>' . $flash . '</p></div>';
-		echo '<div class="wrap">';
-		echo '<h2>Set Up Your Facebook Application</h2><p>';
-		echo 'This plugin allows you to embed your blog into the Facebook canvas';
-    echo ', and in future versions - users who have installed the app will be ';
-    echo 'able to receive notifications upon new blog posts. </p>';
-		echo '<form action="'. $_SERVER["REQUEST_URI"] .'" method="post">';
-		echo '<ol>';
-		echo '<li>To use this app, you must register for an API key at ';
+      $links_position = $_POST['links_position'];
+      $enable_external_link = $_POST['enable_external_link'];
+      $enable_profile_link = $_POST['enable_profile_link'];
+      setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url,
+                      $invite_friends,$require_email,$give_credit,$enable_share,$allow_comments,$links_position,$enable_external_link,$enable_profile_link);
+      $flash = "Your settings have been saved. ";
+    } else {
+      $flash = "Please complete all necessary fields";
+    }
+  } else {
+    $flash = "You don't have enough access rights.";
+}
+    
+  if (is_authorized()) {
+    $wpbookAdminOptions = wpbook_getAdminOptions();
+    if ($wpbookAdminOptions['wpbook_installation'] != 1) {  
+      setAdminOptions(1, null,null,null);
+    }
+      
+    if ($flash != '') echo '<div id="message"class="updated fade">'
+      . '<p>' . $flash . '</p></div>';
+    echo '<div class="wrap">';
+    echo '<h2>Set Up Your Facebook Application</h2><p>';
+    echo 'This plugin allows you to embed your blog into the Facebook canvas';
+    echo ', allows Facebook users to comment on or share your blog posts, and ';
+    echo 'puts your 5 most recent posts in users profiles (with their permission).</p>';
+    echo '<p><a href="../wp-content/plugins/wpbook/instructions/index.html" target="_blank">Detailed instructions</a>, with screenshots</p>';
+    echo '<form action="'. $_SERVER["REQUEST_URI"] .'" method="post">';
+    echo '<ol>';
+    echo '<li>To use this app, you must register for an API key at ';
     echo '<a href="http://www.facebook.com/developers/">';
     echo 'http://www.facebook.com/developers/</a>.  Follow the link and click ';
     echo '"set up a new application."  After you\'ve obtained the necessary ';
     echo 'info, fill in both your application\'s API and Secret keys.</li>';
-		echo '<li>Enter Your Facebook Application\'s API Key:';
+    echo '<li>Enter Your Facebook Application\'s API Key:';
     echo '<br /><input type="text" name="fb_api_key" value="';
     echo htmlentities($wpbookAdminOptions['fb_api_key']) .'" size="45" /></li>';
-		echo '<li>Enter Your Facebook Application\'s Secret:<br />';
+    echo '<li>Enter Your Facebook Application\'s Secret:<br />';
     echo '<input type="text" name="fb_secret" value="';
     echo htmlentities($wpbookAdminOptions['fb_secret']) .'" size="45" /></li>';
-		echo '<li>Enter Your Facebook Application\'s Canvas Page URL, ';
+    echo '<li>Enter Your Facebook Application\'s Canvas Page URL, ';
     echo '<strong>NOT</strong> INCLUDING "http://apps.facebook.com/"<br />';
     echo '<input type="text" name="fb_app_url" value="';
     echo htmlentities($wpbookAdminOptions['fb_app_url']) .'" size="45" /></li>';
-		
+      
     // Here starts the "invite friends" section
-    echo '<li><input type="checkbox" name="invite_friends"';
-    echo 'onclick="document.getElementById(\'invite_options\').style.';
-    echo 'display=(document.getElementById(\'invite_options\').style.';
-    echo 'display== \'none\')?\'block\':\'none\';" value = "true"';
+    echo '<li><input type="checkbox" name="invite_friends" value = "true"';
     if( htmlentities($wpbookAdminOptions['invite_friends']) == "true"){ 
       echo("checked");
     }
-    echo '> Show Invite Friends Link ';
-    // Only show the div for "Application's Name" option if Invite shown
-    echo '<div id="invite_options" style="display:';
-		if( htmlentities($wpbookAdminOptions['invite_friends']) == "true"){ 
-      echo("block");
-    } else { 
-      echo("none");
-    }
-		echo ';margin-top:15px;">Enter Your Application\'s Name:<br />';
-    echo '<input type="text" name="fb_app_name" value="';
-    echo htmlentities($wpbookAdminOptions['fb_app_name']);
-    echo '" size="45" /> (no trailing spaces) </div> </li>';
+    echo '> Show Invite Friends Link </li>';
     // thus the <li> for App name doesn't happen until here
     
     // Now let's handle commenting - only show require_email if comments on
@@ -192,34 +181,67 @@ function wpbook_subpanel() {
       echo("checked");
     }
     echo '> Require Comment Authors E-mail Address</div> </li>';
+    //start give credit option 
     echo '<li><input type="checkbox" name="give_credit" value="true"';
     if( htmlentities($wpbookAdminOptions['give_credit']) == "true"){
       echo("checked");
     }
     echo '> Give WPBook Credit (in Facebook)</li>';
+    // show share option 
     echo '<li><input type="checkbox" name="enable_share" value="true"';
+    if($enable_external_link != "true"){
+      echo 'onclick="document.getElementById(\'position_option\').style.';
+      echo 'display=(document.getElementById(\'position_option\').style.';
+      echo 'display==\'none\')?\'block\':\'none\';" ';
+    }
     if( htmlentities($wpbookAdminOptions['enable_share']) == "true"){
       echo("checked");
     }
     echo '> Enable "Share This Post" (in Facebook)</li>';
-		echo '</ol>';
-    echo '<p>Note!: If you\'d like to enable users to add your application to ';
-    echo 'Facebook <strong>Pages</strong> as well as individual user ';
-    echo 'profiles, you\'ll need to enable &quot;add to pages&quot; in ';
-    echo 'your application settings in Facebook, and set the ';
-    echo '&quot;default FBML&quot; on both the <strong>Pages</strong> tab and ';
-    echo '<strong>User Profiles</strong> tabs to the following: <br /><code>';
-    echo '&lt;fb:ref url="' . get_bloginfo('wpurl');
-    echo '/wp-content/plugins/wpbook/theme/recent_posts.php?fb_sig_in_iframe"';
-    echo '/&gt;</code>';		
-
+    // show external link option 
+    
+    echo '<li><input type="checkbox" name="enable_external_link" value="true"';
+    if($enable_share != "true"){
+      echo 'onclick="document.getElementById(\'position_option\').style.';
+      echo 'display=(document.getElementById(\'position_option\').style.';
+      echo 'display==\'none\')?\'block\':\'none\';" ';
+    }
+    if( htmlentities($wpbookAdminOptions['enable_external_link']) == "true"){
+      echo("checked");
+    }
+    echo '> Enable "view post at external site" link</li>';
+    
+    //links button position for external and share button 
+    //see if share button or external link is enabled first
+    echo '<div id="position_option">';
+    echo '<li>Link Position for share button and external link button (on both single and list views):<br/>
+    <input type="radio" name="links_position" value = "top"';
+    if( htmlentities($wpbookAdminOptions['links_position']) == "top"){ 
+      echo("checked");
+    }
+    echo '>Top ';
+    echo '<input type="radio" name="links_position" value = "bottom"';
+    if( htmlentities($wpbookAdminOptions['links_position']) == "bottom"){ 
+      echo("checked");
+    }
+    echo '> Bottom <br/></li>';
+    echo'</div>';
+    echo '<li><input type="checkbox" name="enable_profile_link" value="true" ';
+    echo 'onclick="document.getElementById(\'enable_profile_link\').style.';
+    echo 'display=(document.getElementById(\'enable_profile_link\').style.';
+    echo 'display==\'none\')?\'block\':\'none\';" ';
+    if( htmlentities($wpbookAdminOptions['enable_profile_link']) == "true") {
+      echo("checked");
+    }
+    echo ' > Enable Facebook users to add your app to their profile';
+    echo '</li></ol>';
     echo '<p><input type="submit" value="Save" class="button"';
     echo 'name="wpbook_save_button" /></p></form>';
-		echo '</div>';
-	} else {
-		echo '<div class="wrap"><p>Sorry, you are not allowed to access ';
+    echo '</div>';
+  } else {
+    echo '<div class="wrap"><p>Sorry, you are not allowed to access ';
     echo 'this page.</p></div>';
-	}
+  }
 }
 
 

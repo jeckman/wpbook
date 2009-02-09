@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.0
+Stable tag: 1.1
 Tested up to: 2.7
 Requires at least: 2.5
 
@@ -21,6 +21,18 @@ Facebook users can also - at their option - add a profile box to their profile,
 using the "add to profile" button at the top of the default canvas page. 
 
 That profile box shows the 5 most recent posts from your blog, as links. 
+
+NOTE: These 2 plugins have been reported to conflict with WPBook:
+	- Bad Behavior 
+	- Facebook Connect (from Sociable.es)
+
+I'm working on identifying and eliminating conflict, but you should not
+try to use WPBook with either of these plugins in the current state. 
+
+Finally, if one of your other plugins (Kaltura's Interactive Video for
+example) uses CSS and sets the height of either the body or html elements
+to 100%, the auto-resizing javascript in Facebook will fail. You can 
+fix this by removing the plugin or editing the css. 
 
 == Installation ==
 
@@ -45,7 +57,7 @@ That profile box shows the 5 most recent posts from your blog, as links.
 
    Set the callback url to your blog url, including  a trailing slash. 
        (http://www.yourblogurl.com/)
-   For canvas url, you just need something all lower case, unique, with
+   For canvas url, you just need something *all lower case*, unique, with
    no spaces, and no trailing slash. Remember it. 
    
    Set the application type to "website"
@@ -70,25 +82,31 @@ That profile box shows the 5 most recent posts from your blog, as links.
    (Facebook does not allow access to the user's email address, so you can 
    really only ask users to provide one, not prefill it automatically). 
 
-   The "Share this post" links can also be enabled or disabled. If they are
-   enabled, they will allow the user to "share" your blog posts using the 
-   built in Facebook Share mechanism, including sending a message to friends
-   or posting in their profile. 
-
    The "Give WPBook credit" option adds a line at the bottom of your Facebook
    application pages which says "This Facebook application powered by the 
    WPBook plugin for Wordpress" - I'd love it if you would leave this enabled
    but it is not required.  
 
-5. If you wish to enable users to add your blog application to Facebook
-   Pages, not just individual user profiles, get the default FBML by 
-   visiting the settings page inside Wordpress (Dashboard->Settings->WPBook)
-   and enter the provided FBML in the appropriate place (default FBML) in
-   the Facebook Application Setting ppage, using the Facebook Developer Application. 
+   The "Share this post" links can also be enabled or disabled. If they are
+   enabled, they will allow the user to "share" your blog posts using the 
+   built in Facebook Share mechanism, including sending a message to friends
+   or posting in their profile. 
 
-   Note that this currently has to be entered in two places: in the
-   "User Profiles" tab AND in the "Pages" tab. Not sure why. 
+   The "Enable 'view post at external site' link" enables a link to each blog post 
+   at your full blog url (outside Facebook). This is useful to get folks going
+   to your blog outside Facebook, to see it full size/theme etc. 
 
+   The "Link position for share button and external link button" option determines
+   where, within each post, those two links will appear - either at the top of the 
+   post (before the post content) or at the bottom of the post (after the post
+   content). 
+
+   "Enable Facebook users to add your app to their profile" will show an "Add to 
+   Profile" button for users viewing the app inside Facebook - this lets them choose
+   to add the application to their profile. 
+
+5. To add the application to "Pages" not just "Profiles" - see the instructions linked to from the "settings" page for the plugin. 
+     
 == Frequently Asked Questions ==
 
 = How do I edit the way my Facebook Application (mirrored blog) looks? =
@@ -100,6 +118,14 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 1.1 =
+* Fixed (I hope!) Profile.setFBML issues for pages, profiles
+  Eliminated the need to copy defaultFBML into settings
+* Added option to view link in external site
+* Added option to move links (share, external) top or bottom
+* Added option to enable "add to profile"
+* Created documentation with photos
 
 = Version 1.0 =
 * Added simplexml44 library (BSD Licensed) for php4client
@@ -226,6 +252,8 @@ as well as some other files for processing comments and the like.
   Facebook, and may change). 
 * Deal with non-standard front pages (where user has set
   a static page in WordPress options)
+* Add notification to wall/notes when user publishes
+  a new post - for all users, for author? 
 
 = Ongoing =
 * Better accompanying documentation
