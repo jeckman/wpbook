@@ -3,8 +3,7 @@
 Plugin Name: WPBook
 Plugin URI: http://www.openparenthesis.org/code/wp
 Date: 2009, February 9
-Description: Plugin to embed Wordpress Blog into Facebook Canvas using 
-the Facebook Platform. 
+Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
 Version: 1.1

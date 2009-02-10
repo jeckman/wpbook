@@ -217,7 +217,7 @@ echo "<a href='$exteral_post_url' title='View this post on the web at $external_
         document.getElementById('addProfileButton'));
 });   
 </script>
-
+	<?php } ?>
 <script type="text/javascript">
 FB_RequireFeatures(["CanvasUtil"], function() {
                    FB.FBDebug.isEnabled=true;
@@ -226,8 +226,6 @@ FB_RequireFeatures(["CanvasUtil"], function() {
                    FB.CanvasClient.startTimerToSizeToContent();
                    });
 </script>	
-
-	<?php } ?>
 </body>
 <?php	 
 }
