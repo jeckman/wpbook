@@ -59,6 +59,8 @@ include_once 'config.php';
 </head>
 <body>
 <?php
+  echo '<!-- URL for setFBML call was ' . $url . ' -->';
+  echo '<!-- and result of setFBML was ' . $my_result  . '-->';
   if(isset($_GET['fb_page_id'])) { 
   echo " <div><h3>Thank You!</h3> <p>This application has been added to your page's profile.</p>";
   echo "<p>You can return to your page to see the updated information.</p>";

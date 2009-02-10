@@ -58,6 +58,6 @@ $facebook->api_client->call_method('facebook.profile.setFBML',
                 'profile_main' => '<fb:ref url="'. $url .'"/>'
 											 )
 								   );  
-$facebook->api_client->fbml_refreshRefUrl($url);	
-
+$my_result = $facebook->api_client->fbml_refreshRefUrl($url);	
+  
 ?>
