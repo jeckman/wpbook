@@ -66,10 +66,8 @@ include_once 'config.php';
   echo "</body></html>";
 } else {
 ?>
-<script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"
-  type="text/javascript"></script>
+<script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
 
-  
 <?php if($invite_friends == "true"){
 	$invite_link = 'http://apps.facebook.com/' . $app_url 
   ."/index.php?is_invite=true&fb_force_mode=fbml";
@@ -79,7 +77,6 @@ include_once 'config.php';
   <?php if($enable_profile_link == "true"){ ?>
 <div><div id="addProfileButton" style="float:right"></div></div>
   <?php }?>
-<div>
 	<h3><a href="http://apps.facebook.com/<?php echo $app_url; ?>/" 
     target="_top"><?php bloginfo('name'); ?></a></h3>
 	<div id="content">
@@ -104,6 +101,7 @@ include_once 'config.php';
 
 
 <?php if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "top")) { 
+  echo '<p>';
 if($enable_share == "true"){?>
 <span class="wpbook_share_button">
 <?php
@@ -141,11 +139,13 @@ $exteral_post_url = get_bloginfo('wpurl').$external_post_permalink;
 echo "<a href='$exteral_post_url' title='View this post on the web at $external_site_url'>View post on $external_site_url</a>";  ?>
 </span>
 <?php }
+  echo '</p>';
 } ?>
 			
 	<?php the_content(); ?>	
 
 <?php if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "bottom")) { 
+  echo '<p>';
 if($enable_share == "true"){?>
 <span class="wpbook_share_button">
 <?php
@@ -183,6 +183,7 @@ $exteral_post_url = get_bloginfo('wpurl').$external_post_permalink;
 echo "<a href='$exteral_post_url' title='View this post on the web at $external_site_url'>View post on $external_site_url</a>";  ?>
 </span>
 <?php }
+  echo '</p>';
 } ?>
 	</div>	
 				<?php
