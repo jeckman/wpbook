@@ -4,14 +4,19 @@
   xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
 <title>Using WPBook - Instructions</title>
+<link rel="stylesheet" href="styles/style.css" type="text/css" media="screen" />
+<!--[if lt IE 7]>
+        <script type="text/javascript" src="scripts/unitpngfix.js"></script>
+<![endif]--> 
 </head>
 <body>
-<style>
-img {
-	margin-left: 20px;
-}
-</style>
-<h1>Installation instructions, with photos</h1>
+<div id="container">
+<div class="rounded_corner_box">
+   <div class="rounded_corner_top"><div></div></div>
+      <div class="rounded_corner_content">
+	  <img src="images/layout/wpbook_logo.png" border="0" class="logo" />
+<br><br>
+<h1>Installation Instructions</h1>
 
 <h2>1. Upload Plugin to WordPress</h2>
 
@@ -21,7 +26,7 @@ img {
    <p>You should have a directory structure like this (of course you'll likely have 
    different plugins installed):
    </p>
-<p><img src="files.png" border="1" />
+<p><img src="images/sceenshots/files.png"  />
 </p>
 
 <h2>2. Create Facebook App</h2>
@@ -29,18 +34,18 @@ img {
 <p>Set up a New Application at <a href="http://www.facebook.com/developers/">http://www.facebook.com/developers/</a>, obtaining
    a secret and API key.  </p>
 
-   <p><img src="key.png" border="1" /></p>
+   <p><img src="images/sceenshots/key.png"  /></p>
 	
    <p>Set the callback url to your blog url, including  a trailing slash. (Example: http://www.yourblogurl.com/)</p>
    
-   <p><img src="callback.png" border="1"/></p>
+   <p><img src="images/sceenshots/callback.png" /></p>
    
    <p>For canvas url, you just need something <em>all lower case</em>, unique, with no spaces, and no trailing slash. Remember it.</p> 
    <p>Set the application to use an iFrame, not fbml, 
    and to "resizable" NOT "smart size." (Using iFrames lets you use javascript, objects, and other 
    tags  not allowed in FBML inside blog posts, setting to resizable enables Facebook javascript to resize
    the iframe to the content).</p>
-   <p><img src="canvas.png" border="1" /></p>
+   <p><img src="images/sceenshots/canvas.png"  /></p>
    
 <h2>3. Activate the Plugin</h2> 
 
@@ -51,13 +56,13 @@ img {
 <p>Using the WPBook menu, (Dashboard->Settings->WPBook) fill in the appropriate information including Facebook application secret 
    and API keys, as well as your application canvas url. </p>
 
-   <p><img src="wpbook.png" border="1" /></p>
+   <p><img src="images/sceenshots/wpbook.png"  /></p>
 
    <p>Enabling the "Show Invite Friends Link" will show a link inside 
    Facebook when viewing your application which allows users to send
    invites to their friends. </p>
 
-	<p><img src="links.png" border="1" /></p>
+	<p><img src="images/sceenshots/links.png"  /></p>
 
    <p>Comments inside Facebook can be enabled or disabled without any impact
    on comments when your blog is viewed outside Facebook. If you have comments
@@ -75,7 +80,7 @@ img {
    built in Facebook Share mechanism, including sending a message to friends
    or posting in their profile. </p>
 
-   <p><img src="links.png" border="1" /></p>
+   <p><img src="images/sceenshots/links.png"  /></p>
 
   <p> The "Enable 'view post at external site' link" enables a link to each blog post 
    at your full blog url (outside Facebook). This is useful to get folks going
@@ -90,11 +95,11 @@ img {
    Profile" button for users viewing the app inside Facebook - this lets them choose
    to add the application to their profile. </p>
    
-   <p><img src="links.png" border="1"  /></p>
+   <p><img src="images/sceenshots/links.png"   /></p>
    <p>Here's what the user should see when they click that "add to profile" link:</p>
-   <p><img src="profile.png" border="1" /></p>
+   <p><img src="images/sceenshots/profile.png"  /></p>
    <p>And here's what the added profile section will look like:</p>
-	<p><img src="in_profile.png" border="1"  /></p>
+	<p><img src="images/sceenshots/in_profile.png"   /></p>
 	<p>Note that the "add to profile" link is not shown to users who have already added 
 	the app to their profiles</p>
 
@@ -106,7 +111,7 @@ a bit complicated, but isn't the kind of thing you should have to do often.</p>
    <p>You'll need to enable "Pages" and "User Profiles" in the "Authorization" 
    tab of the Facebook settings.</p>
    
-   <p><img src="pages.png" border="1"  /></p>
+   <p><img src="images/sceenshots/pages.png"   /></p>
 
    <p>To add to a Facebook page:</p>
    
@@ -114,24 +119,27 @@ a bit complicated, but isn't the kind of thing you should have to do often.</p>
          the application itself, and click on the application name at the bottom 
          where it says "Page built by"). <p>
          
-         <p><img src="built.png" border="1" /></p>
+         <p><img src="images/sceenshots/built.png"  /></p>
          
       <p>B. Click on "Add to Page" in the right column. (If that doesn't appear, you
          haven't enabled "Pages" in the Facebook Settings for your application - 
          authorization tab - or you don't own any pages.)</p>
          
-         <p><img src="add_to_page.png" border="1" /></p>
+         <p><img src="images/sceenshots/add_to_page.png"  /></p>
          
          <p>Facebook will ask you to confirm that you are adding the app to a page</p>
          
-         <p><img src="page_confirm.png" border="1"  /></p>
+         <p><img src="images/sceenshots/page_confirm.png"   /></p>
          
       <p>C. Go back to the page to which you added the app, and click on "edit page."<p>
-      <p><img src="edit_page.png" border="1" /></p>
+      <p><img src="images/sceenshots/edit_page.png"  /></p>
       <p>D. While looking at the page in edit view, find your application in the list 
          of applications on that page. Click on the little pencil in the upper
          right hand corner of the box for your application, and choose edit</p>
-         <p><img src="edit.png" border="1"  /></p>
-      <p>E. You should be taken to a page which thanks you for adding the app.</p>  
-
+         <p><img src="images/sceenshots/edit.png"   /></p>
+      <p>E. You should be taken to a page which thanks you for adding the app.</p> 
+      </div>
+   <div class="rounded_corner_bottom"><div></div></div>
+</div>	  
+</div>
 
