@@ -59,8 +59,13 @@ include_once 'config.php';
 </head>
 <body>
 <?php
-  echo '<!-- URL for setFBML call was ' . $url . ' -->';
-  echo '<!-- and result of setFBML was ' . $my_result  . '-->';
+  echo '<!-- URL was ' . $url ;
+  if ($my_result) {
+    echo ' and fbml_refreshRefUrl was TRUE';
+  } else {
+    echo ' and fbml_refreshRefUrl was FALSE';
+  }
+  echo ' and myfbml result was ' . $set_fbml_result . ' -->';
   if(isset($_GET['fb_page_id'])) { 
   echo " <div><h3>Thank You!</h3> <p>This application has been added to your page's profile.</p>";
   echo "<p>You can return to your page to see the updated information.</p>";
@@ -100,6 +105,8 @@ include_once 'config.php';
           background: #d8dfea;">
 					<a href="<?php the_permalink(); ?>" target="_top">
             <?php the_title(); ?></a></h3>
+<div class="meta"><?php the_time() ?>, <?php the_time('l, F jS, Y') ?></div>
+
 
 
 <?php if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "top")) { 

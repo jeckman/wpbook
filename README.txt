@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.1.1
+Stable tag: 1.2
 Tested up to: 2.7
 Requires at least: 2.5
 
@@ -118,6 +118,13 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 1.2
+* Changed the mechanism for "Add to Profile" to avoid issues with
+  the fb:ref url method, using fb:ref handle instead
+* Eliminated /wpbook/theme/recent_posts.php
+* Incorporated Brandon Dukes' fixes to admins screens
+* Added timestamp to posts
 
 = Version 1.1.1 =
 * Fixed minor bug which broke FB resize javascript when 'add to profile'
@@ -259,8 +266,3 @@ as well as some other files for processing comments and the like.
   a static page in WordPress options)
 * Add notification to wall/notes when user publishes
   a new post - for all users, for author? 
-
-= Ongoing =
-* Better accompanying documentation
-  (Screenshots of examples, clarity on what's required
-   where, all the facebook option pages, etc)
