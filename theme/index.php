@@ -59,13 +59,6 @@ include_once 'config.php';
 </head>
 <body>
 <?php
-  echo '<!-- URL was ' . $url ;
-  if ($my_result) {
-    echo ' and fbml_refreshRefUrl was TRUE';
-  } else {
-    echo ' and fbml_refreshRefUrl was FALSE';
-  }
-  echo ' and myfbml result was ' . $set_fbml_result . ' -->';
   if(isset($_GET['fb_page_id'])) { 
   echo " <div><h3>Thank You!</h3> <p>This application has been added to your page's profile.</p>";
   echo "<p>You can return to your page to see the updated information.</p>";
