@@ -119,7 +119,7 @@ as well as some other files for processing comments and the like.
 
 == Version History ==
 
-= Version 1.2
+= Version 1.2 =
 * Changed the mechanism for "Add to Profile" to avoid issues with
   the fb:ref url method, using fb:ref handle instead
 * Eliminated /wpbook/theme/recent_posts.php
