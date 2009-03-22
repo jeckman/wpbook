@@ -1,0 +1,33 @@
+#wrap{
+padding:5px;
+}
+
+.options{
+padding-left:20px;
+}
+
+.tooltip{ 
+   position: absolute; 
+   top: 0; 
+   left: 0; 
+   z-index: 3; 
+   display: none; 
+   
+
+}
+.tooltip_content {
+   background-color: #F9F9F9;
+   padding:10px;
+   font-size:10px;
+   font-family:"Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
+   }
+  
+#custom_header_footer_options{
+background-color:#F9F9F9;
+font-size:12px;
+font-family:"Lucida Grande", Verdana, Arial, "Bitstream Vera Sans", sans-serif;
+border: 2px solid #DFDFDF;
+padding:5px;
+
+}
+
