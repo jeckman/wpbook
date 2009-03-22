@@ -1,8 +1,8 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.2
-Tested up to: 2.7
+Stable tag: 1.3
+Tested up to: 2.7.1
 Requires at least: 2.5
 
 Plugin to embed Wordpress Blog into Facebook Platform.
@@ -29,12 +29,18 @@ NOTE: These 2 plugins have been reported to conflict with WPBook:
 I'm working on identifying and eliminating conflict, but you should not
 try to use WPBook with either of these plugins in the current state. 
 
+(Note there is a workaround for the Sociable.es Facebook Connect plugin
+ described here: http://bit.ly/hhach)
+
 Finally, if one of your other plugins (Kaltura's Interactive Video for
 example) uses CSS and sets the height of either the body or html elements
-to 100%, the auto-resizing javascript in Facebook will fail. You can 
+to 100%, the auto-resizing javascript in Facebook may fail. You can 
 fix this by removing the plugin or editing the css. 
 
 == Installation ==
+
+(Note: installation instructions are also included in HTML and as a PDF
+ along with the plugin)
 
 1. Copy the entire wpbook directory into your wordpress plugins folder,
    /wp-content/plugins/
@@ -118,6 +124,22 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 1.3=
+* Mostly improvements to the admin interface user experience - better 
+  separation of options into required, customization, social, and advanced. 
+* Ability to include a custom header/footer for each post, including author,
+  date, time, category, and tags. 
+* Bugfix: No longer echoing blog name twice on the invite friends screen. 
+* Bugfix: Caught case where profile box could get updated with links to 
+  the original source (outside FB). 
+* Note: This is expected to be the final PHP4 compatible version. Facebook's 
+  client only supports PHP5, and I need to be able to wrap certain client
+  calls in Try/Catch, which requires PHP5, to avoid nasty "uncaught exception"
+  bugs. (Yes, there are unofficial PHP4 clients, but they are unsupported).
+  If someone wants to create a PHP4 only version which trails the ongoing
+  development, they are welcome to, taking this as the place from which to
+  begin a fork.  
 
 = Version 1.2 =
 * Changed the mechanism for "Add to Profile" to avoid issues with
@@ -257,6 +279,9 @@ as well as some other files for processing comments and the like.
 * First push to WP-Plugins Directory
 
 == To Do ==
+* Update instructions in readme to match new options available in 1.3
+* Leverage new Facebook API to set user's status when a new blog post
+  gets posted. 
 * Capture Facebook Profile picture of user commenting in
   Facebook, display instead of Gravatar. (I think this 
   will require actually fetching and storing the picture,
@@ -264,5 +289,8 @@ as well as some other files for processing comments and the like.
   Facebook, and may change). 
 * Deal with non-standard front pages (where user has set
   a static page in WordPress options)
+* Enable pages for things like cateories and tags, and enable links to 
+  those pages from the header/footer of the post (since 1.3). 
 * Add notification to wall/notes when user publishes
-  a new post - for all users, for author? 
+  a new post - for all users. (May require user to grant additional 
+  permissions). 

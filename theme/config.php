@@ -17,6 +17,7 @@ if (!empty($wpbookOptions)) {
 		$wpbookAdminOptions[$key] = $option;
 	}
 
+//get options from wordpress settings
 $api_key = $wpbookAdminOptions['fb_api_key'];
 $secret  = $wpbookAdminOptions['fb_secret'];
 $app_url = $wpbookAdminOptions['fb_app_url'];
@@ -28,7 +29,109 @@ $enable_share = $wpbookAdminOptions['enable_share'];
 $links_position = $wpbookAdminOptions['links_position'];
 $enable_external_link = $wpbookAdminOptions['enable_external_link'];
 $enable_profile_link = $wpbookAdminOptions['enable_profile_link'];
+$timestamp_date_format = $wpbookAdminOptions['timestamp_date_format'];
+$timestamp_time_format = $wpbookAdminOptions['timestamp_time_format'];
+$show_date_title = $wpbookAdminOptions['show_date_title'];
+$custom_header = $wpbookAdminOptions['custom_header'];
+$custom_footer = $wpbookAdminOptions['custom_footer'];
+$show_custom_header_footer = $wpbookAdminOptions['show_custom_header_footer'];
+//write the custom header and footer 
+function custom_header($custom_template_header,$date,$time){
+//get author 
+$author = get_the_author();
+//get author 
+$category = get_the_category();
+//get date
+$date = get_the_time($date);
+//get time
+$time = get_the_time($time);
+//get tags
+$posttags = get_the_tags();
+if ($posttags) {
+$tag_count = count($posttags);
+$i = 0;
+foreach($posttags as $tags) {
+$i++;
+$write_tags .= $tags->name ;
+if($i<$tag_count){
+$write_tags .= ', ';
+}
+} 
+}
+else {$write_tags  = "no tags";}
 
+//get category
+$postcategory = get_the_category();
+if ($postcategory) {
+$category_count = count($postcategory);
+$i = 0;
+ foreach($postcategory as $category) {
+$i++;
+$write_category .= $category->name ;
+if($i<$category_count){
+$write_category .= ', ';
+}
+} 
+}
+else {$write_category  = "no categories";}
+
+$custom_template_header = str_replace("%author%", "$author", "$custom_template_header");
+$custom_template_header = str_replace("%category%", "$write_category", "$custom_template_header");
+$custom_template_header = str_replace("%time%", "$time", "$custom_template_header");
+$custom_template_header = str_replace("%date%", "$date", "$custom_template_header");
+$custom_template_header = str_replace("%tags%", "$write_tags", "$custom_template_header");
+
+return $custom_template_header;
+}
+
+function custom_footer($custom_template_footer,$date,$time){
+
+//get author 
+$author = get_the_author();
+//get author 
+$category = get_the_category();
+//get date
+$date = get_the_time($date);
+//get time
+$time = get_the_time($time);
+//get tags
+$posttags = get_the_tags();
+if ($posttags) {
+$tag_count = count($posttags);
+$i = 0;
+foreach($posttags as $tags) {
+$i++;
+$write_tags .= $tags->name ;
+if($i<$tag_count){
+$write_tags .= ', ';
+}
+} 
+}
+else {$write_tags  = "no tags";}
+
+//get category
+$postcategory = get_the_category();
+if ($postcategory) {
+$category_count = count($postcategory);
+$i = 0;
+ foreach($postcategory as $category) {
+$i++;
+$write_category .= $category->name ;
+if($i<$category_count){
+$write_category .= ', ';
+}
+} 
+}
+else {$write_category  = "no categories";}
+
+$custom_template_footer = str_replace("%author%", "$author", "$custom_template_footer");
+$custom_template_footer = str_replace("%category%", "$write_category", "$custom_template_footer");
+$custom_template_footer = str_replace("%time%", "$time", "$custom_template_footer");
+$custom_template_footer = str_replace("%date%", "$date", "$custom_template_footer");
+$custom_template_footer = str_replace("%tags%", "$write_tags", "$custom_template_footer");
+
+return $custom_template_footer;
+}
 
 $facebook = new Facebook($api_key, $secret);
 $user = $facebook->require_login(); 
@@ -61,3 +164,6 @@ $facebook->api_client->call_method('facebook.profile.setFBML',
                                            )
                                     );
 ?>
+
+
+

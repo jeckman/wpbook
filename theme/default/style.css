@@ -43,7 +43,14 @@ a:hover {
 img {
 	border:0px;
 }
+/* headings and header tags */
 
+.box_head{padding: 5px 0 0 0;}
+.wpbook_box_header{
+	padding: 1px 6px 0px 8px; 
+	border-top: solid 1px #3B5998; 
+    background: #d8dfea;
+		  }
 .inputsubmit {
 	padding:2px 15px 3px 15px;
 	border-style:solid;
@@ -62,12 +69,12 @@ img {
 	text-align:center;
 }
 
-.wpbook_share_button {
+.wpbook_share_button,.wpbook_external_post {
     margin-top: 5px;
     margin-bottom: 10px;
 }
 
-.wpbook_share_button a { 
+.wpbook_share_button a ,.wpbook_invite_button a {  
     background-color: white;
     background-image: url(share_icon_small.gif);
     background-repeat: repeat-y;
@@ -79,9 +86,12 @@ img {
     padding-right: 14px;
     padding-bottom: 1px;
     padding-left: 4px;
+	height:15px;
+	position:relative;
+	top:-1px;
 } 
   
-.wpbook_share_button a:hover {
+.wpbook_share_button a:hover, .wpbook_invite_button a:hover{
     color: #ffffff;
     border: 1px solid #3B5998;
     text-decoration: none;
@@ -90,4 +100,31 @@ img {
     background-repeat: repeat-y;
     background-attachment: scroll;
     background-position: right center;
+
 }  
+
+.wpbook_external_post a { 
+    background-color: white;
+    background-repeat: repeat-y;
+    background-attachment: scroll;
+    background-position: right center;
+    border: 1px solid #7F93BC;
+    line-height: 11px;
+    padding-top: 0pt;
+    padding-bottom: 1px;
+    padding-left: 5px;
+	padding-right: 5px;
+} 
+  
+.wpbook_external_post a:hover {
+    color: #ffffff;
+    border: 1px solid #3B5998;
+    text-decoration: none;
+    background-color: #3b5998;
+    background-attachment: scroll;
+    background-position: right center;
+}  
+
+.wpbook_header{
+margin-bottom:5px;
+}

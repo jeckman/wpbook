@@ -1,11 +1,11 @@
 <?php
 // the facebook client library
 include_once 'config.php';
+  $app_name = get_bloginfo('name');
 	if(is_home() && isset($_GET['is_invite'])) { // this is the invite page
 		if(isset($_POST["ids"])) { // this means we've already added some stuff
 			echo "<center>Thank you for inviting ".sizeof($_POST["ids"])
-        ." of your friends on <b><a href=\"http://apps.facebook.com/".$app_url
-        ."/\">".$app_name."</a></b>.<br><br>\n"; 
+        ." of your friends to ". $app_name .". <br><br>\n"; 
 			echo "<h2><a href=\"http://apps.facebook.com/".$app_url
         ."/\">Click here to return to ".$app_name."</a>.</h2></center>"; 
 		} 
@@ -27,25 +27,27 @@ include_once 'config.php';
 			$content = "<fb:name uid=\"".$user
         ."\" firstnameonly=\"true\" shownetwork=\"false\"/> has started using "
         ."<a href=\"http://apps.facebook.com/".$app_url."/\">"
-        . bloginfo('name')."</a> and thought you should try it out!\n"
+        . $app_name ."</a> and thought you should try it out!\n"
         ."<fb:req-choice url=\"".$facebook->get_add_url()
-        ."\" label=\"Add ".bloginfo('name')." to your profile\"/>"; 
+      ."\" label=\"Add ". $app_name ." to your profile\"/>"; 
 	?>
-			<fb:request-form action="http://apps.facebook.com/<?php echo $app_url ?>" 
-        method="post" type="<?php bloginfo('name'); ?>" 
+<fb:fbml>
+<fb:title>Invite Friends</fb:title>
+      <fb:request-form action="http://apps.facebook.com/<?php echo $app_url ?>" 
+        method="post" type="testType" 
         content="<? echo htmlentities($content); ?>" 
         image="<? echo $app_image; ?>"> 
 			<fb:multi-friend-selector actiontext="Here are your friends who don't 
-        have <? bloginfo('name') ?> yet. Invite whoever you want - it's free!" 
+have <? echo $app_name; ?> yet. Invite all you want - it's free!" 
         exclude_ids="<? echo $friends; ?>" bypass="cancel" />
 			</fb:request-form> 
+</fb:fbml>
 	<?php
 		}
 	} 
 	else {  // this is the regular blog page
     $receiver_url = get_bloginfo('wpurl') . '/wp-content/plugins/wpbook/theme/default/xd_receiver.html';
 	?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" 
@@ -58,6 +60,7 @@ include_once 'config.php';
 <BASE TARGET="_top">	
 </head>
 <body>
+<!-- testing for WPBook 1.3 - is this still cached? -->
 <?php
   if(isset($_GET['fb_page_id'])) { 
   echo " <div><h3>Thank You!</h3> <p>This application has been added to your page's profile.</p>";
@@ -67,18 +70,21 @@ include_once 'config.php';
 } else {
 ?>
 <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
-
-<?php if($invite_friends == "true"){
-	$invite_link = 'http://apps.facebook.com/' . $app_url 
-  ."/index.php?is_invite=true&fb_force_mode=fbml";
+<div class="wpbook_header">
+  <?php if($invite_friends == "true"){
+	$invite_link = '<a href="http://apps.facebook.com/' . $app_url 
+  .'/index.php?is_invite=true&fb_force_mode=fbml" class="share"> Invite Friends</a>';
   ?>
-<div style="float:right" class="wpbook_invite_button"><a href="<?php echo("$invite_link") ?>" class="share"> Invite Friends </div>				
+		<div style="float:right;"><span class="wpbook_invite_button"><?php echo("$invite_link") ?></span> </div>	
 <?php } ?>
   <?php if($enable_profile_link == "true"){ ?>
-<div><div id="addProfileButton" style="float:right"></div></div>
+<div> <div id="addProfileButton" style="float:right;"></div></div>
   <?php }?>
+
 	<h3><a href="http://apps.facebook.com/<?php echo $app_url; ?>/" 
     target="_top"><?php bloginfo('name'); ?></a></h3>
+	
+</div>
 	<div id="content">
 <?php 	
 	have_posts();
@@ -92,15 +98,11 @@ include_once 'config.php';
                          '%title',FALSE,'');
 ?>
 				<?php } //end if single?> 
-				<div class="box_head clearfix" style="padding: 5px 0 0 0;" 
-          id="post-<?php the_ID(); ?>">
-				<h3 style="padding: 1px 6px 0px 8px; border-top: solid 1px #3B5998; 
-          background: #d8dfea;">
-					<a href="<?php the_permalink(); ?>" target="_top">
+				<div class="box_head clearfix" id="post-<?php the_ID(); ?>">
+				<h3 class="wpbook_box_header">
+					<?php if($show_date_title == "true"){the_time($timestamp_date_format); echo(" - ");}?> <a href="<?php the_permalink(); ?>" target="_top">
             <?php the_title(); ?></a></h3>
-<div class="meta"><?php the_time() ?>, <?php the_time('l, F jS, Y') ?></div>
-
-
+			<?php if(($show_custom_header_footer == "header") || ($show_custom_header_footer == "both")){echo( '<div id="custom_header">'.custom_header($custom_header,$timestamp_date_format,$timestamp_time_format) .'</div>');} ?>
 
 <?php if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "top")) { 
   echo '<p>';
@@ -145,8 +147,12 @@ echo "<a href='$exteral_post_url' title='View this post on the web at $external_
 } ?>
 			
 	<?php the_content(); ?>	
+			
+					<?php // echo custom footer
+					if(($show_custom_header_footer == "footer") || ($show_custom_header_footer == "both")){	echo('<div id="custom_footer">'.custom_header($custom_footer,$timestamp_date_format,$timestamp_time_format) .'</div>');} ?>
 
-<?php if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "bottom")) { 
+					<?php // get share link 
+if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "bottom")) { 
   echo '<p>';
 if($enable_share == "true"){?>
 <span class="wpbook_share_button">
@@ -194,9 +200,8 @@ echo "<a href='$exteral_post_url' title='View this post on the web at $external_
 		endif; // if have posts	
 ?>
 </div>
-<div class="box_head clearfix" style="padding: 5px 0 0 0;">
-				<h3 style="padding: 1px 6px 0px 8px; border-top: solid 1px #3B5998; 
-          background: #d8dfea;">
+<div class="box_head clearfix">
+				<h3 class="wpbook_box_header">
 					<?php _e('Recent Posts'); ?></h3>
       <ul>
 				<?php wp_recent_posts(10); ?>
