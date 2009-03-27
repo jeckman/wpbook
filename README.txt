@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.3
+Stable tag: 1.3.1
 Tested up to: 2.7.1
 Requires at least: 2.5
 
@@ -125,7 +125,14 @@ as well as some other files for processing comments and the like.
 
 == Version History ==
 
-= Version 1.3=
+= Version 1.3.1 = 
+* Fix for XAMPP Windows users - add ABSPATH to include for config.php
+* Fix for users who have the application name *in* the permalink structure
+* Cleanup for images in instructions that were too wide for layout
+* Cleanup button title for submit on invite friends page
+* Remove unnecessary second 'include_once' in comments.php
+
+= Version 1.3 =
 * Mostly improvements to the admin interface user experience - better 
   separation of options into required, customization, social, and advanced. 
 * Ability to include a custom header/footer for each post, including author,
@@ -185,7 +192,6 @@ as well as some other files for processing comments and the like.
 * Moved theme subdirectory inside plugin subdir
 *   Required several function changes
 * Added check for existing FacebookRestClient
-
 
 = Version 0.9.4 =
 * Bug in javascript (NULL isn't the same as null) for profile

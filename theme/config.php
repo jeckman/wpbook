@@ -35,103 +35,7 @@ $show_date_title = $wpbookAdminOptions['show_date_title'];
 $custom_header = $wpbookAdminOptions['custom_header'];
 $custom_footer = $wpbookAdminOptions['custom_footer'];
 $show_custom_header_footer = $wpbookAdminOptions['show_custom_header_footer'];
-//write the custom header and footer 
-function custom_header($custom_template_header,$date,$time){
-//get author 
-$author = get_the_author();
-//get author 
-$category = get_the_category();
-//get date
-$date = get_the_time($date);
-//get time
-$time = get_the_time($time);
-//get tags
-$posttags = get_the_tags();
-if ($posttags) {
-$tag_count = count($posttags);
-$i = 0;
-foreach($posttags as $tags) {
-$i++;
-$write_tags .= $tags->name ;
-if($i<$tag_count){
-$write_tags .= ', ';
-}
-} 
-}
-else {$write_tags  = "no tags";}
-
-//get category
-$postcategory = get_the_category();
-if ($postcategory) {
-$category_count = count($postcategory);
-$i = 0;
- foreach($postcategory as $category) {
-$i++;
-$write_category .= $category->name ;
-if($i<$category_count){
-$write_category .= ', ';
-}
-} 
-}
-else {$write_category  = "no categories";}
-
-$custom_template_header = str_replace("%author%", "$author", "$custom_template_header");
-$custom_template_header = str_replace("%category%", "$write_category", "$custom_template_header");
-$custom_template_header = str_replace("%time%", "$time", "$custom_template_header");
-$custom_template_header = str_replace("%date%", "$date", "$custom_template_header");
-$custom_template_header = str_replace("%tags%", "$write_tags", "$custom_template_header");
-
-return $custom_template_header;
-}
-
-function custom_footer($custom_template_footer,$date,$time){
-
-//get author 
-$author = get_the_author();
-//get author 
-$category = get_the_category();
-//get date
-$date = get_the_time($date);
-//get time
-$time = get_the_time($time);
-//get tags
-$posttags = get_the_tags();
-if ($posttags) {
-$tag_count = count($posttags);
-$i = 0;
-foreach($posttags as $tags) {
-$i++;
-$write_tags .= $tags->name ;
-if($i<$tag_count){
-$write_tags .= ', ';
-}
-} 
-}
-else {$write_tags  = "no tags";}
-
-//get category
-$postcategory = get_the_category();
-if ($postcategory) {
-$category_count = count($postcategory);
-$i = 0;
- foreach($postcategory as $category) {
-$i++;
-$write_category .= $category->name ;
-if($i<$category_count){
-$write_category .= ', ';
-}
-} 
-}
-else {$write_category  = "no categories";}
-
-$custom_template_footer = str_replace("%author%", "$author", "$custom_template_footer");
-$custom_template_footer = str_replace("%category%", "$write_category", "$custom_template_footer");
-$custom_template_footer = str_replace("%time%", "$time", "$custom_template_footer");
-$custom_template_footer = str_replace("%date%", "$date", "$custom_template_footer");
-$custom_template_footer = str_replace("%tags%", "$write_tags", "$custom_template_footer");
-
-return $custom_template_footer;
-}
+$app_name = get_bloginfo('name');
 
 $facebook = new Facebook($api_key, $secret);
 $user = $facebook->require_login(); 
@@ -163,6 +67,103 @@ $facebook->api_client->call_method('facebook.profile.setFBML',
                                           'profile_main' => '<fb:ref handle="recent_posts" />'
                                            )
                                     );
+
+// utility functions after here
+//write the custom header and footer 
+function custom_header($custom_template_header,$date,$time){
+  $author = get_the_author();
+  $category = get_the_category();
+  $date = get_the_time($date);
+  $time = get_the_time($time);
+  $posttags = get_the_tags();
+  if ($posttags) {
+    $tag_count = count($posttags);
+    $i = 0;
+    foreach($posttags as $tags) {
+      $i++;
+      $write_tags .= $tags->name ;
+      if($i<$tag_count){
+        $write_tags .= ', ';
+      }
+    } 
+  }
+  else {$write_tags  = "no tags";}
+  $postcategory = get_the_category();
+  if ($postcategory) {
+    $category_count = count($postcategory);
+    $i = 0;
+    foreach($postcategory as $category) {
+      $i++;
+      $write_category .= $category->name ;
+      if($i<$category_count){
+        $write_category .= ', ';
+      }
+    } 
+  }
+  else {$write_category  = "no categories";}
+  
+  $custom_template_header = str_replace("%author%", "$author", "$custom_template_header");
+  $custom_template_header = str_replace("%category%", "$write_category", "$custom_template_header");
+  $custom_template_header = str_replace("%time%", "$time", "$custom_template_header");
+  $custom_template_header = str_replace("%date%", "$date", "$custom_template_header");
+  $custom_template_header = str_replace("%tags%", "$write_tags", "$custom_template_header");
+  return $custom_template_header;
+}  // end function custom_header
+  
+function custom_footer($custom_template_footer,$date,$time){
+  $author = get_the_author();
+  $category = get_the_category();
+  $date = get_the_time($date);
+  $time = get_the_time($time);
+  $posttags = get_the_tags();
+  if ($posttags) {
+    $tag_count = count($posttags);
+    $i = 0;
+    foreach($posttags as $tags) {
+      $i++;
+      $write_tags .= $tags->name ;
+      if($i<$tag_count){
+        $write_tags .= ', ';
+      }
+    } 
+  }
+  else {$write_tags  = "no tags";}
+  
+  $postcategory = get_the_category();
+  if ($postcategory) {
+    $category_count = count($postcategory);
+    $i = 0;
+    foreach($postcategory as $category) {
+      $i++;
+      $write_category .= $category->name ;
+      if($i<$category_count){
+        $write_category .= ', ';
+      }
+    } 
+  }
+  else {$write_category  = "no categories";}
+  
+  $custom_template_footer = str_replace("%author%", "$author", "$custom_template_footer");
+  $custom_template_footer = str_replace("%category%", "$write_category", "$custom_template_footer");
+  $custom_template_footer = str_replace("%time%", "$time", "$custom_template_footer");
+  $custom_template_footer = str_replace("%date%", "$date", "$custom_template_footer");
+  $custom_template_footer = str_replace("%tags%", "$write_tags", "$custom_template_footer");
+  
+  return $custom_template_footer;
+} // end custom footer
+  
+// check to see if external post link contains the app name, and if it does, 
+// only replace the first instance 
+function str_replace_once($needle, $replace, $haystack) {
+  // Looks for the first occurence of $needle in $haystack
+  // and replaces it with $replace.
+  $pos = strpos($haystack, $needle);
+  if ($pos === false) {
+    // Nothing found
+    return $haystack;
+  }
+  return substr_replace($haystack, $replace, $pos, strlen($needle));
+}  
 ?>
 
 

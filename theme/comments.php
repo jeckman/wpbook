@@ -1,17 +1,6 @@
 <?php
-
-if(!class_exists('FacebookRestClient')) {
-  if (version_compare(PHP_VERSION,'5','>=')) {
-    include_once(ABSPATH.'wp-content/plugins/wpbook/client/facebook.php');
-  } else {
-    include_once(ABSPATH.'wp-content/plugins/wpbook/php4client/facebook.php');
-    include_once(ABSPATH.'wp-content/plugins/wpbook/php4client/'
-                   .'facebookapi_php4_restlib.php');
-  }
-}
-
 $wpbookOptions = get_option('wpbookAdminOptions');
-
+ 
 if (!empty($wpbookOptions)) {
 	foreach ($wpbookOptions as $key => $option)
 		$wpbookAdminOptions[$key] = $option;
@@ -25,9 +14,7 @@ $allow_comments = $wpbookAdminOptions['allow_comments'];
 
 $facebook = new Facebook($api_key, $secret);
 $user = $facebook->require_login(); 
-
-$rs = $facebook->api_client->fql_query("SELECT name, 
-                                       pic FROM user WHERE uid = ".$user); 
+$rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = ".$user); 
 
 ?>
 <div class="comments-post">
@@ -66,7 +53,7 @@ $rs = $facebook->api_client->fql_query("SELECT name,
 	<?php endif; ?>
 <?php endif; ?>
 
-
+<!-- <?php echo $allow_comments . ' ' . $rs[0]['name']; ?> -->
 <?php if (('open' == $post-> comment_status) && ($allow_comments == "true")) : ?>
 <strong>Comment from your Facebook Profile, 
   <?php echo $rs[0]['name']; ?>

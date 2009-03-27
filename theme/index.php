@@ -1,7 +1,6 @@
 <?php
-// the facebook client library
-include_once 'config.php';
-  $app_name = get_bloginfo('name');
+// set up occurs in the config.php
+include_once(ABSPATH . 'wp-content/plugins/wpbook/theme/config.php');
 	if(is_home() && isset($_GET['is_invite'])) { // this is the invite page
 		if(isset($_POST["ids"])) { // this means we've already added some stuff
 			echo "<center>Thank you for inviting ".sizeof($_POST["ids"])
@@ -34,7 +33,7 @@ include_once 'config.php';
 <fb:fbml>
 <fb:title>Invite Friends</fb:title>
       <fb:request-form action="http://apps.facebook.com/<?php echo $app_url ?>" 
-        method="post" type="testType" 
+        method="post" type="<? echo $app_name; ?>" 
         content="<? echo htmlentities($content); ?>" 
         image="<? echo $app_image; ?>"> 
 			<fb:multi-friend-selector actiontext="Here are your friends who don't 
@@ -131,7 +130,7 @@ $permalink_peices = parse_url(get_permalink());
 //get the app_url and the preceeding slash
 $permalink_app_url = "/".$app_url;
 //remove /appname
-$external_post_permalink = str_replace($permalink_app_url,"","$permalink_peices[path]");
+$external_post_permalink = str_replace_once($permalink_app_url,"",$permalink_peices[path]);
 //re-write the post url using the site url 
 $external_site_url_peices = parse_url(get_bloginfo('wpurl'));
 
@@ -179,7 +178,7 @@ $permalink_peices = parse_url(get_permalink());
 //get the app_url and the preceeding slash
 $permalink_app_url = "/".$app_url;
 //remove /appname
-$external_post_permalink = str_replace($permalink_app_url,"","$permalink_peices[path]");
+$external_post_permalink = str_replace_once($permalink_app_url,"",$permalink_peices[path]);
 //re-write the post url using the site url 
 $external_site_url_peices = parse_url(get_bloginfo('wpurl'));
 
