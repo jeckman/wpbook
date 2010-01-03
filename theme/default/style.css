@@ -1,27 +1,44 @@
 /*  
 Styles for Facebook, as part of WP-Book plugin
-Based on acebok styles
+Based on Facebook styles
+
 */
 
+
+
 html,body{
+
 	margin: 0;
+
 	padding: 0;
+
 	background: #FFFFFF;
+
 }
 
+
+
 body {
+
 	background:#fff;
 	font-family:"lucida grande", tahoma, verdana, arial, sans-serif;
 	font-size:11px;
 	margin:10px;
 	padding:0px;
 	text-align:left;
+
 }
 
+
+
 blockquote {
+
 	border-left: 5px solid #ccc;
+
 	margin-left: 1.5em;
+
 	padding-left: 5px;
+
 }
 
 h1, h2, h3, h4, h5 {
@@ -43,6 +60,21 @@ a:hover {
 img {
 	border:0px;
 }
+
+ul.pagenav {
+    margin: 0;
+    padding: 0;
+    bottom: 0;
+    padding-left: 5px;
+    text-align: left;
+    color: red;
+}
+
+ul.pagenav li {
+    display: inline;
+    margin: 0px;    
+}
+
 /* headings and header tags */
 
 .box_head{padding: 5px 0 0 0;}
@@ -128,3 +160,30 @@ img {
 .wpbook_header{
 margin-bottom:5px;
 }
+
+.wpbook_comment_author{
+	font-size:14px;
+	font-family:"lucida grande", tahoma, verdana, arial, sans-serif;
+	color:#3B5998;
+	font-weight:600;
+	padding:0;
+}
+.wpbook_comment_text{
+	font-size:11px;
+	font-family:"lucida grande", tahoma, verdana, arial, sans-serif;
+	color:#333333;
+	padding:0;
+}
+p.wpbook_comment_text{display:none;}
+.wpbook_comment_date {
+	font-size:10px;
+	font-family:"lucida grande", tahoma, verdana, arial, sans-serif;
+	color:#777777;
+	margin-bottom:5px;
+}
+.gravatarr{float: left;}
+
+.gravatarpadding {margin-left:70px;}
+.acomment{clear: both; background-color:#ECEFF5; padding:5px;  margin-bottom:5px; margin-top:5px;}
+.bcomment{clear: both; background-color:#FFFFFF; padding:5px; }
+#commentform{clear: both;}

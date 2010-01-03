@@ -3,8 +3,7 @@
 
     jQuery(document).ready(function($) {
 	//show/hide div code stats here 
-	
-    //see if allow comment is checked on page load 
+	    //see if allow comment is checked on page load 
     if ($('#allow_comments').is(':checked'))
       {$('#comments_options').show();}
     else  
@@ -21,6 +20,18 @@
       {$('#wpbook_advanced_options').show();}
     else  
       {$('#wpbook_advanced_options').hide('fast');}
+	  
+	  //see if gravatar settings are checked on page load
+	   if ($('#use_gravatar').is(':checked'))
+      {$('#gravatar_options').show();}
+    else  
+      {$('#gravatar_options').hide('fast');}
+	  
+	//see if gravatar custom default is checked on page load
+	   if ($('.gravatar_rating_custom_radio').is(':checked'))
+      {$('p.gravatar_rating_custom').show();}
+    else  
+      {$('p.gravatar_rating_custom').hide('fast');}
                        
     //toggle status of allow comments on click 
     $('#allow_comments').click(function(){
@@ -56,7 +67,25 @@
       else
         {$('#wpbook_advanced_options').hide('fast');}
       });
-
+	  
+	  	 //toggle status of gravatar options on click 
+    $('#use_gravatar').click(function(){
+      if ($('#use_gravatar').is(':checked'))
+        {$('#gravatar_options').show('fast');}
+      else
+        {$('#gravatar_options').hide('fast');}
+      });
+	  
+	  //toggle status of gravatar custom default options on click  
+		
+$("input[@name='gravatar_default']").change(function(){
+      if ($('.gravatar_rating_custom_radio').is(':checked'))
+        {$('p.gravatar_rating_custom').show('fast');}
+      else
+        {$('p.gravatar_rating_custom').hide('fast');}
+      });
+	  
+	
 //start tooltip code here 
 
 //comment tooltip
@@ -73,6 +102,64 @@
 	contentClass: 'tooltip_content',
 	viewpoint:true
 			});
+			
+//use gravatar tooltip
+		$('.use_gravatar').simpletip('If checked this option will show a 60x60 Gravatar image by each commment in Facebook.', {
+	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftMiddle'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+			
+//gravatar_rating tooltip
+		$('.gravatar_rating').simpletip('Much like a movie rating this lets you decide how "mature" of Gravatars to show.', {
+	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftMiddle'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+			
+//gravatar_default tooltip
+		$('.gravatar_default').simpletip('What to show if the user hasn\'t set up a Gravatar image.(mouse-over each option for an example) ', {
+	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftMiddle'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+			
+//gravatar_default_facebook image tooltip
+		$('.gravatar_facebook_default').simpletip('<img src="../wp-content/plugins/wpbook/admin_includes/images/gravatar_default.gif" />', {
+	stem: { corner: 'leftTop', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftTop'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+		
+		
+//gravatar_identicon_default_image tooltip
+		$('.gravatar_identicon_default').simpletip('<img src="../wp-content/plugins/wpbook/admin_includes/images/identicon_default.gif" />', {
+	stem: { corner: 'leftTop', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftTop'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+			
+//gravatar_monsterid_default_image tooltip
+		$('.gravatar_monsterid_default').simpletip('<img src="../wp-content/plugins/wpbook/admin_includes/images/monsterid_default.gif" />', {
+	stem: { corner: 'leftTop', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftTop'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+
+//gravatar_wavatar_default_image tooltip
+		$('.gravatar_wavatar_default').simpletip('<img src="../wp-content/plugins/wpbook/admin_includes/images/wavatar_default.gif" />', {
+	stem: { corner: 'leftTop', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftTop'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+			
 //show invite tooltip
 		$('.show_invite').simpletip('If checked this option adds an invite link to the top right corner which allows the end-user to invite their frinds to use your application.', {
 	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
@@ -138,6 +225,14 @@
 		
 //enable give credit tooltip
 		$('.give_credit').simpletip('If checked this option will add "This Facebook Application powered by the WPBook plugin  for WordPress." to the bottom of your application. This helps support further devlopement as well as gets the word out about WPBook. Thanks for the support!', {
+	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftMiddle'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+			
+//enable pages tooltip
+		$('.enable_pages').simpletip('This option will bring all your Wordpress pages into Facebook', {
 	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
 	hook: {tooltip: 'leftMiddle'},
 	contentClass: 'tooltip_content',

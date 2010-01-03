@@ -2,11 +2,11 @@
 /*
 Plugin Name: WPBook
 Plugin URI: http://www.openparenthesis.org/code/wp
-Date: 2009, March 27th
+Date: 2010, January 3rd
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 1.3.1
+Version: 1.4
 */
 
 /*
@@ -31,6 +31,17 @@ Note: This plugin draws from:
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+// Pre-2.6 compatibility - which I may not need as I may require 2.7 soon
+  
+if ( ! defined( 'WP_CONTENT_URL' ) )
+  define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
+if ( ! defined( 'WP_CONTENT_DIR' ) )
+  define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+if ( ! defined( 'WP_PLUGIN_URL' ) )
+  define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
+if ( ! defined( 'WP_PLUGIN_DIR' ) )
+  define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
+  
 // this function checks for admin pages
 if (!function_exists('is_admin_page')) {
   function is_admin_page() {
@@ -73,7 +84,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                            $fb_app_url,$invite_friends,$require_email,$give_credit,
                            $enable_share, $allow_comments,$links_position,$enable_external_link,$enable_profile_link,
 						   $timestamp_date_format,$timestamp_time_format, $show_date_title,$show_advanced_options,$custom_header,
-						   $custom_footer,$show_custom_header_footer) {
+						   $custom_footer,$show_custom_header_footer,$use_gravatar,$gravatar_rating,$gravatar_default,$show_pages) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -92,8 +103,12 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
 							  'show_advanced_options' => $show_advanced_options,
 							  'custom_header' => $custom_header,
 							  'custom_footer' => $custom_footer,
-							  'show_custom_header_footer'=> $show_custom_header_footer
-							  );
+							  'show_custom_header_footer'=> $show_custom_header_footer,
+							  'use_gravatar'=> $use_gravatar,
+							  'gravatar_rating'=> $gravatar_rating,
+							  'gravatar_default'=> $gravatar_default,
+							  'show_pages'=> $show_pages
+							  							  );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
   
@@ -103,17 +118,14 @@ function wpbook_options_page() {
 		$wpbook_plugin_page = add_options_page('WPBook', 'WPBook', 8, 
 		  basename(__FILE__), 'wpbook_subpanel');
 	   add_action( 'admin_head-'. $wpbook_plugin_page, 'wpbook_admin_head' );
-
-	  
-
 	}
 } 
 
 //function to add css and java to the header of the admin page 
 function wpbook_admin_head() {
-$wpbook_admin_styles_path= "../wp-content/plugins/wpbook/admin_includes/wpbook_admin_styles.css";
-$wpbook_admin_tooltip_path = "../wp-content/plugins/wpbook/admin_includes/jquery.simpletip-2.0.0-beta4.js";
-$wpbook_admin_javascript_path ="../wp-content/plugins/wpbook/admin_includes/wpbook_admin_javascript.js";
+$wpbook_admin_styles_path=  WP_PLUGIN_URL . "/wpbook/admin_includes/wpbook_admin_styles.css";
+$wpbook_admin_tooltip_path = WP_PLUGIN_URL . "/wpbook/admin_includes/jquery.simpletip-2.0.0-beta4.js";
+$wpbook_admin_javascript_path = WP_PLUGIN_URL . "/wpbook/admin_includes/wpbook_admin_javascript.js";
 $wpbook_admin_head = "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"".$wpbook_admin_styles_path."\" media=\"screen\" />\n
 \n<script src=\"".$wpbook_admin_tooltip_path."\" type=\"text/javascript\"></script>
 \n<script src=\"".$wpbook_admin_javascript_path."\" type=\"text/javascript\"></script>";
@@ -152,8 +164,18 @@ function wpbook_subpanel() {
 	  $custom_header = $_POST['custom_header'];
 	  $custom_footer = $_POST['custom_footer'];
 	  $show_custom_header_footer = $_POST['show_custom_header_footer'];
+	  $use_gravatar = $_POST['use_gravatar'];
+	  $gravatar_rating = $_POST['gravatar_rating'];
+	  $show_pages = $_POST['show_pages'];
+	  
+	  // Handle custom gravatar_deault   code modified from wp-admin/options.php
+		if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
+			$_POST['gravatar_default'] = urlencode($_POST['gravatar_rating_custom']);
+			//end custom gravatar_deafult code
+			
+	  $gravatar_default = $_POST['gravatar_default'];
       setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url,
-                      $invite_friends,$require_email,$give_credit,$enable_share,$allow_comments,$links_position,$enable_external_link,$enable_profile_link,$timestamp_date_format,$timestamp_time_format,$show_date_title,$show_advanced_options,$custom_header,$custom_footer,$show_custom_header_footer);
+                      $invite_friends,$require_email,$give_credit,$enable_share,$allow_comments,$links_position,$enable_external_link,$enable_profile_link,$timestamp_date_format,$timestamp_time_format,$show_date_title,$show_advanced_options,$custom_header,$custom_footer,$show_custom_header_footer,$use_gravatar,$gravatar_rating,$gravatar_default,$show_pages);
       $flash = "Your settings have been saved. ";
     } 
     elseif (($wpbookAdminOptions['fb_api_key'] != "") || ($wpbookAdminOptions['fb_secret'] != "") || ($wpbookAdminOptions['fb_app_url'] != "")
@@ -169,7 +191,8 @@ function wpbook_subpanel() {
     $wpbookAdminOptions = wpbook_getAdminOptions();
 	//set the "smart" defaults on install  this only works once the page has been refeshed
     if ($wpbookAdminOptions['wpbook_installation'] != 1) {  
-      setAdminOptions(1, null,null,null,null,null,"true",null,"true","top",null,null,"F j, Y","g:i a","true",null,null,null,"disabled");
+	$gravatar_default = WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif';
+      setAdminOptions(1, null,null,null,null,null,"true",null,"true","top",null,null,"F j, Y","g:i a","true",null,null,null,"disabled",null,"g",$gravatar_default,null);
     }
 
       if ($flash != '') echo '<div id="message"class="updated fade">'
@@ -179,7 +202,7 @@ function wpbook_subpanel() {
   echo 'This plugin allows you to embed your blog into the Facebook canvas';
   echo ', allows Facebook users to comment on or share your blog posts, and ';
   echo 'puts your 5 most recent posts in users profiles (with their permission).</p>';
-  echo '<p><a href="../wp-content/plugins/wpbook/instructions/index.html" target="_blank">Detailed instructions</a></p>';
+  echo '<p><a href="'. WP_PLUGIN_URL .'/wpbook/instructions/index.html" target="_blank">Detailed instructions</a></p>';
   echo '<form action="'. $_SERVER["REQUEST_URI"] .'" method="post">';
   echo '<div id ="required_options"><h3> Required Options:</h3>';
   echo'<p>To use this app, you must register for an API key at ';
@@ -206,13 +229,65 @@ function wpbook_subpanel() {
   if( htmlentities($wpbookAdminOptions['allow_comments']) == "true") {
     echo("checked");
   }
-  echo ' id="allow_comments" > Allow comments inside Facebook <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="allow_comments" /></p>';
+  echo ' id="allow_comments" > Allow comments inside Facebook <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="allow_comments" /></p>';
   echo '<div id="comments_options">';
   echo '<p class="options"><input type="checkbox" name="require_email" value = "true"';
   if( htmlentities($wpbookAdminOptions['require_email']) == "true"){ 
     echo("checked");
   }
-  echo '> Require Comment Authors E-mail Address <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="require_email" /></p></div> ';
+  echo '> Require Comment Authors E-mail Address <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="require_email" /></p></div> ';
+  //gravatar options
+    echo '<p class="options"><input type="checkbox" name="use_gravatar" value="true" ';
+  if( htmlentities($wpbookAdminOptions['use_gravatar']) == "true") {
+    echo("checked");
+  }
+  echo ' id="use_gravatar" > Show Gravatar Images Inside Facebook <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="use_gravatar" /></p>';
+  echo '<div id="gravatar_options">';
+   //gravatar rating
+   echo '<p class="options"> Gravatar Rating <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="gravatar_rating" /> <br/>';
+   	
+	$gravatar_ratings = array('G','PG','R','X');
+
+	foreach ( $gravatar_ratings as $gravatar_rating ) {
+		echo "<input type='radio' name='gravatar_rating' value='" . attribute_escape($gravatar_rating) . "'";
+		if ( htmlentities($wpbookAdminOptions['gravatar_rating']) === $gravatar_rating ) { // checked() uses "==" rather than "==="
+			echo " checked='checked'";
+		}
+		echo ' /> ' . $gravatar_rating . "\n";
+	}
+
+	//gravtar default
+  echo'<p class="options"> Gravatar Default <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="gravatar_default" /> <br/>
+    <input type="radio" name="gravatar_default" value = "'. WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif"';
+ $gravatar_defaults_custom = TRUE;
+  if( htmlentities($wpbookAdminOptions['gravatar_default']) == WP_PLUGIN_URL. '/wpbook/theme/default/gravatar_default.gif'){ 
+    echo("checked");
+	$gravatar_defaults_custom = FALSE;
+	}
+	echo (" ><span class='gravatar_facebook_default'> Facebook Default </span> ");
+
+  $gravatar_defaults = array('identicon','monsterid','wavatar');
+
+	foreach ( $gravatar_defaults as $gravatar_default ) {
+	
+		echo "<input type='radio' name='gravatar_default' value='" . attribute_escape($gravatar_default) . "'";
+		if ( htmlentities($wpbookAdminOptions['gravatar_default']) === $gravatar_default ) { // checked() uses "==" rather than "==="
+			echo " checked='checked'";
+			$gravatar_defaults_custom = FALSE;
+		}
+		echo ' /> <span class="gravatar_'.$gravatar_default .'_default">' . $gravatar_default . "</span> ";
+	}
+
+  
+//Custom Gravatar
+ echo '<input type="radio" name="gravatar_default" class="gravatar_rating_custom_radio" value="\c\u\s\t\o\m"';
+	checked( $gravatar_defaults_custom, TRUE );
+	echo '/> Custom Gravatar Default <br/>
+	<p class="gravatar_rating_custom options">  <input type="text" size="70" name="gravatar_rating_custom"'; 
+		if($gravatar_defaults_custom === TRUE){echo 'value= '. urldecode($wpbookAdminOptions['gravatar_default']);}
+		echo'  /></p> ';
+
+  echo' </div> ';
     
 echo'<p><strong> Socialize Options:</strong></p>';	
 // Here starts the "invite friends" section
@@ -220,32 +295,32 @@ echo'<p><strong> Socialize Options:</strong></p>';
   if( htmlentities($wpbookAdminOptions['invite_friends']) == "true"){ 
     echo("checked");
   }
-  echo '> Show Invite Friends Link <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="show_invite" /></p>';
+  echo '> Show Invite Friends Link <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="show_invite" /></p>';
   //enable profile option
   echo '<p class="options"><input type="checkbox" name="enable_profile_link" value="true"';
   if(htmlentities($wpbookAdminOptions['enable_profile_link']) == "true") {
     echo("checked");
   }
-  echo '> Enable Facebook users to add your app to their profile <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="enable_profile" />';
+  echo '> Enable Facebook users to add your app to their profile <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="enable_profile" />';
   echo '</p>';
   // show share option 
   echo '<p class="options"><input type="checkbox" name="enable_share" value="true"';
   if( htmlentities($wpbookAdminOptions['enable_share']) == "true"){
     echo("checked");
   }
-  echo ' id="enable_share"> Enable "Share This Post" (within Facebook) <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="show_share" /> </p>';
+  echo ' id="enable_share"> Enable "Share This Post" (within Facebook) <img src="'. WP_PLUGIN_DIR .'/wpbook/admin_includes/images/help.png" class="show_share" /> </p>';
   // show external link option 
   
   echo '<p class="options"><input type="checkbox" name="enable_external_link" value="true"';
   if( htmlentities($wpbookAdminOptions['enable_external_link']) == "true"){
     echo("checked");
   }
-  echo ' id="enable_external_link"> Enable "view post at external site" link <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="show_external" /></p>';
+  echo ' id="enable_external_link"> Enable "view post at external site" link <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="show_external" /></p>';
   
   //links button position for external and share button 
   //see if share button or external link is enabled first
   echo '<div id="position_option">';
-  echo '<p class="options">Link(s) position for share button and external link button: <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="link_position" /><br/>';
+  echo '<p class="options">Link(s) position for share button and external link button: <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="link_position" /><br/>';
   //top
   echo '<input type="radio" name="links_position" value = "top"';
   if( htmlentities($wpbookAdminOptions['links_position']) == "top"){ 
@@ -265,26 +340,32 @@ echo'<p><strong> Socialize Options:</strong></p>';
   if( htmlentities($wpbookAdminOptions['show_date_title']) == "true"){
     echo("checked");
   }
-  echo '> Show post date with title (you can customize the date format by using the advanced options) <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="show_date_title" /></p>';
+  echo '> Show post date with title (you can customize the date format by using the advanced options) <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="show_date_title" /></p>';
   
    //start give credit option 
   echo '<p class="options"><input type="checkbox" name="give_credit" value="true"';
   if( htmlentities($wpbookAdminOptions['give_credit']) == "true"){
     echo("checked");
   }
-  echo '> Give WPBook Credit (in Facebook) <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="give_credit" /></p>';
-
+  echo '> Give WPBook Credit (in Facebook) <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="give_credit" /></p>';
+   
+   //start show pages option 
+  echo '<p class="options"><input type="checkbox" name="show_pages" value="true"';
+  if( htmlentities($wpbookAdminOptions['show_pages']) == "true"){
+    echo("checked");
+  }
+  echo '> Enable pages in Facebook (experimental) <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="enable_pages" /></p>';
    echo '<p><input type="checkbox" name="show_advanced_options" value="true"';
   if( htmlentities($wpbookAdminOptions['show_advanced_options']) == "true"){
     echo("checked");
   }
-  echo ' id="advanced_options" > <strong> Show Advanced Options</strong> <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="advanced_options" /></p>';
+  echo ' id="advanced_options" > <strong> Show Advanced Options</strong> <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="advanced_options" /></p>';
 
  //start advanced options div
   echo'<div id="wpbook_advanced_options"> <h3> Advanced Options:</h3>';
   
 echo'<p><strong> Date/Time Options:</strong></p>';
-echo '<p> Date format <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="date_format" /> </p><p class="options">';
+echo '<p> Date format <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="date_format" /> </p><p class="options">';
 // date code copied from wp-admin/options-general.php
 	$date_formats = apply_filters( 'date_formats', array(
 		__('F j, Y'),
@@ -311,7 +392,7 @@ echo'</p>';
 	//end date code 
 	
 //start time code, copied from wp-admin/options-general.php
-echo '<p> Time format <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="time_format" /> </p> <p class="options">';
+echo '<p> Time format <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="time_format" /> </p> <p class="options">';
 	$time_formats = apply_filters( 'time_formats', array(
 		__('g:i a'),
 		'g:i A',
@@ -341,11 +422,11 @@ echo'<p><strong>Custom Header and Footer</strong><br/> This is where you can set
 %author% - The Post Author<br/>  %time% - The Post Time (in format above) <br/> %date% - The Post Date (in format above) <br/>  %tags% - The Post\'s tags <br/> %category% - The Post Category <br/>   %permalink% - The Post Permalink<br><br/> <strong>Example Usage</strong><br/> Written by %author% and posted to %category% on %date% at %time%.</div> </p><br/>';
 echo'<div class="options">';
 //custom header
-echo(' Custom Header: <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="custom_header"/><br/><textarea rows="2" cols="100" name="custom_header">'.$wpbookAdminOptions['custom_header'].'</textarea>');
+echo(' Custom Header: <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="custom_header"/><br/><textarea rows="2" cols="100" name="custom_header">'.$wpbookAdminOptions['custom_header'].'</textarea>');
 //custom footer
-echo(' <br/><br/>Custom Footer: <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="custom_footer"/><br/><textarea rows="2" cols="100" name="custom_footer">'.$wpbookAdminOptions['custom_footer'].'</textarea>');
+echo(' <br/><br/>Custom Footer: <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="custom_footer"/><br/><textarea rows="2" cols="100" name="custom_footer">'.$wpbookAdminOptions['custom_footer'].'</textarea>');
  //enable custom footer/header
- echo '<br/><br/>Show Custom Header/Footer: <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="show_header_footer"/><br/>';
+ echo '<br/><br/>Show Custom Header/Footer: <img src=".'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="show_header_footer"/><br/>';
   //disabled
   echo '<input type="radio" name="show_custom_header_footer" value = "disabled"';
    if( htmlentities($wpbookAdminOptions['show_custom_header_footer']) == "disabled"){ 
@@ -379,8 +460,9 @@ echo'</div>';
   echo '</div>';
   echo'<div id="help">';
   echo '<h2>Need Help?</h2>';
-  echo '<p>If you need help setting up this application first read the <a href="../wp-content/plugins/wpbook/instructions/index.html" target="_blank"> install instructions</a>. If you need help about an option mouse-over the <img src="../wp-content/plugins/wpbook/admin_includes/images/help.png" class="need_help"/> for the a tooltip that we hope you\'ll find useful. If you still need help don\'t hesitate to visit the google group at <a href="http://groups.google.com/group/scholarpress-dev" target="_blank">http://groups.google.com/group/scholarpress-dev</a>. Support can also be found at the plugin site <a href="http://www.openparenthesis.org/code/wp" target="_blank">http://www.openparenthesis.org/code/wp</a> </p><h3>Thanks for using WPBook!</h3>';
-    echo'</div>';
+  echo '<p>If you need help setting up this application first read the <a href="'. WP_PLUGIN_URL .'/wpbook/instructions/index.html" target="_blank"> install instructions</a>. If you need help about an option mouse-over the <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="need_help" /> for the a tooltip that we hope you\'ll find useful.';
+  echo 'Support can also be found on <a href="http://wordpress.org/extend/plugins/wpbook/" target="_blank">the plugin page</a> </p><h3>Thanks for using WPBook!</h3>';
+  echo'</div>';
   } else {
     echo '<div class="wrap"><p>Sorry, you are not allowed to access ';
     echo 'this page.</p></div>';
@@ -506,7 +588,7 @@ function wpbook_theme_root($path) {
 
 function wpbook_theme_root_uri($url) {
 	if (check_facebook()) {
-		$dir = get_bloginfo('wpurl') . "/wp-content/plugins/wpbook/theme";
+		$dir = WP_PLUGIN_DIR . "/wpbook/theme";
 		return $dir;
 	} else {
 		return $url;
@@ -532,7 +614,7 @@ if (check_facebook()) {
   add_filter('theme_root_uri', 'wpbook_theme_root_uri');
 }
              
-// also have to change permalinks and next/prev links and more links
+// also have to change permalinks, next/prev links , page links, and archive links
 function fb_filter_postlink($postlink) {
 	if (check_facebook()) {
 		$my_offset = strlen(get_option('home'));
@@ -545,15 +627,29 @@ function fb_filter_postlink($postlink) {
 		return $postlink; 
 	}
 }
-	
+
+// change links to pages as well	
+function fb_filter_pagelink($pagelink) {
+  if(check_facebook()) {
+    $my_offset = strlen(get_option('home'));
+		$my_options = wpbook_getAdminOptions();
+		$app_url = $my_options['fb_app_url'];
+		$my_link = 'http://apps.facebook.com/' . $app_url 
+    . substr($pagelink,$my_offset); 
+		return $my_link;
+	} else {
+		return $pagelink; 
+  }
+}
+  
 function wp_update_profile_boxes() {
   if(!class_exists('FacebookRestClient')) {
     if (version_compare(PHP_VERSION,'5','>=')) {
-      include_once(ABSPATH.'wp-content/plugins/wpbook/client/facebook.php');
+      include_once(WP_PLUGIN_DIR.'/wpbook/client/facebook.php');
 	  } else {
-		  include_once(ABSPATH.'wp-content/plugins/wpbook/php4client/'
+		  include_once(WP_PLUGIN_DIR.'/wpbook/php4client/'
         . 'facebook.php');
-		  include_once(ABSPATH.'wp-content/plugins/wpbook/php4client/'
+		  include_once(WP_PLUGIN_DIR.'/wpbook/php4client/'
         . 'facebookapi_php4_restlib.php');
 	  }
   }           
@@ -578,9 +674,96 @@ function wp_update_profile_boxes() {
                                             'fbml' => $ProfileContent,
                                     ) );
 }
-	
+
+// based on sample code here:
+//      http://willnorris.com/2009/06/wordpress-plugin-pet-peeve-2-direct-calls-to-plugin-files  
+// thanks will  
+function wpbook_parse_request($wp) {
+    // only process requests with "wpbook=comment-handler"
+    if (array_key_exists('wpbook', $wp->query_vars) && $wp->query_vars['wpbook'] == 'comment-handler') {
+      
+      // process the request - in our case this is a comment being posted
+      nocache_headers();
+      
+      $comment_post_ID = (int) $_POST['comment_post_ID'];
+      
+      global $wpdb;
+      $status = $wpdb->get_row("SELECT post_status, comment_status FROM "
+                               . "$wpdb->posts WHERE ID = '$comment_post_ID'");
+      
+      if ( empty($status->comment_status) ) {
+        do_action('comment_id_not_found', $comment_post_ID);
+        exit;
+      } elseif ( !comments_open($comment_post_ID) ) {
+        do_action('comment_closed', $comment_post_ID);
+        wp_die( __('Sorry, comments are closed for this item.') );
+      } elseif ( in_array($status->post_status, array('draft', 'pending') ) ) {
+        do_action('comment_on_draft', $comment_post_ID);
+        exit;
+      }
+      
+      $comment_author       = trim(strip_tags($_POST['author']));
+      $comment_author_email = trim($_POST['email']);
+      $comment_author_url   = trim($_POST['url']);
+      $comment_content      = trim($_POST['comment']);
+      $comment_type = '';
+      
+      if(($require_email == "true") && ('' == $comment_author_email)){
+        wp_die( __('Error: please enter an e-mail.'));
+      }
+      
+      if($comment_author_email != ''){
+        if(!preg_match('/^[A-Z0-9._%-]+@[A-Z0-9.-]+\.(?:[A-Z]{2}|com|org|net|biz|'
+                       . 'info|name|aero|biz|info|jobs|museum|name|edu)$/i', 
+                       $comment_author_email)) {
+        wp_die( __('Error: please enter a valid e-mail.'));
+        }
+      }
+      
+      if ( '' == $comment_content )
+        wp_die( __('Error: please type a comment.') );
+      
+      $commentdata = compact('comment_post_ID', 'comment_author', 
+                             'comment_author_email', 'comment_author_url',
+                             'comment_content', 'comment_type', 'user_ID');
+      
+      $comment_id = wp_new_comment( $commentdata );
+      
+      $comment = get_comment($comment_id);
+      if ( !$user->ID ) {
+        setcookie('comment_author_' . COOKIEHASH, 
+                  $comment->comment_author, time() + 30000000, 
+                  COOKIEPATH, COOKIE_DOMAIN);
+        setcookie('comment_author_email_' . COOKIEHASH,
+                  $comment->comment_author_email, time() + 30000000, 
+                  COOKIEPATH, COOKIE_DOMAIN);
+        setcookie('comment_author_url_' . COOKIEHASH, 
+                  clean_url($comment->comment_author_url), 
+                  time() + 30000000, COOKIEPATH, COOKIE_DOMAIN);
+      }
+      
+    // all done parsing, redirect to post, on comment anchor
+      
+      $redirect_url = get_permalink($comment_post_ID);
+      $redirect_url .= '#comment-' . $comment_id;
+      
+      // switched to raw php header redirect as $facebook->redirect was
+      // problematic and no fb session needed in this page
+      header( 'Location: ' . $redirect_url );
+    }
+}
+  
+function wpbook_query_vars($vars) {
+    $vars[] = 'wpbook';
+    return $vars;
+}
+  
+add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
+add_filter('page_link','fb_filter_pagelink',1,1); 
 add_action('admin_menu', 'wpbook_options_page');
+add_action('wp', 'wpbook_parse_request');
+
 	
 // these capture new posts, not edits of previous posts	
 add_action('future_to_publish','wp_update_profile_boxes');	

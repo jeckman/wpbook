@@ -1,8 +1,8 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.3.1
-Tested up to: 2.7.1
+Stable tag: 1.4
+Tested up to: 2.9
 Requires at least: 2.5
 
 Plugin to embed Wordpress Blog into Facebook Platform.
@@ -22,17 +22,24 @@ using the "add to profile" button at the top of the default canvas page.
 
 That profile box shows the 5 most recent posts from your blog, as links. 
 
-NOTE: These 2 plugins have been reported to conflict with WPBook:
-	- Bad Behavior 
-	- Facebook Connect (from Sociable.es)
+WPBook *DOES NOT* (in it's current versions) do any of these:
+  - Post notifications automatically to your wall when you write a new post
+  - Post notifications into your users feeds when you publish a post
+  - Post notifications to a group or fan page when you publish a new post
+  - Post notifications back to a users feed when he/she posts a comment
 
-I'm working on identifying and eliminating conflict, but you should not
-try to use WPBook with either of these plugins in the current state. 
+If you'd like to do these things, please investigate:
+ - Simplaris Blogcast (http://apps.facebook.com/flogblog/)
+ - The Facebook Notes application (for fan pages) 
+     (http://www.facebook.com/notes.php) 
+ - The Sociable Facebook Connect plugin
+     (http://www.sociable.es/facebook-connect/)
 
-(Note there is a workaround for the Sociable.es Facebook Connect plugin
- described here: http://bit.ly/hhach)
+Posting updates into the notifications stream is a frequently requested
+feature and will likely make it into a future version, but it will take
+time. 
 
-Finally, if one of your other plugins (Kaltura's Interactive Video for
+If one of your other plugins (Kaltura's Interactive Video for
 example) uses CSS and sets the height of either the body or html elements
 to 100%, the auto-resizing javascript in Facebook may fail. You can 
 fix this by removing the plugin or editing the css. 
@@ -88,6 +95,9 @@ fix this by removing the plugin or editing the css.
    (Facebook does not allow access to the user's email address, so you can 
    really only ask users to provide one, not prefill it automatically). 
 
+   Similarly, you can enable or disable gravatars within Facebook
+   independent of what you do on your regular blog. 
+
    The "Give WPBook credit" option adds a line at the bottom of your Facebook
    application pages which says "This Facebook application powered by the 
    WPBook plugin for Wordpress" - I'd love it if you would leave this enabled
@@ -124,6 +134,17 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 1.4 =
+* Fixed bug which made invite friends link only work on the home page
+* Fixed bug in setting for custom/header footer which included a permalink
+  (See http://wordpress.org/support/topic/306263)
+* Added Gravatar support (thanks Brooke)
+* Added list of pages (thanks Brooke)
+* Removed hard coded references to wp-content and plugins directories
+  (See http://willnorris.com/2009/05/wordpress-plugin-pet-peeve-hardcoding-wp-content)
+* Removed hard coded reference to config.php
+  (See http://willnorris.com/2009/06/wordpress-plugin-pet-peeve-2-direct-calls-to-plugin-files)
 
 = Version 1.3.1 = 
 * Fix for XAMPP Windows users - add ABSPATH to include for config.php
@@ -285,18 +306,20 @@ as well as some other files for processing comments and the like.
 * First push to WP-Plugins Directory
 
 == To Do ==
+(Roughly in order of priority)
+* Leverage Facebook API for posting notifications to stream when 
+  a new blog post is published
+* Leverage Facebook API to publish notifications to stream when
+  user leaves a comment (comment poster's stream and users streams)
+* Threaded comments. (If user has them enabled - requires WP 2.7.x)
+* Require PHP5, wrap update of profile boxes and notifications in
+  a try-catch block to avoid uncaught exceptions
+* Prep for WordPress 3.0 and merge with WPMU
 * Update instructions in readme to match new options available in 1.3
-* Leverage new Facebook API to set user's status when a new blog post
-  gets posted. 
-* Capture Facebook Profile picture of user commenting in
-  Facebook, display instead of Gravatar. (I think this 
-  will require actually fetching and storing the picture,
-  not just its url, as it may not be available outside
-  Facebook, and may change). 
 * Deal with non-standard front pages (where user has set
-  a static page in WordPress options)
+  a static page in WordPress options) - right now these configurations
+  aren't really supported, and I'm not sure what support will mean - 
+  just listing posts and pages? (That actually works now if you just
+  use your wordpress home url as your canvas callback)
 * Enable pages for things like cateories and tags, and enable links to 
-  those pages from the header/footer of the post (since 1.3). 
-* Add notification to wall/notes when user publishes
-  a new post - for all users. (May require user to grant additional 
-  permissions). 
+  those pages from the header/footer of the post 

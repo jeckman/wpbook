@@ -2,10 +2,10 @@
 // the facebook client library
 if(!class_exists('FacebookRestClient')) {
   if (version_compare(PHP_VERSION,'5','>=')) {
-    include_once(ABSPATH . 'wp-content/plugins/wpbook/client/facebook.php');
+    include_once(WP_PLUGIN_DIR . '/wpbook/client/facebook.php');
   } else {
-    include_once(ABSPATH . 'wp-content/plugins/wpbook/php4client/facebook.php');
-    include_once(ABSPATH . 'wp-content/plugins/wpbook/php4client/facebookapi_php4_restlib.php');
+    include_once(WP_PLUGIN_DIR . '/wpbook/php4client/facebook.php');
+    include_once(WP_PLUGIN_DIR . '/wpbook/php4client/facebookapi_php4_restlib.php');
   }
 }
 
@@ -36,6 +36,11 @@ $custom_header = $wpbookAdminOptions['custom_header'];
 $custom_footer = $wpbookAdminOptions['custom_footer'];
 $show_custom_header_footer = $wpbookAdminOptions['show_custom_header_footer'];
 $app_name = get_bloginfo('name');
+$use_gravatar = $wpbookAdminOptions['use_gravatar'];
+$gravatar_rating = $wpbookAdminOptions['gravatar_rating'];
+$gravatar_default = $wpbookAdminOptions['gravatar_default'];
+$show_pages = $wpbookAdminOptions['show_pages'];
+
 
 $facebook = new Facebook($api_key, $secret);
 $user = $facebook->require_login(); 
@@ -69,13 +74,33 @@ $facebook->api_client->call_method('facebook.profile.setFBML',
                                     );
 
 // utility functions after here
+function get_external_post_url($my_permalink){
+  global $app_url;
+  // code to get the url of the orginal post for use in the "show external url view"
+  $permalink_peices = parse_url($my_permalink);
+  //get the app_url and the preceeding slash
+  $permalink_app_url = "/". $app_url; 
+  //remove /appname
+  $external_post_permalink = str_replace_once($permalink_app_url,"",$permalink_peices[path]);
+  //re-write the post url using the site url 
+  $external_site_url_peices = parse_url(get_bloginfo('wpurl'));
+    
+  //break apart the external site address and get just the "site.com" part
+  $external_site_url = $external_site_url_peices[host];
+  $external_post_url = get_bloginfo('siteurl').  $external_post_permalink;
+  
+  //return "app url is " . $app_url; 
+  return $external_post_url; 
+}  
+  
 //write the custom header and footer 
 function custom_header($custom_template_header,$date,$time){
   $author = get_the_author();
   $category = get_the_category();
   $date = get_the_time($date);
   $time = get_the_time($time);
-  $posttags = get_the_tags();
+  $permalink = '<a href="' . get_permalink() . '">permalink</a>';
+  $posttags = get_the_tags();  
   if ($posttags) {
     $tag_count = count($posttags);
     $i = 0;
@@ -107,6 +132,8 @@ function custom_header($custom_template_header,$date,$time){
   $custom_template_header = str_replace("%time%", "$time", "$custom_template_header");
   $custom_template_header = str_replace("%date%", "$date", "$custom_template_header");
   $custom_template_header = str_replace("%tags%", "$write_tags", "$custom_template_header");
+  $custom_template_header = str_replace("%permalink%","$permalink","$custom_template_header");
+  
   return $custom_template_header;
 }  // end function custom_header
   
@@ -115,6 +142,7 @@ function custom_footer($custom_template_footer,$date,$time){
   $category = get_the_category();
   $date = get_the_time($date);
   $time = get_the_time($time);
+  $permalink ='<a href="' . get_permalink() . '">permalink</a>';
   $posttags = get_the_tags();
   if ($posttags) {
     $tag_count = count($posttags);
@@ -148,6 +176,7 @@ function custom_footer($custom_template_footer,$date,$time){
   $custom_template_footer = str_replace("%time%", "$time", "$custom_template_footer");
   $custom_template_footer = str_replace("%date%", "$date", "$custom_template_footer");
   $custom_template_footer = str_replace("%tags%", "$write_tags", "$custom_template_footer");
+  $custom_template_footer = str_replace("%permalink%","$permalink","$custom_template_footer");
   
   return $custom_template_footer;
 } // end custom footer
