@@ -200,7 +200,7 @@ if($enable_share == "true"){?>
 </span>
 <?php } 
 if($enable_external_link == "true"){?>
-<span class="wpbook_external_post"><a href="<?php echo get_exteral_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span>
+<span class="wpbook_external_post"><a href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span>
 <?php }
   echo '</p>';
 } ?>

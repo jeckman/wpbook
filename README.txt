@@ -135,6 +135,9 @@ as well as some other files for processing comments and the like.
 
 == Version History ==
 
+= Version 1.4.1 =
+* Doh! Typo snuck into release package. (See http://wordpres.org/support/topic/348292)
+
 = Version 1.4 =
 * Fixed bug which made invite friends link only work on the home page
 * Fixed bug in setting for custom/header footer which included a permalink
