@@ -1,8 +1,8 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.4
-Tested up to: 2.9
+Stable tag: 1.4.1
+Tested up to: 2.9.1
 Requires at least: 2.5
 
 Plugin to embed Wordpress Blog into Facebook Platform.
