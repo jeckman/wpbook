@@ -76,7 +76,7 @@ $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = "
 
 </strong>
 	<div id="commentform-container">
-  <form action="<?php echo get_bloginfo('wpurl'); ?>?fb_sig_in_iframe&wpbook=comment-handler" 
+  <form action="<?php echo get_bloginfo('url'); ?>?fb_sig_in_iframe&wpbook=comment-handler" 
       method="post" id="commentform">
   <p>
   <input type="text" name="email" id="email" value="" size="22" tabindex="1" />

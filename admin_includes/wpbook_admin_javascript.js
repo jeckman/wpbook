@@ -78,7 +78,7 @@
 	  
 	  //toggle status of gravatar custom default options on click  
 		
-$("input[@name='gravatar_default']").change(function(){
+$("input[name='gravatar_default']").change(function(){
       if ($('.gravatar_rating_custom_radio').is(':checked'))
         {$('p.gravatar_rating_custom').show('fast');}
       else
@@ -123,39 +123,6 @@ $("input[@name='gravatar_default']").change(function(){
 		$('.gravatar_default').simpletip('What to show if the user hasn\'t set up a Gravatar image.(mouse-over each option for an example) ', {
 	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
 	hook: {tooltip: 'leftMiddle'},
-	contentClass: 'tooltip_content',
-	viewpoint:true
-			});
-			
-//gravatar_default_facebook image tooltip
-		$('.gravatar_facebook_default').simpletip('<img src="../wp-content/plugins/wpbook/admin_includes/images/gravatar_default.gif" />', {
-	stem: { corner: 'leftTop', color:'#DFDFDF', size: 12 }, 
-	hook: {tooltip: 'leftTop'},
-	contentClass: 'tooltip_content',
-	viewpoint:true
-			});
-		
-		
-//gravatar_identicon_default_image tooltip
-		$('.gravatar_identicon_default').simpletip('<img src="../wp-content/plugins/wpbook/admin_includes/images/identicon_default.gif" />', {
-	stem: { corner: 'leftTop', color:'#DFDFDF', size: 12 }, 
-	hook: {tooltip: 'leftTop'},
-	contentClass: 'tooltip_content',
-	viewpoint:true
-			});
-			
-//gravatar_monsterid_default_image tooltip
-		$('.gravatar_monsterid_default').simpletip('<img src="../wp-content/plugins/wpbook/admin_includes/images/monsterid_default.gif" />', {
-	stem: { corner: 'leftTop', color:'#DFDFDF', size: 12 }, 
-	hook: {tooltip: 'leftTop'},
-	contentClass: 'tooltip_content',
-	viewpoint:true
-			});
-
-//gravatar_wavatar_default_image tooltip
-		$('.gravatar_wavatar_default').simpletip('<img src="../wp-content/plugins/wpbook/admin_includes/images/wavatar_default.gif" />', {
-	stem: { corner: 'leftTop', color:'#DFDFDF', size: 12 }, 
-	hook: {tooltip: 'leftTop'},
 	contentClass: 'tooltip_content',
 	viewpoint:true
 			});

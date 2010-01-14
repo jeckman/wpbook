@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 Tested up to: 2.9.1
 Requires at least: 2.5
 
@@ -134,6 +134,12 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 1.4.2 =
+
+* Bugfix for those who install WordPress in a subdirectory, for home comment submission was failing in 1.4 and 1.4.1. 
+* Bugfix for wpbook_admin_javascript.js which included an outmoded jQuery selector syntax and broke the admin js in 2.9.1
+* Bugfix for wpbook_admin_javascript.js which included hardcoded paths assuming wp_content path relative to wp-admin (shows images for default gravatar icons by default now rather than waiting for tooltip hover)
 
 = Version 1.4.1 =
 * Doh! Typo snuck into release package. (See http://wordpres.org/support/topic/348292)
