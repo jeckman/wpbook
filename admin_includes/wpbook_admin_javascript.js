@@ -120,7 +120,7 @@ $("input[name='gravatar_default']").change(function(){
 			});
 			
 //gravatar_default tooltip
-		$('.gravatar_default').simpletip('What to show if the user hasn\'t set up a Gravatar image.(mouse-over each option for an example) ', {
+		$('.gravatar_default').simpletip('What to show if the user hasn\'t set up a Gravatar image. ', {
 	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
 	hook: {tooltip: 'leftMiddle'},
 	contentClass: 'tooltip_content',
