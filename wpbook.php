@@ -310,7 +310,7 @@ echo'<p><strong> Socialize Options:</strong></p>';
   if( htmlentities($wpbookAdminOptions['enable_share']) == "true"){
     echo("checked");
   }
-  echo ' id="enable_share"> Enable "Share This Post" (within Facebook) <img src="'. WP_PLUGIN_DIR .'/wpbook/admin_includes/images/help.png" class="show_share" /> </p>';
+  echo ' id="enable_share"> Enable "Share This Post" (within Facebook) <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="show_share" /> </p>';
   // show external link option 
   
   echo '<p class="options"><input type="checkbox" name="enable_external_link" value="true"';
