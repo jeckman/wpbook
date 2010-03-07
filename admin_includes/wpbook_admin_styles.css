@@ -5,6 +5,12 @@ padding:5px;
 .options{
 padding-left:20px;
 }
+.child_options {
+padding-left:30px;
+}
+.grandchild_options {
+padding-left:40px;
+}
 
 .tooltip{ 
    position: absolute; 

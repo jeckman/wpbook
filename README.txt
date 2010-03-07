@@ -1,11 +1,13 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.4.2
-Tested up to: 2.9.1
-Requires at least: 2.5
+Stable tag: 1.5
+Tested up to: 2.9.2
+Requires at least: 2.6
 
 Plugin to embed Wordpress Blog into Facebook Platform.
+
+**As of 1.5, this plugin REQUIRES PHP5**
 
 == Overview ==
 
@@ -20,12 +22,15 @@ users of either "view" of your content.
 Facebook users can also - at their option - add a profile box to their profile,
 using the "add to profile" button at the top of the default canvas page. 
 
-That profile box shows the 5 most recent posts from your blog, as links. 
+That profile box shows the N most recent posts from your blog, as links. 
+(N = user configurable). 
 
-WPBook *DOES NOT* (in it's current versions) do any of these:
-  - Post notifications automatically to your wall when you write a new post
-  - Post notifications into your users feeds when you publish a post
-  - Post notifications to a group or fan page when you publish a new post
+WPBook also post notifications automatically to your wall, or the wall
+of pages for which you are an admin, to which you've added the app, and 
+for which you've granted stream publish permission, when you write a new post.
+
+WPBook *DOES NOT* (yet) do any of these:
+  - Post notifications into your users feeds (except to your wall) when you publish a post
   - Post notifications back to a users feed when he/she posts a comment
 
 If you'd like to do these things, please investigate:
@@ -34,15 +39,6 @@ If you'd like to do these things, please investigate:
      (http://www.facebook.com/notes.php) 
  - The Sociable Facebook Connect plugin
      (http://www.sociable.es/facebook-connect/)
-
-Posting updates into the notifications stream is a frequently requested
-feature and will likely make it into a future version, but it will take
-time. 
-
-If one of your other plugins (Kaltura's Interactive Video for
-example) uses CSS and sets the height of either the body or html elements
-to 100%, the auto-resizing javascript in Facebook may fail. You can 
-fix this by removing the plugin or editing the css. 
 
 == Installation ==
 
@@ -134,6 +130,28 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Version History ==
+
+= Version 1.5 =
+ * Now requires PHP 5
+ * Enables user to post to stream, including to pages. 
+ * Catches exceptions from Facebook client. (Doesn't yet surface those in 
+   good error messages, but at least they are caught)
+ * Fixed, I hope, issue with comments inside Facebook for some users
+ * Clean up of some admin styles (resized gravatar images as well as
+   some basic hierarchy on options)
+ * Added Pageing options as their own section
+ * Allow user to select pages to be excluded
+ * Added option to allow a menu of parent pages at top of the app
+   below the title
+ * Fixed "Facebok" typo in line line 182 of theme/index.php
+ * Option to turn on and off page list under content 
+   (independent of menu)
+ * Option to turn on/off recent post under content
+ * Allow user to set the amount of recent post to show under content (default 10)
+ * Cleaned up custom header/footer now only one function instead of two
+   (no reason to have two functions)
+ * Added %tag_links% and %category_links% to custom header footer as
+   well as made archive pages work. 
 
 = Version 1.4.2 =
 
@@ -316,19 +334,17 @@ as well as some other files for processing comments and the like.
 
 == To Do ==
 (Roughly in order of priority)
-* Leverage Facebook API for posting notifications to stream when 
-  a new blog post is published
 * Leverage Facebook API to publish notifications to stream when
   user leaves a comment (comment poster's stream and users streams)
 * Threaded comments. (If user has them enabled - requires WP 2.7.x)
-* Require PHP5, wrap update of profile boxes and notifications in
-  a try-catch block to avoid uncaught exceptions
+* Error handling - do something with the FB exceptions caught
+  Probably use set_transient to show - will require WP 2.8 or greater
 * Prep for WordPress 3.0 and merge with WPMU
-* Update instructions in readme to match new options available in 1.3
+* Update instructions in readme to match new options available
 * Deal with non-standard front pages (where user has set
   a static page in WordPress options) - right now these configurations
   aren't really supported, and I'm not sure what support will mean - 
   just listing posts and pages? (That actually works now if you just
   use your wordpress home url as your canvas callback)
-* Enable pages for things like cateories and tags, and enable links to 
+* Enable pages for things like categories and tags, and enable links to 
   those pages from the header/footer of the post 

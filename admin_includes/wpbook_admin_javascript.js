@@ -1,9 +1,9 @@
-   // jquery functions to replace the old hid show div functions  
-    //  this should also probally be refactord to make it smaller at some point
+   // jquery functions to replace the old hide show div functions  
+   //  this should also probally be refactord to make it smaller at some point
 
     jQuery(document).ready(function($) {
 	//show/hide div code stats here 
-	    //see if allow comment is checked on page load 
+	//see if allow comment is checked on page load 
     if ($('#allow_comments').is(':checked'))
       {$('#comments_options').show();}
     else  
@@ -15,7 +15,25 @@
     else  
       {$('#position_option').hide('fast');}
 	 
-	   //see if advanced is checked on page load 
+   //see if advanced is checked on page load 
+    if ($('#advanced_options').is(':checked'))
+      {$('#wpbook_advanced_options').show();}
+    else  
+      {$('#wpbook_advanced_options').hide('fast');}
+   
+    //see if page options is checked on page load 
+    if ($('#show_pages').is(':checked'))
+      {$('#page_options').show();}
+    else  
+      {$('#page_options').hide('fast');}
+
+    //see if exclude pages is checked on page load 
+    if ($('#exclude_true').is(':checked'))
+      {$('#exclude_true_div').show();}
+    else  
+      {$('#exclude_true_div').hide('fast');}
+
+   //see if advanced is checked on page load 
     if ($('#advanced_options').is(':checked'))
       {$('#wpbook_advanced_options').show();}
     else  
@@ -28,10 +46,16 @@
       {$('#gravatar_options').hide('fast');}
 	  
 	//see if gravatar custom default is checked on page load
-	   if ($('.gravatar_rating_custom_radio').is(':checked'))
+	if ($('.gravatar_rating_custom_radio').is(':checked'))
       {$('p.gravatar_rating_custom').show();}
     else  
       {$('p.gravatar_rating_custom').hide('fast');}
+
+	//see if gravatar show recent post is checked on page load
+	if ($('#show_recent_post_list').is(':checked'))
+      {$('p.recent_post_amount').show();}
+    else  
+      {$('p.recent_post_amount').hide('fast');}
                        
     //toggle status of allow comments on click 
     $('#allow_comments').click(function(){
@@ -59,6 +83,22 @@
       else
         {$('#position_option').hide('fast');}
     });
+    
+       //toggle status of paging on click 
+    $('#show_pages').click(function(){
+      if ($('#show_pages').is(':checked'))
+        {$('#page_options').show('fast');}
+      else
+        {$('#page_options').hide('fast');}
+      });
+      
+    //toggle status of exclude pages list on click
+    $('#exclude_true').click(function(){
+      if ($('#exclude_true').is(':checked'))
+        {$('#exclude_true_div').show('fast');}
+      else
+        {$('#exclude_true_div').hide('fast');}
+      });
 
 	 //toggle status of advanced options on click 
     $('#advanced_options').click(function(){
@@ -83,6 +123,14 @@ $("input[name='gravatar_default']").change(function(){
         {$('p.gravatar_rating_custom').show('fast');}
       else
         {$('p.gravatar_rating_custom').hide('fast');}
+      });
+
+//toggle status of gravatar custom default options on click  
+$("input[name='show_recent_post_list']").change(function(){
+      if ($('#show_recent_post_list').is(':checked'))
+        {$('p.recent_post_amount').show('fast');}
+      else
+        {$('p.recent_post_amount').hide('fast');}
       });
 	  
 	
@@ -165,6 +213,35 @@ $("input[name='gravatar_default']").change(function(){
 	contentClass: 'tooltip_content',
 	viewpoint:true
 			});
+		
+//enable pages tooltip
+	$('.enable_pages').simpletip('This option will bring all your WordPress pages into Facebook', {
+	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftMiddle'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+//exlude pages tooltip
+	$('.exclude_pages').simpletip('If you don\'t want to show all your pages choose which one to exclude', {
+	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftMiddle'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+//enable pages menu tooltip
+	$('.enable_pages_menu').simpletip('Show a Facebook style menu of parent pages at the top of your app', {
+	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftMiddle'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});
+//enable pages menu below content tooltip
+	$('.enable_pages_below').simpletip('Show a list of pages below the page content', {
+	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+	hook: {tooltip: 'leftMiddle'},
+	contentClass: 'tooltip_content',
+	viewpoint:true
+			});	
 			
 //date format tooltip
 		$('.date_format').simpletip('This is the format of the date that will be displayed in the timestamp used within facebook.', {
@@ -191,23 +268,30 @@ $("input[name='gravatar_default']").change(function(){
 			});
 		
 //enable give credit tooltip
-		$('.give_credit').simpletip('If checked this option will add "This Facebook Application powered by the WPBook plugin  for WordPress." to the bottom of your application. This helps support further devlopement as well as gets the word out about WPBook. Thanks for the support!', {
+	$('.give_credit').simpletip('If checked this option will add "This Facebook Application powered by the WPBook plugin  for WordPress." to the bottom of your application. This helps support further devlopement as well as gets the word out about WPBook. Thanks for the support!', {
 	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
 	hook: {tooltip: 'leftMiddle'},
 	contentClass: 'tooltip_content',
 	viewpoint:true
 			});
 			
-//enable pages tooltip
-		$('.enable_pages').simpletip('This option will bring all your Wordpress pages into Facebook', {
+//enable a list of recent post below contnet
+	$('.enable_recent_post_list').simpletip('If checked this option will add a list of recent post below the page content. The number of post can be set in the next option', {
 	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
 	hook: {tooltip: 'leftMiddle'},
 	contentClass: 'tooltip_content',
 	viewpoint:true
-			});
+			});	
+// stream publish tooltip
+    $('.stream_publish').simpletip('If checked this option will publish new posts to your Facebook profile stream whenever you post.',{
+    stem: { corner: 'leftMiddle',color:'#DFDFDF',size: 12 },
+    hook: { tooltip: 'leftMiddle'},
+    contentClass: 'tooltip_content',
+    viewpoint: true
+            });
 
 //advanced options tooltip
-		$('.advanced_options').simpletip('If checked this option allow you to access the advacned options for wpbook. Such as time, date, and header footer information. ', {
+		$('.advanced_options').simpletip('If checked this option allow you to access the advacned options for WPBook. Such as time, date, and header footer information. ', {
 	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
 	hook: {tooltip: 'leftMiddle'},
 	contentClass: 'tooltip_content',

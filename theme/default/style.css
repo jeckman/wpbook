@@ -81,7 +81,7 @@ ul.pagenav li {
 .wpbook_box_header{
 	padding: 1px 6px 0px 8px; 
 	border-top: solid 1px #3B5998; 
-    background: #d8dfea;
+	background: #d8dfea;
 		  }
 .inputsubmit {
 	padding:2px 15px 3px 15px;
@@ -182,8 +182,54 @@ p.wpbook_comment_text{display:none;}
 	margin-bottom:5px;
 }
 .gravatarr{float: left;}
-
 .gravatarpadding {margin-left:70px;}
 .acomment{clear: both; background-color:#ECEFF5; padding:5px;  margin-bottom:5px; margin-top:5px;}
 .bcomment{clear: both; background-color:#FFFFFF; padding:5px; }
 #commentform{clear: both;}
+.archive{ clear: both; background-color:#ECEFF5; padding:5px; margin-bottom:5px; margin-top:15px;}
+/* pages menu /*
+/*Credits: Dynamic Drive CSS Library */
+/*URL: http://www.dynamicdrive.com/style/ */
+
+#underlinemenu{
+padding:0;
+margin:0;
+padding-bottom:30px;
+}
+
+#underlinemenu ul{
+margin: 0;
+padding-left: 0;
+float: left;
+font-weight: bold;
+width: 100%;
+border: 1px solid #3B5998;
+border-width: 1px 0;
+background-color:#3B5998;
+}
+
+* html #underlinemenu ul{ /*IE only rule. Delete extra margin-bottom*/
+margin-bottom: 0;
+}
+
+#underlinemenu ul li{
+display: inline;
+float: left;
+color:#fff;
+padding: 10px 6px 0px 8px; 
+}
+
+
+#underlinemenu ul li a{
+color: #fff;
+font-weight: bold;
+text-decoration: none;
+padding:5px;
+}
+
+#underlinemenu ul li a:hover{
+padding:5px;
+color: #fff;
+background-color: #5C75AA;
+padding-bottom: 0;
+}

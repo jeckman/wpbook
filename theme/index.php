@@ -44,6 +44,65 @@ have <? echo $app_name; ?> yet. Invite all you want - it's free!"
 	<?php
 		}
 	} 
+  if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
+    $receiver_url = WP_PLUGIN_URL . '/wpbook/theme/default/xd_receiver.html';
+  ?>
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+  <html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
+  <title><?php bloginfo('name'); ?> :: Facebook Blog Application</title>
+  <link rel="stylesheet" href="<?php echo WP_PLUGIN_URL ?>/wpbook/theme/default/style.css" 
+    type="text/css" media="screen" />
+  <BASE TARGET="_top">	
+  </head>
+  <body>
+  <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
+  <p>This page is just for the author of the blog to grant extended permissions.</p>
+  <p>Your userid is <?php echo $user; ?> </p>
+  <p><strong>You will need to enter that number into WPBook's settings page on your WordPress install.</strong></p>
+  
+  <p><a href="#" onclick="FB.Connect.showPermissionDialog('publish_stream', function() { window.top.location='http://apps.facebook.com/<?php echo $app_url; ?>' },true);">Click here to trigger extended permissions dialog box</a>
+
+  <p>After you have granted permission, return to the main application: <a href="http://apps.facebook.com/<?php echo $app_url; ?>/" 
+target="_top"><?php bloginfo('name'); ?></a></p>
+<p>You are also listed as the admin of these pages:
+<ul>
+<?php 
+  $query = "SELECT name, page_id, has_added_app FROM page WHERE page_id IN (SELECT name, page_id FROM page WHERE page_id IN (SELECT page_id FROM page_admin WHERE uid = $user))";
+  $second_result = $facebook->api_client->fql_query($query);
+  foreach ($second_result as $page) {
+    if($page['has_added_app']) {
+      echo '<li>'. $page['name'] .' ('. $page['page_id'] .'), ';
+      try { 
+        $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
+      } catch (Exception $e) {
+        //echo 'Caught exception: ',  $e->getMessage(); 
+      }
+      if ($permission) { 
+        echo 'This page has granted stream.publish permissions to this app';
+      } else { 
+        echo 'This page has NOT granted stream.publish permissions to this app';
+      }  
+    echo '</li>'; 
+    }
+  }
+  ?>
+  </ul></p>
+  <p>If you are the administrator of pages which do not show up in this list, 
+   you need to ensure you have added the application to the pages first.</p>
+  <p>Follow the <a href="">detailed directions</a> included with the plugin.</p>
+<script type="text/javascript">
+FB_RequireFeatures(["XFBML"],function() {
+                   FB.Facebook.init('<?php echo $api_key; ?>',
+                                    '<?php echo $receiver_url; ?>',
+                                    null);
+                   });   
+</script></body>
+</html>
+    <?php 
+    }
 	else {  // this is the regular blog page
     // if this is the frontpage, but it is not the blog list page
     if(is_front_page() && (!is_home())) {
@@ -90,11 +149,21 @@ have <? echo $app_name; ?> yet. Invite all you want - it's free!"
 
 	<h3><a href="http://apps.facebook.com/<?php echo $app_url; ?>/" 
     target="_top"><?php bloginfo('name'); ?></a></h3>
-	
+    <?php if($show_pages_menu == "true"){ ?>
+    	    <div id="underlinemenu" class="clearfix">
+    	    <ul>
+    	    <li>Pages:</li>
+    	    <?php if ($exclude_pages_true == "true"){wp_list_pages("sort_column=menu_order&depth=1&title_li=&exclude=$exclude_pages_list");}
+				else{wp_list_pages("sort_column=menu_order&depth=1&title_li=");} ?>
+    	    </ul>
+    	    </div>
+    <?php } //end show pages menu
+    ?>
 </div>
-<?php if(is_page()){ // is a page ?>
+<?php if(is_page()){ // is a page 
+	?>
 <div id="content">
-				<div class="box_head clearfix"
+				<div class="box_head clearfix">
 				<h3 class="wpbook_box_header"><?php the_title(); ?></a></h3>
 				<?php if (have_posts()) : while (have_posts()) : the_post();
 					the_content();
@@ -106,28 +175,28 @@ have <? echo $app_name; ?> yet. Invite all you want - it's free!"
 </div>	
 	<?php } 
 else{
-if(is_archive()){ //is an archive page  ?>
-<div class="acomment">
- <?php /* If this is a category archive */ if (is_category()) { ?>
+if(is_archive()){ //is an archive page  
+	?>
+<div class="archive">
+ <?php 			/*If this is a category archive */ if (is_category()) { ?>
 			<p><b><?php printf( __('You are currently browsing the %1$s archives for the \'%2$s\' category.'), $app_name, single_cat_title('', false) ) ?></b></p>
-
-					
 			<?php /* If this is a yearly archive */ } elseif (is_day()) { ?>
 			<p><b>You are currently browsing the <?php $app_name; ?> archives for the day <?php the_time('l, F jS, Y'); ?>.</b></p>
 			
 			<?php /* If this is a monthly archive */ } elseif (is_month()) { ?>
 			<p><b>You are currently browsing the <?php $app_name; ?> archives 	for <?php the_time('F, Y'); ?>.</b></p>
 
-      <?php /* If this is a yearly archive */ } elseif (is_year()) { ?>
+			<?php /* If this is a yearly archive */ } elseif (is_year()) { ?>
 			<p><b>You are currently browsing the <?php $app_name; ?> archives  for the year <?php the_time('Y'); ?>.</b></p>
 			
-		 <?php /* If this is a monthly archive */ } elseif (is_search()) { ?>
+			<?php /* If this is a monthly archive */ } elseif (is_search()) { ?>
 			<p><b>You have searched the <?php $app_name; ?> archives for <strong>'<?php echo wp_specialchars($s); ?>'</strong>. </b></p>
 
 			<?php /* If this is a monthly archive */ } elseif (isset($_GET['paged']) && !empty($_GET['paged'])) { ?>
 			<p><b>You are currently browsing the <?php $app_name; ?> archives.</b></p>
-
-			<?php } }?>
+			<?php }/* If this is a tag archive */	elseif(is_tag()){ ?>
+				<p><b><?php printf( __('You are currently browsing the %1$s archives for the \'%2$s\' tag.'), $app_name, single_tag_title('', false) ) ?></b></p>
+				<?php } }?>
 			</div>
 	<div id="content">
 <?php 	
@@ -141,13 +210,14 @@ if(is_archive()){ //is an archive page  ?>
 					next_post_link('Next Post: %link &raquo;<br />',
                          '%title',FALSE,'');
 ?>
-				<?php } //end if single?> 
+				<?php } //end if single 
+				?> 
 				<div class="box_head clearfix" id="post-<?php the_ID(); ?>">
 				<h3 class="wpbook_box_header">
 					<?php if($show_date_title == "true"){the_time($timestamp_date_format); echo(" - ");}?> <a href="<?php the_permalink(); ?>" target="_top">
             <?php the_title(); ?></a></h3>
 			<?php if(($show_custom_header_footer == "header") || ($show_custom_header_footer == "both")){
-        echo( '<div id="custom_header">'.custom_header($custom_header,$timestamp_date_format,$timestamp_time_format) .'</div>');
+        echo( '<div id="custom_header">'.custom_header_footer($custom_header,$timestamp_date_format,$timestamp_time_format) .'</div>');
       } // end if for showing customer header
       ?>
 
@@ -168,7 +238,7 @@ if(is_archive()){ //is an archive page  ?>
   </span>
 <?php } // end if for enable_share
   if($enable_external_link == "true"){ ?>
-  <span class="wpbook_external_post"><a href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebok at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span>
+  <span class="wpbook_external_post"><a href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span>
 <?php } // end if for enable external_link
   echo '</p>';
 } ?>
@@ -177,7 +247,7 @@ if(is_archive()){ //is an archive page  ?>
 			
 					<?php // echo custom footer
 					if(($show_custom_header_footer == "footer") || ($show_custom_header_footer == "both")){	
-            echo('<div id="custom_footer">'.custom_header($custom_footer,$timestamp_date_format,$timestamp_time_format) .'</div>');
+            echo('<div id="custom_footer">'.custom_header_footer($custom_footer,$timestamp_date_format,$timestamp_time_format) .'</div>');
           } // endif for header or footer 
           ?>
 
@@ -214,24 +284,25 @@ if($enable_external_link == "true"){?>
 <?php 	 
 } //end if blog or arvhive 
 
-if($show_pages == "true"){?>
+if($show_pages == "true" && $show_page_list=="true"){?>
 <div class="box_head clearfix">
 				<h3 class="wpbook_box_header">
 					<?php _e('Pages'); ?></h3>
 				<ul>
-					    <?php wp_list_pages('sort_column=menu_order&title_li='); ?>
+				<?php if ($exclude_pages_true == "true"){wp_list_pages("sort_column=menu_order&title_li=&exclude=$exclude_pages_list");}
+				else{wp_list_pages("sort_column=menu_order&title_li=");} ?>
 				</ul>
 </div>
-<?php }?>
-
+<?php }
+if($show_post_list == "true"){?>
 <div class="box_head clearfix">
 				<h3 class="wpbook_box_header">
 					<?php _e('Recent Posts'); ?></h3>
       <ul>
-				<?php wp_recent_posts(10); ?>
+				<?php wp_recent_posts($recent_post_list_amount); ?>
       </ul>
 </div>
-<?php if($give_credit == "true"){ ?>
+<?php }if($give_credit == "true"){ ?>
 <div class="box_head clearfix" style="padding: 5px 0 0 0;">
 <p><small>
   This Facebook Application powered by 
