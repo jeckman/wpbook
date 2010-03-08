@@ -6,7 +6,7 @@ Date: 2010, January 3rd
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 1.5
+Version: 1.5.1
 */
   
 /* 
@@ -905,24 +905,26 @@ function wp_update_profile_boxes($post_ID) {
     // and for which permission has been granted
     $query = "SELECT name, page_id, has_added_app FROM page WHERE page_id IN (SELECT name, page_id FROM page WHERE page_id IN (SELECT page_id FROM page_admin WHERE uid = $target_admin))";
     $second_result = $facebook->api_client->fql_query($query);
-    foreach ($second_result as $page) {
-      if($page['has_added_app']) {
-        try { 
-          $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
-        } catch (Exception $e) {
-          //echo 'Caught exception: ',  $e->getMessage(); 
-        }
-        if ($permission) { 
-          // post to page
-          try{
-            $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$page['page_id']);
+    if(($second_result != '') && (!empty($second_result))) {
+      foreach ($second_result as $page) {
+        if($page['has_added_app']) {
+          try { 
+            $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
           } catch (Exception $e) {
-            //echo 'Caught exception: ',  $e->getMessage(), "<br>"; 
-            //wp_die($e->getMessage(),'Failed to publish');
+            //echo 'Caught exception: ',  $e->getMessage(); 
           }
-        }  
-      } // end of if page has_added_app
-    } // end of foreach _second result
+          if ($permission) { 
+            // post to page
+            try{
+              $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$page['page_id']);
+            } catch (Exception $e) {
+              //echo 'Caught exception: ',  $e->getMessage(), "<br>"; 
+              //wp_die($e->getMessage(),'Failed to publish');
+            }
+          }  
+        } // end of if page has_added_app
+      } // end of foreach _second result
+    } // end of non-empty second_result
   } // end for if stream_publish is true
 } // end of function
 
