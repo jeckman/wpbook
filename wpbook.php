@@ -839,7 +839,7 @@ function wp_update_profile_boxes($post_ID) {
   
   if( (!empty($api_key)) && (!empty($secret))) {
   // this call just updates the RefHandle, already set for the user profile
-    try{
+    try {
       $facebook->api_client->call_method('facebook.Fbml.setRefHandle',
                                      array('handle' => 'recent_posts',
                                             'fbml' => $ProfileContent,
@@ -1019,6 +1019,18 @@ function wpbook_query_vars($vars) {
     $vars[] = 'wpbook';
     return $vars;
 }
+  
+/**
+  * Thanks Otto - http://lists.automattic.com/pipermail/wp-hackers/2009-July/026759.html
+  */
+function wpbook_activation_check(){
+  if (version_compare(PHP_VERSION, '5.0.0', '<')) {
+    deactivate_plugins(basename(__FILE__)); // Deactivate ourself
+    wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
+  }
+}
+
+register_activation_hook(__FILE__, 'plugin_activation_check');
   
 add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
