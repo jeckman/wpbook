@@ -72,27 +72,29 @@ target="_top"><?php bloginfo('name'); ?></a></p>
 <?php 
   $query = "SELECT name, page_id, has_added_app FROM page WHERE page_id IN (SELECT name, page_id FROM page WHERE page_id IN (SELECT page_id FROM page_admin WHERE uid = $user))";
   $second_result = $facebook->api_client->fql_query($query);
-  foreach ($second_result as $page) {
-    if($page['has_added_app']) {
-      echo '<li>'. $page['name'] .' ('. $page['page_id'] .'), ';
-      try { 
-        $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
-      } catch (Exception $e) {
-        //echo 'Caught exception: ',  $e->getMessage(); 
-      }
-      if ($permission) { 
-        echo 'This page has granted stream.publish permissions to this app';
-      } else { 
-        echo 'This page has NOT granted stream.publish permissions to this app';
-      }  
-    echo '</li>'; 
-    }
-  }
+  if((!empty($second_result))) {
+    foreach ($second_result as $page) {
+      if($page['has_added_app']) {
+        echo '<li>'. $page['name'] .' ('. $page['page_id'] .'), ';
+        try { 
+          $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
+        } catch (Exception $e) {
+          //echo 'Caught exception: ',  $e->getMessage(); 
+        }
+        if ($permission) { 
+          echo 'This page has granted stream.publish permissions to this app';
+        } else { 
+          echo 'This page has NOT granted stream.publish permissions to this app';
+        }  
+      echo '</li>'; 
+      } // end if has_added_app
+    } // end for each
+  } // end if !empty
   ?>
   </ul></p>
   <p>If you are the administrator of pages which do not show up in this list, 
    you need to ensure you have added the application to the pages first.</p>
-  <p>Follow the <a href="">detailed directions</a> included with the plugin.</p>
+  <p>Follow the <a href="<?php echo WP_PLUGIN_URL ?>/wpbook/install_instructions.html" target="_new">detailed directions</a> included with the plugin.</p>
 <script type="text/javascript">
 FB_RequireFeatures(["XFBML"],function() {
                    FB.Facebook.init('<?php echo $api_key; ?>',
