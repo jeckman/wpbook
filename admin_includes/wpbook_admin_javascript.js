@@ -290,6 +290,13 @@ $("input[name='show_recent_post_list']").change(function(){
     viewpoint: true
             });
 
+// show errors tooltip
+    $('.show_errors').simpletip('If checked this option will capture errors thrown by the Facebook client.',{
+    stem: { corner: 'leftMiddle',color:'#DFDFDF',size: 12 },
+    hook: { tooltip: 'leftMiddle'},
+    contentClass: 'tooltip_content',
+    viewpoint: true
+            });
 //advanced options tooltip
 		$('.advanced_options').simpletip('If checked this option allow you to access the advacned options for WPBook. Such as time, date, and header footer information. ', {
 	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
