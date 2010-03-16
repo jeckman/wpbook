@@ -349,7 +349,6 @@ as well as some other files for processing comments and the like.
 * First push to WP-Plugins Directory
 
 == To Do ==
-(Roughly in order of priority)
 * Leverage Facebook API to publish notifications to stream when
   user leaves a comment (comment poster's stream and users streams)
 * Threaded comments. (If user has them enabled - requires WP 2.7.x)
