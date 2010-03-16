@@ -108,7 +108,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                          $gravatar_rating,$gravatar_default,$show_pages,
                          $exclude_page_list,$exclude_true,$show_pages_menu,
                          $show_pages_list, $show_recent_post_list, 
-                         $recent_post_amount,$stream_publish) {
+                         $recent_post_amount,$stream_publish,$show_errors) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -139,7 +139,8 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'show_pages_list'=>$show_pages_list,
                               'show_recent_post_list'=>$show_recent_post_list,
                               'recent_post_amount'=>$recent_post_amount,
-                              'stream_publish' => $stream_publish
+                              'stream_publish' => $stream_publish,
+                              'show_errors' => $show_errors
                               );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
@@ -226,6 +227,7 @@ function wpbook_subpanel() {
 	  $show_recent_post_list = $_POST['show_recent_post_list'];
 	  $recent_post_amount = ereg_replace("[^0-9]", "",$_POST['recent_post_amount_input']);  // todo: replace ereg
     $stream_publish = $_POST['stream_publish'];  
+    $show_errors = $_POST['show_errors'];  
       
 	  // Handle custom gravatar_deault   code modified from wp-admin/options.php
 		if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
@@ -256,7 +258,7 @@ function wpbook_subpanel() {
                     $show_custom_header_footer,$use_gravatar,$gravatar_rating,
                     $gravatar_default,$show_pages,$exclude_page_list,
                     $exclude_true,$show_pages_menu,$show_pages_list,
-                    $show_recent_post_list, $recent_post_amount,$stream_publish);
+                    $show_recent_post_list, $recent_post_amount,$stream_publish,$show_errors);
       $flash = "Your settings have been saved. ";
     } 
     elseif (($wpbookAdminOptions['fb_api_key'] != "") || ($wpbookAdminOptions['fb_secret'] != "") || ($wpbookAdminOptions['fb_app_url'] != "")
@@ -273,9 +275,8 @@ function wpbook_subpanel() {
 	//set the "smart" defaults on install this only works once the page has been refeshed
     if ($wpbookAdminOptions['wpbook_installation'] != 1) {  
 	$gravatar_default = WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif';
-      setAdminOptions(1, null,null,null,null,null,null,"true",null,"true","top",null,null,"F j, Y","g:i a","true",null,null,null,"disabled",null,"g",$gravatar_default,null,null,null,null,true,true,10,"false");
+      setAdminOptions(1, null,null,null,null,null,null,"true",null,"true","top",null,null,"F j, Y","g:i a","true",null,null,null,"disabled",null,"g",$gravatar_default,null,null,null,null,true,true,10,false,false);
     }
-
       if ($flash != '') echo '<div id="message"class="updated fade">'
       . '<p>' . $flash . '</p></div>'; 
   echo '<div class="wrap">';
@@ -393,6 +394,13 @@ function wpbook_subpanel() {
     echo '<p>Enter Your Facebook Profile ID';
     echo '<br /><input type="text" name="fb_admin_target" value="';
     echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="45" /></p>';  
+    echo '<p>If you have trouble with Stream publishing you can enable error messages below. This will trigger WPBook to ';
+    . ' capture and display errors it receives back from the Facebook client.</p>';
+    echo '<p class="options"><input type="checkbox" name="show_errors" value="true" ';
+    if( htmlentities($wpbookAdminOptions['show_errors']) == "true") {
+      echo("checked");
+    }
+    echo ' id="show_errors" > Show errors posting to Facebook Stream <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="show_errors" /></p>';
     
     
 echo'<p><strong> Socialize Options:</strong></p>';	
