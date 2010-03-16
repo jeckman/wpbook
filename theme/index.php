@@ -63,7 +63,7 @@ have <? echo $app_name; ?> yet. Invite all you want - it's free!"
   <p>Your userid is <?php echo $user; ?> </p>
   <p><strong>You will need to enter that number into WPBook's settings page on your WordPress install.</strong></p>
   
-  <p><a href="#" onclick="FB.Connect.showPermissionDialog('publish_stream', function() { window.top.location='http://apps.facebook.com/<?php echo $app_url; ?>' },true);">Click here to trigger extended permissions dialog box</a>
+  <p><a href="#" onclick="FB.Connect.showPermissionDialog('offline_access,publish_stream', function() { window.top.location='http://apps.facebook.com/<?php echo $app_url; ?>' },true);">Click here to trigger extended permissions dialog box</a>
 
   <p>After you have granted permission, return to the main application: <a href="http://apps.facebook.com/<?php echo $app_url; ?>/" 
 target="_top"><?php bloginfo('name'); ?></a></p>
