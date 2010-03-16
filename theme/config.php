@@ -44,7 +44,7 @@ $show_pages_menu = $wpbookAdminOptions['show_pages_menu'];
 $show_page_list = $wpbookAdminOptions['show_pages_list'];
 $show_post_list = $wpbookAdminOptions['show_recent_post_list'];
 $recent_post_list_amount= $wpbookAdminOptions['recent_post_amount'];
-
+$wpbook_show_errors = $wpbookAdminOptions['show_errors'];
 
 $facebook = new Facebook($api_key, $secret);
 $user = $facebook->require_login(); 

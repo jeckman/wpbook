@@ -838,7 +838,8 @@ function wp_update_profile_boxes($post_ID) {
 	$api_key = $wpbookAdminOptions['fb_api_key'];
 	$secret  = $wpbookAdminOptions['fb_secret'];
   $target_admin = $wpbookAdminOptions['fb_admin_target'];
-  $stream_publish = $wpbookAdminOptions['stream_publish'];  
+  $stream_publish = $wpbookAdminOptions['stream_publish'];
+  $wpbook_show_errors = $wpbookAdminOptions['show_errors'];
   
 	$facebook = new Facebook($api_key, $secret);
 	
@@ -853,9 +854,12 @@ function wp_update_profile_boxes($post_ID) {
                                             'fbml' => $ProfileContent,
                                     ) );
     } catch (Exception $e) {
-        //echo 'Caught exception: ',  $e->getMessage(), "<br>";
-    }
-  }
+      if($wpbook_show_errors) {
+        $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+        wp_die($wpbook_message,'WPBook Error');
+      } // end if for show errors
+    } // end try catch
+  } // end if for api_key and secret
      
   if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && ($stream_publish == "true") ) {
   // here we should also post to the author's stream
@@ -906,8 +910,11 @@ function wp_update_profile_boxes($post_ID) {
     try{
       $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_admin,$target_admin);
     } catch (Exception $e) {
-      //  echo 'Caught exception: ',  $e->getMessage(), "<br>";
-    }
+      if($wpbook_show_errors) {
+        $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+        wp_die($wpbook_message,'WPBook Error');
+      } // end if for show errors
+    } // end try-catch
     
     // need to do something here to get the pages for which this user is an admin
     // and for which permission has been granted
@@ -919,17 +926,22 @@ function wp_update_profile_boxes($post_ID) {
           try { 
             $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
           } catch (Exception $e) {
-            //echo 'Caught exception: ',  $e->getMessage(); 
+            if($wpbook_show_errors) {
+              $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+              wp_die($wpbook_message,'WPBook Error');
+            } // end if for show errors
           }
           if ($permission) { 
             // post to page
             try{
               $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$page['page_id']);
             } catch (Exception $e) {
-              //echo 'Caught exception: ',  $e->getMessage(), "<br>"; 
-              //wp_die($e->getMessage(),'Failed to publish');
-            }
-          }  
+              if($wpbook_show_errors) {
+                $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+                wp_die($wpbook_message,'WPBook Error');
+              } // end if for show errors
+            } // end try catch
+          } // if permissions 
         } // end of if page has_added_app
       } // end of foreach _second result
     } // end of non-empty second_result

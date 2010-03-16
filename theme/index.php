@@ -79,7 +79,10 @@ target="_top"><?php bloginfo('name'); ?></a></p>
         try { 
           $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
         } catch (Exception $e) {
-          //echo 'Caught exception: ',  $e->getMessage(); 
+          if($wpbook_show_errors) {
+            $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+            wp_die($wpbook_message,'WPBook Error');
+          }
         }
         if ($permission) { 
           echo 'This page has granted stream.publish permissions to this app';
