@@ -1,15 +1,15 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 Tested up to: 2.9.2
 Requires at least: 2.6
 
 Plugin to embed Wordpress Blog into Facebook Platform.
 
-As of 1.5, this plugin REQUIRES PHP5
+As of 1.5, this plugin requires PHP 5. 
 
-== Overview ==
+== Description ==
 
 WPBook enables users to add your (self-hosted, not wordpress.com) wordpress 
 blog as a Facebook application. Facebook users will see your posts in a 
@@ -30,7 +30,8 @@ of pages for which you are an admin, to which you've added the app, and
 for which you've granted stream publish permission, when you write a new post.
 
 WPBook *DOES NOT* (yet) do any of these:
-  - Post notifications into your users feeds (except to your wall) when you publish a post
+  - Post notifications into your users feeds (except for your posts to your wall) 
+    when you publish a post
   - Post notifications back to a users feed when he/she posts a comment
 
 If you'd like to do these things, please investigate:
@@ -39,6 +40,8 @@ If you'd like to do these things, please investigate:
      (http://www.facebook.com/notes.php) 
  - The Sociable Facebook Connect plugin
      (http://www.sociable.es/facebook-connect/)
+
+As of 1.5, this plugin requires PHP 5. 
 
 == Installation ==
 
@@ -129,12 +132,22 @@ what you want is there.
 There's also a default/style.css which basically mimics Facebook's styles, 
 as well as some other files for processing comments and the like.  
 
-== Version History ==
+== Changelog ==
 
-= Version 1.5.1 =
+= 1.5.2 =
+ * Now checks for PHP 5 at activation, will not allow activation under PHP4
+ * Checks for zero pages of which user is admin (avoid edge case exception)
+ * Added link to installation instructions to permissions page
+ * Added offline-access permission request (some users had not yet granted
+   this permission)
+ * Added "show errors" mode, which when enabled calls wp_die when
+   the Facebook client throws exceptions - a bit extreme but does show the 
+   exceptions to the user
+
+= 1.5.1 =
  * Oops. Forgot to check for user who isn't an admin of any pages. 
 
-= Version 1.5 =
+= 1.5 =
  * Now requires PHP 5
  * Enables user to post to stream, including to pages. 
  * Catches exceptions from Facebook client. (Doesn't yet surface those in 
@@ -156,16 +169,16 @@ as well as some other files for processing comments and the like.
  * Added %tag_links% and %category_links% to custom header footer as
    well as made archive pages work. 
 
-= Version 1.4.2 =
+= 1.4.2 =
 
 * Bugfix for those who install WordPress in a subdirectory, for home comment submission was failing in 1.4 and 1.4.1. 
 * Bugfix for wpbook_admin_javascript.js which included an outmoded jQuery selector syntax and broke the admin js in 2.9.1
 * Bugfix for wpbook_admin_javascript.js which included hardcoded paths assuming wp_content path relative to wp-admin (shows images for default gravatar icons by default now rather than waiting for tooltip hover)
 
-= Version 1.4.1 =
+= 1.4.1 =
 * Doh! Typo snuck into release package. (See http://wordpres.org/support/topic/348292)
 
-= Version 1.4 =
+= 1.4 =
 * Fixed bug which made invite friends link only work on the home page
 * Fixed bug in setting for custom/header footer which included a permalink
   (See http://wordpress.org/support/topic/306263)
@@ -176,14 +189,14 @@ as well as some other files for processing comments and the like.
 * Removed hard coded reference to config.php
   (See http://willnorris.com/2009/06/wordpress-plugin-pet-peeve-2-direct-calls-to-plugin-files)
 
-= Version 1.3.1 = 
+= 1.3.1 = 
 * Fix for XAMPP Windows users - add ABSPATH to include for config.php
 * Fix for users who have the application name *in* the permalink structure
 * Cleanup for images in instructions that were too wide for layout
 * Cleanup button title for submit on invite friends page
 * Remove unnecessary second 'include_once' in comments.php
 
-= Version 1.3 =
+= 1.3 =
 * Mostly improvements to the admin interface user experience - better 
   separation of options into required, customization, social, and advanced. 
 * Ability to include a custom header/footer for each post, including author,
@@ -199,19 +212,19 @@ as well as some other files for processing comments and the like.
   development, they are welcome to, taking this as the place from which to
   begin a fork.  
 
-= Version 1.2 =
+= 1.2 =
 * Changed the mechanism for "Add to Profile" to avoid issues with
   the fb:ref url method, using fb:ref handle instead
 * Eliminated /wpbook/theme/recent_posts.php
 * Incorporated Brandon Dukes' fixes to admins screens
 * Added timestamp to posts
 
-= Version 1.1.1 =
+= 1.1.1 =
 * Fixed minor bug which broke FB resize javascript when 'add to profile'
   option was off
 * Fixed minor bug in the description of the plugin (display). 
 
-= Version 1.1 =
+= 1.1 =
 * Fixed (I hope!) Profile.setFBML issues for pages, profiles
   Eliminated the need to copy defaultFBML into settings
 * Added option to view link in external site
@@ -219,7 +232,7 @@ as well as some other files for processing comments and the like.
 * Added option to enable "add to profile"
 * Created documentation with photos
 
-= Version 1.0 =
+= 1.0 =
 * Added simplexml44 library (BSD Licensed) for php4client
 * Added option for "Give Credit" 
 * Added option for "Enable Share"
@@ -230,64 +243,64 @@ as well as some other files for processing comments and the like.
   curl libraries were not present or enabled
 * Jumped version to 1.0 - functionally complete
 
-= Version 0.9.7 =
+= 0.9.7 =
 * template_directory deprecated in 2.7, use bloginfo('wpurl') instead
 
-= Version 0.9.6 = 
+= 0.9.6 = 
 * Clean up from moving plugin in to directory
 * Added Share button to share posts on FB
 * Added fix for conflict with other Facebook-based plugins
 
-= Version 0.9.5 = 
+= 0.9.5 = 
 * Moved plugin into wpbook dir in subversion
 * Moved theme subdirectory inside plugin subdir
 *   Required several function changes
 * Added check for existing FacebookRestClient
 
-= Version 0.9.4 =
+= 0.9.4 =
 * Bug in javascript (NULL isn't the same as null) for profile
 
-= Version 0.9.3 =
+= 0.9.3 =
 * Bug in commenting inside Facebook due to $facebook->redirect
 * Now redirects to the post on which the user commented
 * Added instruction for adding to FB Pages to settings page in WordPress
 
-= Version 0.9.2 =
+= 0.9.2 =
 * Didn't realize I had set default FBML inside Facebook, masked a bug
 * Should now set profile FBML before calling add profile box
 
-= Version 0.9.1 =
+= 0.9.1 =
 * Fixed xd_reciever.html versus xd_receiver.html issue
 * (You'd think a guy with a PhD in English would know how to spell.) 
 
-= Version 0.9  = 
+= 0.9  = 
 * Added profile boxes
 * Shows 5 most recent posts in profile box
 * Also sets FBML for "pages" profile boxes
 
-= Version 0.8.2 =
+= 0.8.2 =
 * Added option to require email address of comment author
 * Can be set separately only for Facebook comment authors
 * Functionality added by Brandon Dukes. 
 
-= Version 0.8.1 =
+= 0.8.1 =
 * Oops. Typo in README.txt - Brandon Dukes.
 * Issue with some text not being displayed
   on the invite form
 * Tested with Wordpress 2.6.2
 
-= Version 0.8 =
+= 0.8 =
 * Thanks to Brandon Dukes for contributing facebook invites - if you
   select 'display invite friends link' checkbox in the wp-admin 
   settings for WPBook, you can invite facebook friends!
 * Display email box for commentors (optional)
 
-= Version 0.7.5 = 
+= 0.7.5 = 
 * bug fix: style.css is in template directory, not necessarily
   based on /wp-content/themes/wp-facebook - account for subdirs
 * Same goes for the FB.XdComm.Server.init call
 
-= Version 0.7.4 =
+= 0.7.4 =
 * bug fix for subdirectory based blogs
 * fixed hardcoded offset of permalinks
 * added note to readme to update theme when updating plugin
@@ -297,28 +310,28 @@ as well as some other files for processing comments and the like.
 * Added ABSPATH as appropriate to catch the right includes
 * Removed hard dependency on specific Avatars plugin, now uses default gravatar
 
-= Version 0.7.3 =
+= 0.7.3 =
 * bug fix
 * adding namespacing to plugin function
 * anded min version to readme
 
-= Version 0.7.2 =
+= 0.7.2 =
 * bug fix
 * no try { } catch {} in PHP4
 
-= Version 0.7.1 =
+= 0.7.1 =
 * bug fix
 * comments_facebook.php was not being found
 * created fb_comments_template function instead
 
-= Version 0.7 =
+= 0.7 =
 * Major architecture changes
 * Relies on a theme, not creation of a page
 * Inspired by Alex King's mobile plugin (http://alexking.org/projects/wordpress)
 * Enables recent posts and post navigation
 * Added app canvas url to options for use as redirect post-comment submission
 
-= Version 0.6 =
+= 0.6 =
 * Added support for posting comments
 * Switched to iFrame to allow more code in blog posts
 * Added Facebook javascript for resizing iFrame
@@ -327,12 +340,12 @@ as well as some other files for processing comments and the like.
 * consolidated Facebook client stuff in config.php
 * auto detect php version and set client include accordingly
 
-= Version 0.5 =
+= 0.5 =
 * Added support for PHP4 Facebook Client Library
 * Options combined into associative array to speed-up and remove 
   interference w/ other plugins
 
-= Version 0.4 =
+= 0.4 =
 * First push to WP-Plugins Directory
 
 == To Do ==
@@ -351,3 +364,5 @@ as well as some other files for processing comments and the like.
   use your wordpress home url as your canvas callback)
 * Enable pages for things like categories and tags, and enable links to 
   those pages from the header/footer of the post 
+* Enable users to select a theme, overriding the default
+  theme/index.php for ease of updates
