@@ -142,6 +142,7 @@ as well as some other files for processing comments and the like.
  * Added option for 'publish to pages' separate from 'publish to stream'
    (This enables publishing to author's wall, page's wall, OR both)
  * Added code to carry querystring into "external permalink" function
+ * Fixed spelling of pieces in external permalink function
 
 = 1.5.2 =
  * Now checks for PHP 5 at activation, will not allow activation under PHP4
