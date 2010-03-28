@@ -103,18 +103,20 @@ function str_replace_once($needle, $replace, $haystack) {
 function get_external_post_url($my_permalink){
   global $app_url;
   // code to get the url of the orginal post for use in the "show external url view"
-  $permalink_peices = parse_url($my_permalink);
+  $permalink_pieces = parse_url($my_permalink);
   //get the app_url and the preceeding slash
   $permalink_app_url = "/". $app_url; 
   //remove /appname
-  $external_post_permalink = str_replace_once($permalink_app_url,"",$permalink_peices[path]);
+  $external_post_permalink = str_replace_once($permalink_app_url,"",$permalink_pieces[path]);
   //re-write the post url using the site url 
-  $external_site_url_peices = parse_url(get_bloginfo('wpurl'));
+  $external_site_url_pieces = parse_url(get_bloginfo('wpurl'));
     
   //break apart the external site address and get just the "site.com" part
-  $external_site_url = $external_site_url_peices[host];
+  $external_site_url = $external_site_url_pieces[host];
   $external_post_url = get_bloginfo('siteurl').  $external_post_permalink;
-  
+  if(!empty($permalink_pieces[query])) {
+    $external_post_url = $external_post_url .'?'. $permalink_pieces[query];
+  }
   //return "app url is " . $app_url; 
   return $external_post_url; 
 }  
