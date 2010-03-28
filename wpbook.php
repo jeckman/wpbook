@@ -390,6 +390,8 @@ function wpbook_subpanel() {
       echo("checked");
     }
     echo ' id="stream_publish_pages" > Publish new posts to the Wall of Facebook Fan Pages to which permission has been granted <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" /></p>';
+    echo '<p><strong>Note:</strong> You are still requred to enter a Facebook profile ID below, and that Facebook profile ID must be an admin of the pages to which you want to publish. ';
+    echo 'You can check to see if permission has been granted by visiting the "grant permissions" link below.</p>';
     if( !empty($wpbookAdminOptions['fb_app_url'])  
        && !empty($wpbookAdminOptions['fb_secret'])
        && !empty($wpbookAdminOptions['fb_api_key'])
