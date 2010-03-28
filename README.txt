@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.5.2
+Stable tag: 1.5.3
 Tested up to: 2.9.2
 Requires at least: 2.6
 
@@ -40,6 +40,8 @@ If you'd like to do these things, please investigate:
      (http://www.facebook.com/notes.php) 
  - The Sociable Facebook Connect plugin
      (http://www.sociable.es/facebook-connect/)
+ - The Wordbooker Plugin
+     (http://wordpress.org/extend/plugins/wordbooker/)
 
 As of 1.5, this plugin requires PHP 5. 
 
@@ -133,6 +135,13 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 1.5.3 =
+ * Fixed Activation check for PHP5
+ * Added Try/Catch around FQL call for pages of which user is admin
+ * Added option for 'publish to pages' separate from 'publish to stream'
+   (This enables publishing to author's wall, page's wall, OR both)
+ * Added code to carry querystring into "external permalink" function
 
 = 1.5.2 =
  * Now checks for PHP 5 at activation, will not allow activation under PHP4

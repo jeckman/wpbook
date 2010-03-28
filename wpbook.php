@@ -1071,7 +1071,7 @@ function wpbook_activation_check(){
   }
 }
 
-register_activation_hook(__FILE__, 'plugin_activation_check');
+register_activation_hook(__FILE__, 'wpbook_activation_check');
   
 add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
