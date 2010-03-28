@@ -919,7 +919,14 @@ function wp_update_profile_boxes($post_ID) {
     // need to do something here to get the pages for which this user is an admin
     // and for which permission has been granted
     $query = "SELECT name, page_id, has_added_app FROM page WHERE page_id IN (SELECT name, page_id FROM page WHERE page_id IN (SELECT page_id FROM page_admin WHERE uid = $target_admin))";
-    $second_result = $facebook->api_client->fql_query($query);
+    try{
+      $second_result = $facebook->api_client->fql_query($query);
+    } catch (Exception $e) {
+      if($wpbook_show_errors) {
+        $wpbook_message = 'Caught exception: ' . $e->getMessage();
+        wp_die($wpbook_message,'WPBook Error');
+      }
+    }
     if(($second_result != '') && (!empty($second_result))) {
       foreach ($second_result as $page) {
         if($page['has_added_app']) {
