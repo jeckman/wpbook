@@ -290,6 +290,14 @@ $("input[name='show_recent_post_list']").change(function(){
     viewpoint: true
             });
 
+// stream publish_pages tooltip
+    $('.stream_publish_pages').simpletip('If checked this option will publish new posts to the Wall of any Facebook Fan Pages of which you are an admin, and for which permission has been granted, whenever you post.',{
+    stem: { corner: 'leftMiddle',color:'#DFDFDF',size: 12 },
+    hook: { tooltip: 'leftMiddle'},
+    contentClass: 'tooltip_content',
+    viewpoint: true
+            });
+
 // show errors tooltip
     $('.show_errors').simpletip('If checked this option will capture errors thrown by the Facebook client.',{
     stem: { corner: 'leftMiddle',color:'#DFDFDF',size: 12 },
