@@ -403,7 +403,6 @@ function wpbook_subpanel() {
     echo '<p>Enter Your Facebook Profile ID';
     echo '<br /><input type="text" name="fb_admin_target" value="';
     echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="45" /></p>';  
-    echo 
     echo '<p>If you have trouble with Stream publishing you can enable error messages below. This will trigger WPBook to '
     . ' capture and display errors it receives back from the Facebook client.</p>';
     echo '<p class="options"><input type="checkbox" name="show_errors" value="true" ';
