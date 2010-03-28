@@ -839,6 +839,7 @@ function wp_update_profile_boxes($post_ID) {
 	$secret  = $wpbookAdminOptions['fb_secret'];
   $target_admin = $wpbookAdminOptions['fb_admin_target'];
   $stream_publish = $wpbookAdminOptions['stream_publish'];
+  $stream_publish_pages = $wpbookAdminOptions['stream_publish_pages'];
   $wpbook_show_errors = $wpbookAdminOptions['show_errors'];
   
 	$facebook = new Facebook($api_key, $secret);
@@ -861,7 +862,7 @@ function wp_update_profile_boxes($post_ID) {
     } // end try catch
   } // end if for api_key and secret
      
-  if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && ($stream_publish == "true") ) {
+  if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && (($stream_publish == "true") || $stream_publish_pages == "true")) {
   // here we should also post to the author's stream
      $my_post = get_post($post_ID);
      $my_title=$my_post->post_title;
@@ -907,52 +908,56 @@ function wp_update_profile_boxes($post_ID) {
     $attachment = json_encode($attachment); 
     $action_links = json_encode($action_links); 
     
-    try{
-      $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_admin,$target_admin);
-    } catch (Exception $e) {
-      if($wpbook_show_errors) {
-        $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
-        wp_die($wpbook_message,'WPBook Error');
-      } // end if for show errors
-    } // end try-catch
+    if($stream_publish == "true") {
+      try{
+        $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_admin,$target_admin);
+      } catch (Exception $e) {
+        if($wpbook_show_errors) {
+          $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+          wp_die($wpbook_message,'WPBook Error');
+        } // end if for show errors
+      } // end try-catch
+    } // end of if stream_publish 
     
-    // need to do something here to get the pages for which this user is an admin
-    // and for which permission has been granted
-    $query = "SELECT name, page_id, has_added_app FROM page WHERE page_id IN (SELECT name, page_id FROM page WHERE page_id IN (SELECT page_id FROM page_admin WHERE uid = $target_admin))";
-    try{
-      $second_result = $facebook->api_client->fql_query($query);
-    } catch (Exception $e) {
-      if($wpbook_show_errors) {
-        $wpbook_message = 'Caught exception: ' . $e->getMessage();
-        wp_die($wpbook_message,'WPBook Error');
+    if($stream_publish_pages == "true") {      
+      // get the pages for which this user is an admin
+      // and for which permission has been granted
+      $query = "SELECT name, page_id, has_added_app FROM page WHERE page_id IN (SELECT name, page_id FROM page WHERE page_id IN (SELECT page_id FROM page_admin WHERE uid = $target_admin))";
+      try{
+        $second_result = $facebook->api_client->fql_query($query);
+      } catch (Exception $e) {
+        if($wpbook_show_errors) {
+          $wpbook_message = 'Caught exception: ' . $e->getMessage();
+          wp_die($wpbook_message,'WPBook Error');
+        }
       }
-    }
-    if(($second_result != '') && (!empty($second_result))) {
-      foreach ($second_result as $page) {
-        if($page['has_added_app']) {
-          try { 
-            $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
-          } catch (Exception $e) {
-            if($wpbook_show_errors) {
-              $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
-              wp_die($wpbook_message,'WPBook Error');
-            } // end if for show errors
-          }
-          if ($permission) { 
-            // post to page
-            try{
-              $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$page['page_id']);
+      if(($second_result != '') && (!empty($second_result))) {
+        foreach ($second_result as $page) {
+          if($page['has_added_app']) {
+            try { 
+              $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
             } catch (Exception $e) {
               if($wpbook_show_errors) {
                 $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
                 wp_die($wpbook_message,'WPBook Error');
               } // end if for show errors
-            } // end try catch
-          } // if permissions 
-        } // end of if page has_added_app
-      } // end of foreach _second result
-    } // end of non-empty second_result
-  } // end for if stream_publish is true
+            }
+            if ($permission) { 
+              // post to page
+              try{
+                $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$page['page_id']);
+              } catch (Exception $e) {
+                if($wpbook_show_errors) {
+                  $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+                  wp_die($wpbook_message,'WPBook Error');
+                } // end if for show errors
+              } // end try catch
+            } // if permissions 
+          } // end of if page has_added_app
+        } // end of foreach _second result
+      } // end of non-empty second_result
+    } // end of if stream_publish_pages is true
+  } // end for if stream_publish OR stream_publish_pages is true
 } // end of function
 
      
