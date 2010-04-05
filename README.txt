@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 Tested up to: 2.9.2
 Requires at least: 2.6
 
@@ -135,6 +135,10 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 1.5.4 = 
+ * Cleaned up theme/index.php if/else loops
+ * Eliminates FBML errors for blog owner on invite page
 
 = 1.5.3 =
  * Fixed Activation check for PHP5
