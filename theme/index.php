@@ -62,10 +62,12 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
   </head>
   <body>
   <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
-  <p>This page is just for the author of the blog to grant extended permissions.</p>
+  <p>This page is where you can check and grant extended permissions, which enable WPBook to 
+   publish to your personal wall and/or to the walls of fan pages.</p>
   <p>Your userid is <?php echo $user; ?> </p>
   <p><strong>You will need to enter that number into WPBook's settings page on your WordPress install.</strong></p>
-  <p><a href="#" onclick="FB.Connect.showPermissionDialog('offline_access,publish_stream', function() { window.top.location='http://apps.facebook.com/<?php echo $app_url; ?>' },true);">Click here to trigger extended permissions dialog box</a>
+  <p><a href="#" onclick="FB.Connect.showPermissionDialog('offline_access', function() { window.top.location='http://apps.facebook.com/<?php echo $app_url; ?>' },true);">Click here to trigger extended permissions dialog box to grant <b>offline access</b> permissions.</a></p>
+  <p><a href="#" onclick="FB.Connect.showPermissionDialog('publish_stream', function() { window.top.location='http://apps.facebook.com/<?php echo $app_url; ?>' },true);">Click here to trigger extended permissions dialog box to grant <b>stream publish permissions.</a></p>
   <p>After you have granted permission, return to the main application: <a href="http://apps.facebook.com/<?php echo $app_url; ?>/" 
 target="_top"><?php bloginfo('name'); ?></a></p>
   <p>You are also listed as the admin of these pages:
