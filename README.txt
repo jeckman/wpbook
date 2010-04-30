@@ -136,6 +136,9 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
+= 1.5.5 = 
+ * Change mechanism for requesting offline.access, stream.publish permissions for fan pages. 
+
 = 1.5.4 = 
  * Cleaned up theme/index.php if/else loops
  * Eliminates FBML errors for blog owner on invite page

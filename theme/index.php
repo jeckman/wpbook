@@ -66,31 +66,46 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
    publish to your personal wall and/or to the walls of fan pages.</p>
   <p>Your userid is <?php echo $user; ?> </p>
   <p><strong>You will need to enter that number into WPBook's settings page on your WordPress install.</strong></p>
-  <p><a href="#" onclick="FB.Connect.showPermissionDialog('offline_access', function() { window.top.location='http://apps.facebook.com/<?php echo $app_url; ?>' },true);">Click here to trigger extended permissions dialog box to grant <b>offline access</b> permissions.</a></p>
-  <p><a href="#" onclick="FB.Connect.showPermissionDialog('publish_stream', function() { window.top.location='http://apps.facebook.com/<?php echo $app_url; ?>' },true);">Click here to trigger extended permissions dialog box to grant <b>stream publish permissions.</a></p>
-  <p>After you have granted permission, return to the main application: <a href="http://apps.facebook.com/<?php echo $app_url; ?>/" 
-target="_top"><?php bloginfo('name'); ?></a></p>
+  <p><a href="http://www.facebook.com/login.php?api_key=<?php echo $api_key; ?>&connect_display=popup&v=1.0&next=http://www.facebook.com/connect/login_success.html&cancel_url=http://www.facebook.com/connect/login_failure.html&fbconnect=true&return_session=true&session_key_only=true&req_perms=read_stream,publish_stream,offline_access">Click here to grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
   <p>You are also listed as the admin of these pages:
   <ul>
   <?php 
   $query = "SELECT name, page_id, has_added_app FROM page WHERE page_id IN (SELECT name, page_id FROM page WHERE page_id IN (SELECT page_id FROM page_admin WHERE uid = $user))";
-  $second_result = $facebook->api_client->fql_query($query);
+  try {
+    $second_result = $facebook->api_client->fql_query($query);
+  } catch (Exception $e) {
+    if ($wpbook_show_errors) {
+      $wpbook_message = 'Caught exception in second_result query: ' . $e->$getMessage();
+      wp_die($wpbook_message,'WPBook Error');
+    }
+  }
   if((!empty($second_result))) {
     foreach ($second_result as $page) {
       if($page['has_added_app']) {
         echo '<li>'. $page['name'] .' ('. $page['page_id'] .'), ';
-        try { 
-          $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
+        // Using FQL based lookup, per http://forum.developers.facebook.com/viewtopic.php?pid=213979
+        $perm = '';
+        $permissions_fql = 'SELECT publish_stream FROM permissions WHERE uid = '.$page['page_id'].' ';
+        try {
+          $perm = $facebook->api_client->fql_query($permissions_fql);
         } catch (Exception $e) {
-          if($wpbook_show_errors) {
-            $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+          if ($wpbook_show_errors) {
+            $wpbook_message = 'Caught exception in fql_query: ' . $e->$getMessage();
             wp_die($wpbook_message,'WPBook Error');
           }
         }
-        if ($permission) { 
-          echo 'This page has granted stream.publish permissions to this app';
+        //This query will return an array as follows if the permission was found.
+        //Array ( [0] => Array ( [publish_stream] => 1 ) )
+        //If there was no permission set it will return an empty string. 
+        if (empty($perm)) { 
+          echo 'This page has NOT granted stream.publish permissions to this app. ';
+          echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
+          echo $api_key;
+          echo '&v=1.0&next=http://www.facebook.com/connect/login_success.html?xxRESULTTOKENxx&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
+          echo $page['page_id'];
+          echo '">Grant stream.publish for this page</a>. ';          
         } else { 
-          echo 'This page has NOT granted stream.publish permissions to this app';
+          echo 'This page has granted stream.publish permissions to this app. ';
         }  
       echo '</li>'; 
       } // end if has_added_app
