@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.5.4
+Stable tag: 1.5.5
 Tested up to: 2.9.2
 Requires at least: 2.6
 
@@ -137,7 +137,10 @@ as well as some other files for processing comments and the like.
 == Changelog ==
 
 = 1.5.5 = 
- * Change mechanism for requesting offline.access, stream.publish permissions for fan pages. 
+ * Changed mechanism for requesting offline.access, stream.publish permissions
+   for users and fan pages. 
+ * This should help eliminate the API 100 and API 200 errors some have
+   encountered
 
 = 1.5.4 = 
  * Cleaned up theme/index.php if/else loops
