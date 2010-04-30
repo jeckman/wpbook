@@ -66,7 +66,7 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
    publish to your personal wall and/or to the walls of fan pages.</p>
   <p>Your userid is <?php echo $user; ?> </p>
   <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
-  <p><a href="http://www.facebook.com/login.php?api_key=<?php echo $api_key; ?>&connect_display=popup&v=1.0&next=http://www.facebook.com/connect/login_success.html&cancel_url=http://www.facebook.com/connect/login_failure.html&fbconnect=true&return_session=true&session_key_only=true&req_perms=read_stream,publish_stream,offline_access">Click here to grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
+  <p><a href="http://www.facebook.com/login.php?api_key=<?php echo $api_key; ?>&connect_display=popup&v=1.0&next=http://www.facebook.com/connect/login_success.html&cancel_url=http://www.facebook.com/connect/login_failure.html&fbconnect=1&return_session=1&session_key_only=1&req_perms=read_stream,publish_stream,offline_access">Click here to grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
   <p>You are also listed as the admin of these pages:
   <ul>
   <?php 
