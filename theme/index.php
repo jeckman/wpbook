@@ -86,7 +86,7 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
         // Using FQL based lookup, per http://forum.developers.facebook.com/viewtopic.php?pid=213979
         $perm = '';
         $permissions_fql = 'SELECT publish_stream FROM permissions WHERE uid = '.$page['page_id'].' ';
-        echo '<!-- permissions_fql was ' . $permissions_fql . ' -->'; 
+        //echo '<!-- permissions_fql was ' . $permissions_fql . ' -->'; 
         try {
           $perm = $facebook->api_client->fql_query($permissions_fql);
         } catch (Exception $e) {
@@ -98,7 +98,7 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
         //This query will return an array as follows if the permission was found.
         //Array ( [0] => Array ( [publish_stream] => 1 ) )
         //If there was no permission set it will return an empty string. 
-        echo '<!-- perm was ' . print_r($perm) . ' -->'; 
+        //echo '<!-- perm was ' . print_r($perm) . ' -->'; 
 
         if ($perm[0]['publish_stream'] != 1) { 
           echo 'This page has NOT granted stream.publish permissions to this app. ';
