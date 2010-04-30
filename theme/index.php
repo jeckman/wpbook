@@ -65,7 +65,7 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
   <p>This page is where you can check and grant extended permissions, which enable WPBook to 
    publish to your personal wall and/or to the walls of fan pages.</p>
   <p>Your userid is <?php echo $user; ?> </p>
-  <p><strong>You will need to enter that number into WPBook's settings page on your WordPress install.</strong></p>
+  <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
   <p><a href="http://www.facebook.com/login.php?api_key=<?php echo $api_key; ?>&connect_display=popup&v=1.0&next=http://www.facebook.com/connect/login_success.html&cancel_url=http://www.facebook.com/connect/login_failure.html&fbconnect=true&return_session=true&session_key_only=true&req_perms=read_stream,publish_stream,offline_access">Click here to grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
   <p>You are also listed as the admin of these pages:
   <ul>
@@ -86,6 +86,7 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
         // Using FQL based lookup, per http://forum.developers.facebook.com/viewtopic.php?pid=213979
         $perm = '';
         $permissions_fql = 'SELECT publish_stream FROM permissions WHERE uid = '.$page['page_id'].' ';
+        echo '<!-- permissions_fql was ' . $permissions_fql . ' -->'; 
         try {
           $perm = $facebook->api_client->fql_query($permissions_fql);
         } catch (Exception $e) {
@@ -97,7 +98,9 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
         //This query will return an array as follows if the permission was found.
         //Array ( [0] => Array ( [publish_stream] => 1 ) )
         //If there was no permission set it will return an empty string. 
-        if (empty($perm)) { 
+        echo '<!-- perm was ' . print_r($perm) . ' -->'; 
+
+        if ($perm[0]['publish_stream'] != 1) { 
           echo 'This page has NOT granted stream.publish permissions to this app. ';
           echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
           echo $api_key;
