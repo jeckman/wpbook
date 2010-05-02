@@ -100,7 +100,7 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
         //If there was no permission set it will return an empty string. 
         //echo '<!-- perm was ' . print_r($perm) . ' -->'; 
 
-        if ($perm[0]['publish_stream'] != 1) { 
+        if (($perm == '') || ($perm[0]['publish_stream'] != 1)) { 
           echo 'This page has NOT granted stream.publish permissions to this app. ';
           echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
           echo $api_key;
