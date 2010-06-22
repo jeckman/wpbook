@@ -865,7 +865,7 @@ function wp_update_profile_boxes($post_ID) {
                                     ) );
     } catch (Exception $e) {
       if($wpbook_show_errors) {
-        $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+        $wpbook_message = 'Caught exception: ' .  $e->getMessage() .' Error code: '. $e->getCode(); 
         wp_die($wpbook_message,'WPBook Error');
       } // end if for show errors
     } // end try catch
@@ -890,7 +890,7 @@ function wp_update_profile_boxes($post_ID) {
          $img[] = wp_get_attachment_image_src($imageID);
        }
        $thumb = array_pop($img);
-       $my_image =$thumb[0];
+       $my_image = $thumb[0];
      }
      if(!empty($my_image)) {
        $attachment = array( 'name' => $my_title,
@@ -922,7 +922,7 @@ function wp_update_profile_boxes($post_ID) {
         $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_admin,$target_admin);
       } catch (Exception $e) {
         if($wpbook_show_errors) {
-          $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+          $wpbook_message = 'Caught exception in stream publish for user: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
           wp_die($wpbook_message,'WPBook Error');
         } // end if for show errors
       } // end try-catch
@@ -936,7 +936,7 @@ function wp_update_profile_boxes($post_ID) {
         $second_result = $facebook->api_client->fql_query($query);
       } catch (Exception $e) {
         if($wpbook_show_errors) {
-          $wpbook_message = 'Caught exception: ' . $e->getMessage();
+          $wpbook_message = 'Caught exception in getting list of potential pages: ' . $e->getMessage() .' Error code: '. $e->getCode(); 
           wp_die($wpbook_message,'WPBook Error');
         }
       }
@@ -947,7 +947,7 @@ function wp_update_profile_boxes($post_ID) {
               $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
             } catch (Exception $e) {
               if($wpbook_show_errors) {
-                $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+                $wpbook_message = 'Caught exception in checking extended permissions for those pages: ' .  $e->getMessage() .' Error code: '. $e->getCode(); 
                 wp_die($wpbook_message,'WPBook Error');
               } // end if for show errors
             }
@@ -957,7 +957,7 @@ function wp_update_profile_boxes($post_ID) {
                 $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$page['page_id']);
               } catch (Exception $e) {
                 if($wpbook_show_errors) {
-                  $wpbook_message = 'Caught exception: ' .  $e->getMessage(); 
+                  $wpbook_message = 'Caught exception in actually publishing to stream: '.  $e->getMessage() .' Error code: '. $e->getCode(); 
                   wp_die($wpbook_message,'WPBook Error');
                 } // end if for show errors
               } // end try catch

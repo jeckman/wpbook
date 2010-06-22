@@ -66,8 +66,27 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
    publish to your personal wall and/or to the walls of fan pages.</p>
   <p>Your userid is <?php echo $user; ?> </p>
   <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
-  <p><a href="http://www.facebook.com/login.php?api_key=<?php echo $api_key; ?>&connect_display=popup&v=1.0&next=http://www.facebook.com/connect/login_success.html&cancel_url=http://www.facebook.com/connect/login_failure.html&fbconnect=1&return_session=1&session_key_only=1&req_perms=read_stream,publish_stream,offline_access">Click here to grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
-  <p>You are also listed as the admin of these pages:
+  <p><a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=<?php echo $api_key; ?>&next=http://www.facebook.com/connect/login_success.html&display=popup&ext_perm=read_stream,publish_stream,offline_access">Click here to grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
+<p>Debug code:</p>
+<ul>
+<?php 
+  // check to see users permissions for this app 
+  if($wpbook_show_errors) {
+    if($facebook->api_client->users_hasAppPermission("publish_stream")) {
+      echo '<li>User is listed as having publish_stream</li>';
+    } else {
+      echo '<li>User has NOT granted publish_stream permission</li>';
+    }
+    if($facebook->api_client->users_hasAppPermission("offline_access")) {
+      echo '<li>User is listed as having offline_access</li>';
+    } else {
+      echo '<li>User has NOT granted offline_access</li>';
+    }
+  }
+?>
+</ul>
+
+<p>You are also listed as the admin of these pages:
   <ul>
   <?php 
   $query = "SELECT name, page_id, has_added_app FROM page WHERE page_id IN (SELECT name, page_id FROM page WHERE page_id IN (SELECT page_id FROM page_admin WHERE uid = $user))";
