@@ -98,7 +98,7 @@ function wpbook_getAdminOptions() {
 }
   
 function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, 
-                         $fb_app_url,$fb_admin_target,$invite_friends,$require_email,
+                         $fb_app_url,$fb_admin_target,$fb_page_target,$invite_friends,$require_email,
                          $give_credit,$enable_share, $allow_comments,
                          $links_position,$enable_external_link,
                          $enable_profile_link,$timestamp_date_format,
@@ -114,6 +114,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'fb_secret'  => $fb_secret,
                               'fb_app_url' => $fb_app_url,
                               'fb_admin_target' => $fb_admin_target,
+                              'fb_page_target' => $fb_admin_target,
                               'invite_friends' => $invite_friends,
                               'require_email' => $require_email,
                               'give_credit' => $give_credit,
@@ -196,6 +197,7 @@ function wpbook_subpanel() {
       $fb_secret = $_POST['fb_secret'];
       $fb_app_url = $_POST['fb_app_url'];
       $fb_admin_target = $_POST['fb_admin_target'];
+      $fb_page_target = $_POST['fb_page_target'];
       $invite_friends = $_POST['invite_friends'];
       $require_email = $_POST['require_email'];
       $give_credit = $_POST['give_credit'];
@@ -251,7 +253,7 @@ function wpbook_subpanel() {
         }
       }
     }
-    setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url,$fb_admin_target,
+    setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url,$fb_admin_target,$fb_page_target,
                     $invite_friends,$require_email,$give_credit,$enable_share,
                     $allow_comments,$links_position,$enable_external_link,
                     $enable_profile_link,$timestamp_date_format,
@@ -403,6 +405,10 @@ function wpbook_subpanel() {
     echo '<p>Enter Your Facebook Profile ID';
     echo '<br /><input type="text" name="fb_admin_target" value="';
     echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="45" /></p>';  
+
+    echo '<p>Enter the PageID of the target FB page (you can get this at the grant permissions link above): ';
+    echo '<br /><input type="text" name="fb_page_target" value="';
+    echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="45" /></p>';  
     echo '<p>If you have trouble with Stream publishing you can enable error messages below. This will trigger WPBook to '
     . ' capture and display errors it receives back from the Facebook client.</p>';
     echo '<p class="options"><input type="checkbox" name="show_errors" value="true" ';
@@ -847,6 +853,7 @@ function wp_update_profile_boxes($post_ID) {
 	$api_key = $wpbookAdminOptions['fb_api_key'];
 	$secret  = $wpbookAdminOptions['fb_secret'];
   $target_admin = $wpbookAdminOptions['fb_admin_target'];
+  $target_page = $wpbookAdminOptions['fb_page_target'];
   $stream_publish = $wpbookAdminOptions['stream_publish'];
   $stream_publish_pages = $wpbookAdminOptions['stream_publish_pages'];
   $wpbook_show_errors = $wpbookAdminOptions['show_errors'];
@@ -928,49 +935,33 @@ function wp_update_profile_boxes($post_ID) {
       } // end try-catch
     } // end of if stream_publish 
     
-    if($stream_publish_pages == "true") {      
-      // get the pages for which this user is an admin
-      // and for which permission has been granted
-      $query = "SELECT name, page_id, has_added_app FROM page WHERE page_id IN (SELECT name, page_id FROM page WHERE page_id IN (SELECT page_id FROM page_admin WHERE uid = $target_admin))";
-      try{
-        $second_result = $facebook->api_client->fql_query($query);
+    if(($stream_publish_pages == "true") && (!empty($target_page))) {      
+      // try to publish to page
+      try { 
+        $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$target_page);
       } catch (Exception $e) {
         if($wpbook_show_errors) {
-          $wpbook_message = 'Caught exception in getting list of potential pages: ' . $e->getMessage() .' Error code: '. $e->getCode(); 
+          $wpbook_message = 'Caught exception in checking extended permissions for page: ' .  $e->getMessage() .' Error code: '. $e->getCode(); 
           wp_die($wpbook_message,'WPBook Error');
-        }
+        } // end if for show errors
       }
-      if(($second_result != '') && (!empty($second_result))) {
-        foreach ($second_result as $page) {
-          if($page['has_added_app']) {
-            try { 
-              $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$page['page_id']);
-            } catch (Exception $e) {
-              if($wpbook_show_errors) {
-                $wpbook_message = 'Caught exception in checking extended permissions for those pages: ' .  $e->getMessage() .' Error code: '. $e->getCode(); 
-                wp_die($wpbook_message,'WPBook Error');
-              } // end if for show errors
-            }
-            if ($permission) { 
-              // post to page
-              try{
-                $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$page['page_id']);
-              } catch (Exception $e) {
-                if($wpbook_show_errors) {
-                  $wpbook_message = 'Caught exception in actually publishing to stream: '.  $e->getMessage() .' Error code: '. $e->getCode(); 
-                  wp_die($wpbook_message,'WPBook Error');
-                } // end if for show errors
-              } // end try catch
-            } // if permissions 
-          } // end of if page has_added_app
-        } // end of foreach _second result
-      } // end of non-empty second_result
-    } // end of if stream_publish_pages is true
+            
+      if ($permission) { 
+      // post to page
+        try{
+          $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$target_page);
+        } catch (Exception $e) {
+          if($wpbook_show_errors) {
+            $wpbook_message = 'Caught exception in actually publishing to page '. $target_page .': '. $e->getMessage() .' Error code: '. $e->getCode(); 
+            wp_die($wpbook_message,'WPBook Error');
+          } // end if for show errors
+        } // end try catch
+      } // if permissions 
+    } // end of if stream_publish_pages is true AND target_page non-empty
   } // end for if stream_publish OR stream_publish_pages is true
 } // end of function
 
-     
-
+  
 // based on sample code here:
 //      http://willnorris.com/2009/06/wordpress-plugin-pet-peeve-2-direct-calls-to-plugin-files  
 // thanks will  

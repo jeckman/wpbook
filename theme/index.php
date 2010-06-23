@@ -67,25 +67,6 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
   <p>Your userid is <?php echo $user; ?> </p>
   <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
   <p><a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=<?php echo $api_key; ?>&next=http://www.facebook.com/connect/login_success.html&display=popup&ext_perm=read_stream,publish_stream,offline_access">Click here to grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
-<p>Debug code:</p>
-<ul>
-<?php 
-  // check to see users permissions for this app 
-  if($wpbook_show_errors) {
-    if($facebook->api_client->users_hasAppPermission("publish_stream")) {
-      echo '<li>User is listed as having publish_stream</li>';
-    } else {
-      echo '<li>User has NOT granted publish_stream permission</li>';
-    }
-    if($facebook->api_client->users_hasAppPermission("offline_access")) {
-      echo '<li>User is listed as having offline_access</li>';
-    } else {
-      echo '<li>User has NOT granted offline_access</li>';
-    }
-  }
-?>
-</ul>
-
 <p>You are also listed as the admin of these pages:
   <ul>
   <?php 
@@ -135,6 +116,8 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
   } // end if !empty
   ?>
   </ul></p>
+  <p>You can use the page IDs of any of these pages in the WPBook settings to publish to that page's wall.</p>
+
   <p>If you are the administrator of pages which do not show up in this list, 
     you need to ensure you have added the application to the pages first.</p>
   <p>Follow the <a href="<?php echo WP_PLUGIN_URL ?>/wpbook/install_instructions.html" target="_new">detailed directions</a> included with the plugin.</p>
