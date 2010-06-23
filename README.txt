@@ -136,6 +136,13 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
+= 1.5.6 =
+ * Changed mechanism for getting pageID for publishing to page's wall. 
+   Rather than getting this each time via FQL, we only get it the first
+   time in Grant Permissions page, then store it as a setting. 
+ * Thanks to Larry Bertolino and others for help debugging and for persistence
+   in trying to make this work
+
 = 1.5.5 = 
  * Changed mechanism for requesting offline.access, stream.publish permissions
    for users and fan pages. 
@@ -369,12 +376,16 @@ as well as some other files for processing comments and the like.
 * First push to WP-Plugins Directory
 
 == To Do ==
+* Add option to enable publishing to stream with direct links to 
+  external blog rather than to application
+* Import comments posted in the wall (page or individual) to the wordpress
+  blog
+* Convert to new API from Facebook for OAuth based authorization
 * Leverage Facebook API to publish notifications to stream when
   user leaves a comment (comment poster's stream and users streams)
 * Threaded comments. (If user has them enabled - requires WP 2.7.x)
 * Error handling - do something with the FB exceptions caught
   Probably use set_transient to show - will require WP 2.8 or greater
-* Prep for WordPress 3.0 and merge with WPMU
 * Update instructions in readme to match new options available
 * Deal with non-standard front pages (where user has set
   a static page in WordPress options) - right now these configurations
