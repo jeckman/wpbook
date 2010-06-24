@@ -1051,7 +1051,7 @@ function wpbook_query_vars($vars) {
     $vars[] = 'wpbook';
     return $vars;
 }
-  
+
 /**
   * Thanks Otto - http://lists.automattic.com/pipermail/wp-hackers/2009-July/026759.html
   */
