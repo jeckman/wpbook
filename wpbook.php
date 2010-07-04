@@ -108,7 +108,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                          $gravatar_rating,$gravatar_default,$show_pages,
                          $exclude_page_list,$exclude_true,$show_pages_menu,
                          $show_pages_list, $show_recent_post_list, 
-                         $recent_post_amount,$stream_publish,$stream_publish_pages,$show_errors) {
+                         $recent_post_amount,$stream_publish,$stream_publish_pages,$show_errors,$promote_external) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -142,7 +142,8 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'recent_post_amount'=>$recent_post_amount,
                               'stream_publish' => $stream_publish,
                               'stream_publish_pages' => $stream_publish_pages,
-                              'show_errors' => $show_errors
+                              'show_errors' => $show_errors,
+                              'promote_external' => $promote_external
                               );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
@@ -232,6 +233,7 @@ function wpbook_subpanel() {
     $stream_publish = $_POST['stream_publish'];  
     $stream_publish_pages = $_POST['stream_publish_pages'];
     $show_errors = $_POST['show_errors'];  
+    $promote_external = $_POST['promote_external'];
       
 	  // Handle custom gravatar_deault   code modified from wp-admin/options.php
 		if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
@@ -262,7 +264,8 @@ function wpbook_subpanel() {
                     $show_custom_header_footer,$use_gravatar,$gravatar_rating,
                     $gravatar_default,$show_pages,$exclude_page_list,
                     $exclude_true,$show_pages_menu,$show_pages_list,
-                    $show_recent_post_list, $recent_post_amount,$stream_publish,$stream_publish_pages,$show_errors);
+                    $show_recent_post_list, $recent_post_amount,$stream_publish,
+                    $stream_publish_pages,$show_errors,$promote_external);
       $flash = "Your settings have been saved. ";
     } 
     elseif (($wpbookAdminOptions['fb_api_key'] != "") || ($wpbookAdminOptions['fb_secret'] != "") || ($wpbookAdminOptions['fb_app_url'] != "")
@@ -391,9 +394,8 @@ function wpbook_subpanel() {
     if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
       echo("checked");
     }
-    echo ' id="stream_publish_pages" > Publish new posts to the Wall of Facebook Fan Pages to which permission has been granted <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" /></p>';
-    echo '<p><strong>Note:</strong> Even if you are only posting to the wall of a Fan Page, you MUST enter a Facebook profile ID below, and that Facebook profile ID must be an admin of the pages to which you want to publish. ';
-    echo 'You can check to see if permission has been granted by visiting the "grant permissions" link below.</p>';
+    echo ' id="stream_publish_pages" > Publish new posts to the Wall of Facebook Fan Page below <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" /></p>';
+    echo '<p>You can check to see if permission has been granted by visiting the "grant permissions" link below.</p>';
     if( !empty($wpbookAdminOptions['fb_app_url'])  
        && !empty($wpbookAdminOptions['fb_secret'])
        && !empty($wpbookAdminOptions['fb_api_key'])
@@ -416,7 +418,15 @@ function wpbook_subpanel() {
       echo("checked");
     }
     echo ' id="show_errors" > Show errors posting to Facebook Stream <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="show_errors" /></p>';
-    
+    echo '<p>By default, WPBook will direct users to the Facebook Application version of your posts. ';
+    echo ' If you would prefer to have WPBook direct users to the (external) WordPress version, check ';
+    echo ' the "promote external" checkbox below. (This will apply to posts in the ';
+    echo ' Facebook Stream as well as to the "recent posts" box in profiles)</p>';
+    echo '<p class="options"><input type="checkbox" name="promote_external" value="true" ';
+    if( htmlentities($wpbookAdminOptions['promote_external']) == "true") {
+      echo("checked");
+    }
+    echo ' id="promote_external" >Promote external permalinks <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="promote_external" /></p>';
     
 echo'<p><strong> Socialize Options:</strong></p>';	
 // Here starts the "invite friends" section
@@ -681,9 +691,10 @@ function wpbook_profile_recent_posts($count = 5, $before = '<li>', $after = '</l
                         $hide_pass_post = true, $skip_posts = 0, $show_excerpts = false, 
                         $where = '', $join = '', $groupby = '') {
   global $wpdb;
+  $my_options = wpbook_getAdminOptions();
+  
   $time_difference = get_settings('gmt_offset');
   $now = gmdate("Y-m-d H:i:s",time());
-    
   $join = apply_filters('posts_join', $join);
   $where = apply_filters('posts_where', $where);
   $groupby = apply_filters('posts_groupby', $groupby);
@@ -699,23 +710,24 @@ function wpbook_profile_recent_posts($count = 5, $before = '<li>', $after = '</l
   if ($posts) {
     foreach ($posts as $post) {
       $post_title = stripslashes($post->post_title);
-      // Permalink will be non-filtered (ie, refer to the full blog url)
-      // when this is called outside Facebook.
-      if(check_facebook()) {
-        $permalink = get_permalink($post->ID);  // permalink is filtered
+      if($my_options['promote_external']) {
+        if(check_facebook()) {
+          $permalink = get_external_post_url(get_permalink($post->ID));  // external permalink
+        } else {
+          $permalink = get_permalink($post->ID);
+        }
       } else {
         $permalink = get_permalink($post->ID);  // permalink is un-filtered
         $my_offset = strlen(get_option('home'));
-        $my_options = wpbook_getAdminOptions();
         $app_url = $my_options['fb_app_url'];
         $my_link = 'http://apps.facebook.com/' . $app_url 
           . substr($permalink,$my_offset); 
         $permalink = $my_link;
       }
       $output .= $before . '<a href="' . $permalink . '" rel="bookmark" '
-      . 'title="Permanent Link: ' 
-      . htmlspecialchars($post_title, ENT_COMPAT) . '">'
-      . htmlspecialchars($post_title) . '</a>';
+        . 'title="Permanent Link: ' 
+        . htmlspecialchars($post_title, ENT_COMPAT) . '">'
+        . htmlspecialchars($post_title) . '</a>';
       if($show_excerpts) {
         $post_excerpt = stripslashes($post->post_excerpt);
         $output.= '<br />' . $post_excerpt;
@@ -857,6 +869,7 @@ function wp_update_profile_boxes($post_ID) {
   $stream_publish = $wpbookAdminOptions['stream_publish'];
   $stream_publish_pages = $wpbookAdminOptions['stream_publish_pages'];
   $wpbook_show_errors = $wpbookAdminOptions['show_errors'];
+  $wpbook_promote_external = $wpbookAdminOptions['promote_external'];
   
 	$facebook = new Facebook($api_key, $secret);
 	
@@ -883,13 +896,17 @@ function wp_update_profile_boxes($post_ID) {
      $my_post = get_post($post_ID);
      $my_title=$my_post->post_title;
      $my_author=get_userdata($my_post->post_author)->display_name;
-     $my_permalink = wpbook_always_filter_postlink(get_permalink($post_ID));
+     if($wpbook_promote_external) { 
+       $my_permalink = get_permalink($post_ID);
+     } else {
+       $my_permalink = wpbook_always_filter_postlink(get_permalink($post_ID));
+     }
      $message = $my_author .' has published a new blog post at '. get_bloginfo('name'); 
      $images = get_children('post_type=attachment&post_mime_type=image&post_parent='. $my_post->ID );
      if(!empty($my_post->post_excerpt)) {
         $wpbook_description = $my_post->post_excerpt; 
      } else {
-        $wpbook_description = $my_post->post_content; 
+        $wpbook_description = $my_post->post_content; // need to trim here
      }
      if ( $images ) {
        $img = array();
@@ -961,6 +978,40 @@ function wp_update_profile_boxes($post_ID) {
   } // end for if stream_publish OR stream_publish_pages is true
 } // end of function
 
+function get_external_post_url($my_permalink){
+  $my_options = wpbook_getAdminOptions();
+  $app_url = $my_options['fb_app_url'];
+  // code to get the url of the orginal post for use in the "show external url view"
+  $permalink_pieces = parse_url($my_permalink);
+  //get the app_url and the preceeding slash
+  $permalink_app_url = "/". $app_url; 
+  //remove /appname
+  $external_post_permalink = str_replace_once($permalink_app_url,"",$permalink_pieces[path]);
+  //re-write the post url using the site url 
+  $external_site_url_pieces = parse_url(get_bloginfo('wpurl'));
+    
+  //break apart the external site address and get just the "site.com" part
+  $external_site_url = $external_site_url_pieces[host];
+  $external_post_url = get_bloginfo('siteurl').  $external_post_permalink;
+  if(!empty($permalink_pieces[query])) {
+    $external_post_url = $external_post_url .'?'. $permalink_pieces[query];
+  }
+  //return "app url is " . $app_url; 
+  return $external_post_url; 
+} 
+  
+// check to see if external post link contains the app name, and if it does, 
+// only replace the first instance 
+function str_replace_once($needle, $replace, $haystack) {
+  // Looks for the first occurence of $needle in $haystack
+  // and replaces it with $replace.
+  $pos = strpos($haystack, $needle);
+  if ($pos === false) {
+    // Nothing found
+    return $haystack;
+  }
+  return substr_replace($haystack, $replace, $pos, strlen($needle));
+}
   
 // based on sample code here:
 //      http://willnorris.com/2009/06/wordpress-plugin-pet-peeve-2-direct-calls-to-plugin-files  
@@ -1042,6 +1093,37 @@ function wpbook_parse_request($wp) {
       
       // switched to raw php header redirect as $facebook->redirect was
       // problematic and no fb session needed in this page
+      header( 'Location: ' . $redirect_url );
+    }
+    if($wp->query_vars['wpbook'] == 'update_profile_boxes') {  // first process requests with "wpbook=comment-handler"
+      if(!class_exists('FacebookRestClient')) {
+        include_once(WP_PLUGIN_DIR . '/wpbook/client/facebook.php');
+      }
+      $wpbookOptions = get_option('wpbookAdminOptions');
+      if (!empty($wpbookOptions)) {
+        foreach ($wpbookOptions as $key => $option)
+        $wpbookAdminOptions[$key] = $option;
+      }
+      
+      $ProfileContent = '<h3>Recent posts</h3><div class="wpbook_recent_posts">'
+        . '<ul>' . wpbook_profile_recent_posts(5) . '</ul></div>';
+      // this call just updates the RefHandle, already set for the user profile
+      $api_key = $wpbookAdminOptions['fb_api_key'];
+      $secret  = $wpbookAdminOptions['fb_secret'];
+      $facebook = new Facebook($api_key, $secret);
+      try {
+        $facebook->api_client->call_method('facebook.Fbml.setRefHandle',
+                                             array('handle' => 'recent_posts',
+                                                   'fbml' => $ProfileContent,
+                                                   ) 
+                                             );
+      } catch (Exception $e) {
+        if($wpbook_show_errors) {
+          $wpbook_message = 'Caught exception: ' .  $e->getMessage() .' Error code: '. $e->getCode(); 
+          wp_die($wpbook_message,'WPBook Error');
+        } // end if for show errors
+      } // end try catch
+      $redirect_url = $wpbookAdminOptions['app_url'];
       header( 'Location: ' . $redirect_url );
     }
   }

@@ -86,41 +86,7 @@ try{
 }
 // utility functions after here
 
-// check to see if external post link contains the app name, and if it does, 
-// only replace the first instance 
-function str_replace_once($needle, $replace, $haystack) {
-  // Looks for the first occurence of $needle in $haystack
-  // and replaces it with $replace.
-  $pos = strpos($haystack, $needle);
-  if ($pos === false) {
-    // Nothing found
-    return $haystack;
-  }
-  return substr_replace($haystack, $replace, $pos, strlen($needle));
-}
-
-//external post url function
-function get_external_post_url($my_permalink){
-  global $app_url;
-  // code to get the url of the orginal post for use in the "show external url view"
-  $permalink_pieces = parse_url($my_permalink);
-  //get the app_url and the preceeding slash
-  $permalink_app_url = "/". $app_url; 
-  //remove /appname
-  $external_post_permalink = str_replace_once($permalink_app_url,"",$permalink_pieces[path]);
-  //re-write the post url using the site url 
-  $external_site_url_pieces = parse_url(get_bloginfo('wpurl'));
     
-  //break apart the external site address and get just the "site.com" part
-  $external_site_url = $external_site_url_pieces[host];
-  $external_post_url = get_bloginfo('siteurl').  $external_post_permalink;
-  if(!empty($permalink_pieces[query])) {
-    $external_post_url = $external_post_url .'?'. $permalink_pieces[query];
-  }
-  //return "app url is " . $app_url; 
-  return $external_post_url; 
-}  
-  
 //write the custom header and footer 
 function custom_header_footer($custom_template_header_footer,$date,$time){
   $author = get_the_author();
