@@ -53,7 +53,7 @@ function wpbook_import_comments() {
     $wpbook_comment_approval = 0;
   }
   // need to get posts in last X days which have postmeta for streamid
-  $num_days = wpbook_settings['num_days_import'];
+  $num_days = $wpbook_settings['num_days_import'];
   if ($num_days == '') { $num_days = 7; }
   $today = date("Y-m-d H:i:s");
   $daysago = date("Y-m-d H:i:s",strtotime(date('Y-m-j H:i:s')) - ($num_days * 24 * 60 * 60)); 	
