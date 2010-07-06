@@ -105,7 +105,9 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                          $gravatar_rating,$gravatar_default,$show_pages,
                          $exclude_page_list,$exclude_true,$show_pages_menu,
                          $show_pages_list, $show_recent_post_list, 
-                         $recent_post_amount,$stream_publish,$stream_publish_pages,$show_errors,$promote_external) {
+                         $recent_post_amount,$stream_publish,$stream_publish_pages,
+                         $show_errors,$promote_external,$import_comments,
+                         $approve_imported_comments,$num_days_import) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -140,7 +142,10 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'stream_publish' => $stream_publish,
                               'stream_publish_pages' => $stream_publish_pages,
                               'show_errors' => $show_errors,
-                              'promote_external' => $promote_external
+                              'promote_external' => $promote_external,
+                              'import_comments' => $import_comments,
+                              'approve_imported_comments' => $approve_imported_comments,
+                              'num_days_import' => $num_days_import
                               );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
@@ -231,6 +236,9 @@ function wpbook_subpanel() {
     $stream_publish_pages = $_POST['stream_publish_pages'];
     $show_errors = $_POST['show_errors'];  
     $promote_external = $_POST['promote_external'];
+    $import_comments = $_POST['import_comments'];
+    $approve_imported_comments = $_POST['approve_imported_comments'];
+    $num_days_import = $_POST['num_days_import'];  
       
 	  // Handle custom gravatar_deault   code modified from wp-admin/options.php
 		if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
@@ -262,7 +270,8 @@ function wpbook_subpanel() {
                     $gravatar_default,$show_pages,$exclude_page_list,
                     $exclude_true,$show_pages_menu,$show_pages_list,
                     $show_recent_post_list, $recent_post_amount,$stream_publish,
-                    $stream_publish_pages,$show_errors,$promote_external);
+                    $stream_publish_pages,$show_errors,$promote_external,
+                    $import_comments,$approve_imported_comments,$num_days_import);
       $flash = "Your settings have been saved. ";
     } 
     elseif (($wpbookAdminOptions['fb_api_key'] != "") || ($wpbookAdminOptions['fb_secret'] != "") || ($wpbookAdminOptions['fb_app_url'] != "")
@@ -424,6 +433,25 @@ function wpbook_subpanel() {
       echo("checked");
     }
     echo ' id="promote_external" >Promote external permalinks <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="promote_external" /></p>';
+    
+    echo '<p>WPBook can also import comments made against these posts on the wall - ';
+    echo ' including your personal wall and/or the wall of the page listed above.</p>';
+    echo '<p class="options"><input type="checkbox" name="import_coments" value="1" ';
+    if( htmlentities($wpbookAdminOptions['import_comments']) == "1") {
+      echo("checked");
+    }
+    echo ' id="import_comments" >Import comments from Facebook Walls <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="import_comments" /></p>';
+
+    echo '<p>If WPBook is importing comments, should they be automatically approved?</p>';
+    echo '<p class="options"><input type="checkbox" name="approve_imported_comments" value="1" ';
+    if( htmlentities($wpbookAdminOptions['approve_imported_comments']) == "1") {
+      echo("checked");
+    }
+    echo ' id="approve_imported_comments" >Automatically approve comments imported from FB Walls <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="approve_imported_comments" /></p>';
+   
+    echo '<p>For how many days should WPBook look for comments on Facebook Walls? (I recommend less than 7 days)</p>';
+    echo '&nbsp;<input type="text" name="num_days_import" value="';
+    echo htmlentities($wpbookAdminOptions['num_days_import']) .'" size="2" /></p>';      
     
 echo'<p><strong> Socialize Options:</strong></p>';	
 // Here starts the "invite friends" section
