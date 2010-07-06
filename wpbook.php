@@ -436,7 +436,7 @@ function wpbook_subpanel() {
     
     echo '<p>WPBook can also import comments made against these posts on the wall - ';
     echo ' including your personal wall and/or the wall of the page listed above.</p>';
-    echo '<p class="options"><input type="checkbox" name="import_coments" value="1" ';
+    echo '<p class="options"><input type="checkbox" name="import_comments" value="1" ';
     if( htmlentities($wpbookAdminOptions['import_comments']) == "1") {
       echo("checked");
     }
