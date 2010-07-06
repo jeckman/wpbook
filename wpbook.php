@@ -9,21 +9,6 @@ Author URI: http://johneckman.com
 Version: 1.5.6
 */
   
-/* 
-Todo: Determine approach for authorized users from FB. Ultimately we need
- an array of FB userIDs. This could be set via ajax via the 'extended permissions'
- page within the FB application. If we do that, where do we store it? It isn't
- an admin option at that point - but then when folks deauthorize how will we know?
- 
- Easier approach might be to let the user edit the array of UIDs that are authorized-
- if they want another person / page admin's stream added they just need to send
- them to the extended permissions page. 
- 
- Long term this really should be automatic - anyone who grants permission has
- their ID stored in the array, and whenever the exception that is returned from
- the call is that the permission is no longer granted, that ID should be removed
- from that list. 
-*/ 
 
 /*
 Note: This plugin draws from: 
@@ -78,6 +63,18 @@ $_SERVER['REQUEST_URI'] = ( isset($_SERVER['REQUEST_URI']) ?
   $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'] 
   . (( isset($_SERVER['QUERY_STRING']) ? '?' 
   . $_SERVER['QUERY_STRING'] : '')));
+
+
+// activation, install, uninstall need work  
+function wpbook_activate() {
+  wpbook_activation_check();
+  $dummy=wp_clear_scheduled_hook('wpbook_cron_job');
+	$dummy=wp_schedule_event(time(), 'hourly', 'wpbook_cron_job');
+}
+
+function wpbook_deactivate() {
+  wp_clear_scheduled_hook('wpbook_cron_job');
+}
 
 function is_authorized() {
   global $user_level;
@@ -942,14 +939,19 @@ function wp_update_profile_boxes($post_ID) {
     $action_links = json_encode($action_links); 
     
     if($stream_publish == "true") {
+      $fb_response = '';
       try{
-        $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_admin,$target_admin);
+        $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_admin,$target_admin);
       } catch (Exception $e) {
         if($wpbook_show_errors) {
           $wpbook_message = 'Caught exception in stream publish for user: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
           wp_die($wpbook_message,'WPBook Error');
         } // end if for show errors
       } // end try-catch
+      if($fb_response != '') {
+        add_post_meta($post_ID->ID,'_wpbook_user_stream_id', $fb_response);
+        add_post_meta($post_ID->ID,'_wpbook_user_stream_time',0); // no comments imported yet
+      } // end of if $response
     } // end of if stream_publish 
     
     if(($stream_publish_pages == "true") && (!empty($target_page))) {      
@@ -962,17 +964,22 @@ function wp_update_profile_boxes($post_ID) {
           wp_die($wpbook_message,'WPBook Error');
         } // end if for show errors
       }
-            
+        
       if ($permission) { 
       // post to page
+        $fb_response = '';
         try{
-          $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$target_page);
+          $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$target_page);
         } catch (Exception $e) {
           if($wpbook_show_errors) {
             $wpbook_message = 'Caught exception in actually publishing to page '. $target_page .': '. $e->getMessage() .' Error code: '. $e->getCode(); 
             wp_die($wpbook_message,'WPBook Error');
           } // end if for show errors
         } // end try catch
+        if($fb_response != '') {
+          add_post_meta($post_ID->ID,'_wpbook_page_stream_id',$fb_response);
+          add_post_meta($post_ID->ID,'_wpbook_page_stream_time',0); // no comments imported
+        }
       } // if permissions 
     } // end of if stream_publish_pages is true AND target_page non-empty
   } // end for if stream_publish OR stream_publish_pages is true
@@ -1144,7 +1151,8 @@ function wpbook_activation_check(){
   }
 }
 
-register_activation_hook(__FILE__, 'wpbook_activation_check');
+register_activation_hook(__FILE__, 'wpbook_activate');
+#register_deactivation_hook(__FILE__, 'wpbook_deactivate');
   
 add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
@@ -1159,4 +1167,9 @@ add_action('wp', 'wpbook_parse_request');
 add_action('future_to_publish','wp_update_profile_boxes');	
 add_action('new_to_publish','wp_update_profile_boxes');
 add_action('draft_to_publish','wp_update_profile_boxes');  
+  
+// cron job task  
+add_action('wpbook_cron_job', 'wpbook_import_comments');
+
+include("wpbook_cron.php");
 ?>
