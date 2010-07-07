@@ -305,6 +305,31 @@ $("input[name='show_recent_post_list']").change(function(){
     contentClass: 'tooltip_content',
     viewpoint: true
             });
+
+// promote external links tooltip
+    $('.promote_external').simpletip('If checked this option will make WPBook use external links - to your WordPress blog - rather than links to the Facebook application view of your blog.',{
+    stem: { corner: 'leftMiddle',color:'#DFDFDF',size: 12 },
+    hook: { tooltip: 'leftMiddle'},
+    contentClass: 'tooltip_content',
+    viewpoint: true
+            });
+
+// import comments tooltip
+    $('.import_comments').simpletip('If checked this option will trigger WPBook to import comments people post on your wall or Fan page wall in response to your blog postings cross-posted by WPBook',{
+    stem: { corner: 'leftMiddle',color:'#DFDFDF',size: 12 },
+    hook: { tooltip: 'leftMiddle'},
+    contentClass: 'tooltip_content',
+    viewpoint: true
+            });
+
+// approve imported comments tooltip
+    $('.approve_imported_coments').simpletip('If checked, comments imported from FB walls (see above) will be automatically marked approved - if not, they will require approval by a blog administrator',{
+    stem: { corner: 'leftMiddle',color:'#DFDFDF',size: 12 },
+    hook: { tooltip: 'leftMiddle'},
+    contentClass: 'tooltip_content',
+    viewpoint: true
+            });
+
 //advanced options tooltip
 		$('.advanced_options').simpletip('If checked this option allow you to access the advacned options for WPBook. Such as time, date, and header footer information. ', {
 	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 

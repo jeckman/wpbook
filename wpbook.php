@@ -461,7 +461,7 @@ function wpbook_subpanel() {
     echo 'to get their email, a generic address must be used. If you set this to an ';
     echo 'email address under your control, you can then create an appropriate gravatar ';
     echo 'for display alongside FB comments. If not set, this will default to ';
-    echo 'facebook@openparenthsis.org which has no gravatar at all). ';
+    echo 'facebook@openparenthesis.org which has no gravatar at all). ';
     echo '&nbsp;<input type="text" name="imported_comments_email" value="';
     echo htmlentities($wpbookAdminOptions['imported_comments_email']) .'" size="20" /></p>';      
     
