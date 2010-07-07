@@ -932,6 +932,9 @@ function wp_update_profile_boxes($post_ID) {
   if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && (($stream_publish == "true") || $stream_publish_pages == "true")) {
   // here we should also post to the author's stream
      $my_post = get_post($post_ID);
+     if(!empty($my_post->post_password)) { // post is password protected, don't post
+      return;
+     }
      $my_title=$my_post->post_title;
      $my_author=get_userdata($my_post->post_author)->display_name;
      if($wpbook_promote_external) { 
