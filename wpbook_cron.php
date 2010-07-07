@@ -33,97 +33,220 @@ function wpbook_import_comments() {
   if(!class_exists('FacebookRestClient')) {
     include_once(WP_PLUGIN_DIR . '/wpbook/client/facebook.php');
   }
-  $wpbook_settings =get_option('wpbookAdminOptions'); 
-    
+  $wpbookOptions = get_option('wpbookAdminOptions');
+  define ('DEBUG', false);
+
+  $debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_debug.txt';
+  if(DEBUG) {
+    $fp = fopen($debug_file, 'a');
+    $debug_string=date("Y-m-d H:i:s",time())." : Cron Running\n";
+    fwrite($fp, $debug_string);
+  }
   if (!empty($wpbookOptions)) {
     foreach ($wpbookOptions as $key => $option)
       $wpbookAdminOptions[$key] = $option;
 	}
-  
-  $facebook = new Facebook($api_key, $secret);
 
-  //$sql="Select user_id from ".WORDBOOKER_USERDATA.$limit_user;
-  //$wb_users = $wpdb->get_results($sql);
-  if (!($wpbook_settings['import_comments'])) {
+  $api_key = $wpbookAdminOptions['fb_api_key'];
+  $secret  = $wpbookAdminOptions['fb_secret'];
+
+  $facebook = new Facebook($api_key, $secret);
+  
+  if (!($wpbookAdminOptions['import_comments'])) {
+    if(DEBUG) {
+      $fp = fopen($debug_file, 'a');
+      $debug_string=date("Y-m-d H:i:s",time())." : import_comments was false - nothing to do\n";
+      fwrite($fp, $debug_string);
+    }
     return;
   }
-  if ($wpbook_settings['approve_imported_comments'] == true) {
+  
+  if ($wpbookAdminOptions['approve_imported_comments'] == 1) {
     $wpbook_comment_approval = 1;
   } else {
     $wpbook_comment_approval = 0;
   }
+  
+  // use an email address set by the admin for WPBook comments, this way the 
+  // blog admin can create a gravatar specific to that email if they use gravatars
+  
+  if($wpbookAdminOptions['imported_comments_email'] == '') {
+    $wpbook_comment_email = 'facebook@openparenthesis.org';
+  } else {
+    $wpbook_comment_email = $wpbookAdminOptions['imported_comments_email']; 
+  }
+  
   // need to get posts in last X days which have postmeta for streamid
-  $num_days = $wpbook_settings['num_days_import'];
+  $num_days = $wpbookAdminOptions['num_days_import'];
   if ($num_days == '') { $num_days = 7; }
   $today = date("Y-m-d H:i:s");
   $daysago = date("Y-m-d H:i:s",strtotime(date('Y-m-j H:i:s')) - ($num_days * 24 * 60 * 60)); 	
-  $sql='Select post_id FROM $wpdb->posts WHERE post_date BETWEEN '. $daysago . 'AND '. $today;
-  $wordpress_post_ids = $wpdb->get_column($sql); // only need the post ids so we can use get_column
+  $sql="Select ID FROM $wpdb->posts WHERE post_date BETWEEN '". $daysago . "' AND '". $today ."'";
+  if(DEBUG) {
+    $fp = fopen($debug_file, 'a');
+    $debug_string=date("Y-m-d H:i:s",time())." : Getting posts, SQL was $sql \n";
+    fwrite($fp, $debug_string);
+  }
+  $wpdb->flush();
+  $wordpress_post_ids = $wpdb->get_col($sql); // only need the post ids so we can use get_column
   if ($wordpress_post_ids) {
+    if(DEBUG) {
+      $fp = fopen($debug_file, 'a');
+      $debug_string=date("Y-m-d H:i:s",time())." : How many posts to consider? $wpdb->num_rows \n";
+      fwrite($fp, $debug_string);
+    }
     foreach($wordpress_post_ids as $wordpress_post_id) {
       // now lets go find out which of those rows we need to examine
-      $my_sql = "Select post_id,meta_key, meta_value from $wpdb->postmeta WHERE meta_key LIKE %_wpbook_% AND post_id = $wordpress_post_id"; 
-      $my_meta_posts = $wpdb->get_results($sql);
-      if(count($my_meta_posts)>0) {
-        foreach($my_meta_posts as $meta_post) {
-          if($meta_post->meta_key == '_wpbook_user_stream_id') {
-            $my_timestamp_results = $wpdb->get_row("Select meta_value from $wpdb->postmeta WHERE meta_key LIKE %_wpbook_user_stream_time% AND post_id = $wordpress_post_id",ARRAY_A);
-            $my_timestamp = $my_timestamp_results->meta_value;
-            $fbsql="select time,text,fromid,xid,post_id from comment where post_id=$meta_post->meta_value and time > $my_timestamp order by time ASC"; 
-            $fbcomments=$facebook->fql_query($fbsql);
+      $my_sql = "Select post_id,meta_key,meta_value from $wpdb->postmeta WHERE meta_key LIKE '%_wpbook_%' AND post_id = '$wordpress_post_id'"; 
+      $wpdb->flush();
+      $my_meta_posts = $wpdb->get_results($my_sql);
+      if($wpdb->num_rows>0) {
+        if(DEBUG) {
+          $fp = fopen($debug_file, 'a');
+          $debug_string=date("Y-m-d H:i:s",time())." : How many meta_posts found? $wpdb->num_rows \n";
+          fwrite($fp, $debug_string);
+        }
+        foreach($my_meta_posts as $mp) {
+          if(DEBUG) {
+            $fp = fopen($debug_file, 'a');
+            $debug_string=date("Y-m-d H:i:s",time())." : Examining a meta_post, post ID is $mp->post_id, meta key = $mp->meta_key \n";
+            fwrite($fp, $debug_string);
+          }
+          if(($mp->meta_key == '_wpbook_user_stream_time') || ($mp->meta_key == '_wpbook_page_stream_time')) {
+            if(DEBUG) {
+              $fp = fopen($debug_file, 'a');
+              $debug_string=date("Y-m-d H:i:s",time())." : Skipping meta key $mp->meta_key \n";
+              fwrite($fp, $debug_string);
+            }
+            continue; // don't need to process these - go on to the next
+          }
+          if(($mp->meta_key == '_wpbook_user_stream_id') || ($mp->meta_key == '_wpbook_page_stream_id')) {
+            if($mp->meta_key == '_wpbook_user_stream_id') {
+              $my_timestamp_results = $wpdb->get_row("Select meta_value from $wpdb->postmeta WHERE meta_key LIKE '%_wpbook_user_stream_time%' AND post_id = '$wordpress_post_id'",ARRAY_A);
+            } else {
+              $my_timestamp_results = $wpdb->get_row("Select meta_value from $wpdb->postmeta WHERE meta_key LIKE '%_wpbook_page_stream_time%' AND post_id = '$wordpress_post_id'",ARRAY_A);
+            }
+            $my_timestamp = $my_timestamp_results[meta_value];
+            $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE post_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC"; 
+            if(DEBUG) {
+              $fp = fopen($debug_file, 'a');
+              $debug_string=date("Y-m-d H:i:s",time())." : FBcomments, fbsql is $fbsql \n";
+              fwrite($fp, $debug_string);
+            }
+            try {
+              $fbcomments=$facebook->api_client->call_method('facebook.fql.query',
+                                                             array('query' => $fbsql) 
+                                                             );
+            } catch (Exception $e) {
+              $fp = fopen($debug_file, 'a');
+              $debug_string=date("Y-m-d H:i:s",time())." : Caught exception: ". $e->getMessage() ." Error code: ". $e->getCode() ."\n";
+              fwrite($fp, $debug_string);
+              return;
+            }
             if (is_array($fbcomments)) {
+              if(DEBUG) {
+                $fp = fopen($debug_file, 'a');
+                $debug_string=date("Y-m-d H:i:s",time())." : Number of fbcomments for this post- " . count($fbcomments) . " \n";
+                fwrite($fp, $debug_string);
+              }
               foreach ($fbcomments as $comment) {
-                $fbuserinfo=$fbclient->users_getInfo($comment[fromid],'name,profile_url');
-                $time = date("Y-m-d H:i:s",$comment[time]);
-                $data = array(
-                              'comment_post_ID' => $wordpress_post_id,
-                              'comment_author' => $fbuserinfo[0][name],
-                              'comment_author_email' => get_bloginfo( 'admin_email' ),
-                              'comment_author_url' => $fbuserinfo[0][profile_url],
-                              'comment_content' => $comment[text],
-                              'comment_author_IP' => '127.0.0.1',
-                              'comment_agent' => 'WPBook Comment Import',
-                              'comment_date' => $time,
-                              'comment_date_gmt' => $time,
-                              'comment_approved' => $wpbook_comment_approval,
-                              );
-                wp_new_comment($data); 
-                $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$meta_post->post_id and meta_key='_wpbook_user_stream_time'";
-                $result = $wpdb->query($sql);
+                sleep(30); // maybe posting these too quickly?
+                if(DEBUG) {
+                  $fp = fopen($debug_file, 'a');
+                  $debug_string=date("Y-m-d H:i:s",time())." : Inside comment, comment[time] is $comment[time], comment[fromid] is $comment[fromid] \n";
+                  fwrite($fp, $debug_string);
+                }
+                $fbsql = "SELECT name,url FROM profile WHERE id = '$comment[fromid]'";
+                if(DEBUG) {
+                  $fp = fopen($debug_file, 'a');
+                  $debug_string=date("Y-m-d H:i:s",time())." : Getting author info, fbsql is $fbsql \n";
+                  fwrite($fp, $debug_string);
+                }
+                try {
+                  $fbuserinfo=$facebook->api_client->call_method('facebook.fql.query',
+                                                               array('query' => $fbsql) 
+                                                               );
+                } catch (Exception $e) {
+                  $fp = fopen($debug_file, 'a');
+                  $debug_string=date("Y-m-d H:i:s",time())." : Caught exception getting info about comment author: ". $e->getMessage() ." Error code: ". $e->getCode() ."\n";
+                  fwrite($fp, $debug_string);
+                  return;
+                }
+                // todo - take proxied email? or use a setting in wpbook to choose an email
+                // which would let people set gravatar to something facebook-y
+                if (is_array($fbuserinfo)) {
+                  if(DEBUG) {
+                    $fp = fopen($debug_file, 'a');
+                    $debug_string=date("Y-m-d H:i:s",time())." : fbuserinfo is an array, count is " . count($fbuserinfo) . "\n";
+                    fwrite($fp, $debug_string);
+                  }
+                  foreach ($fbuserinfo as $fb_user) {
+                    if($fb_user[url] == '') {
+                      // sometimes url doesn't come - not sure why
+                      // do I need to worry about pages here? I think they always pass a url
+                      $fb_user[url] = 'http://www.facebook.com/profile.php?id=' . $comment[fromid];
+                    }
+                    if(DEBUG) {
+                      $fp = fopen($debug_file, 'a');
+                      $debug_string=date("Y-m-d H:i:s",time())." : In fb_user, name is $fb_user[name], url is $fb_user[url] \n";
+                      fwrite($fp, $debug_string);
+                    }
+                    $time = date("Y-m-d H:i:s",$comment[time]);
+                    $data = array(
+                                  'comment_post_ID' => $wordpress_post_id,
+                                  'comment_author' => $fb_user[name],
+                                  'comment_author_email' => $wpbook_comment_email,
+                                  'comment_author_url' => $fb_user[url],
+                                  'comment_content' => $comment[text],
+                                  'comment_type' => '',
+                                  'comment_parent' => 0,
+                                  'comment_author_IP' => '127.0.0.1',
+                                  'comment_agent' => 'WPBook Comment Import',
+                                  'comment_date' => $time,
+                                  'comment_approved' => $wpbook_comment_approval
+                                  );
+                    /* I'd like to use wp_new_comment here, but:
+                        - It ignores the timestamp passed in and uses now instead
+                        - It calls wp_allow_comment which in turn invokes comment flood throttle
+                       
+                    $my_id = wp_new_comment($data); 
+                    */
+                    $my_id = wp_insert_comment($data);
+                    if(DEBUG) {
+                      $fp = fopen($debug_file, 'a');
+                      $debug_string=date("Y-m-d H:i:s",time())." : Posted comment with timestamp $time, id $my_id, approval $wpbook_comment_approval \n";
+                      fwrite($fp, $debug_string);
+                    }
+                    if($mp->meta_key == '_wpbook_user_stream_id') {
+                      $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_user_stream_time'";
+                    } else {
+                      $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_page_stream_time'";
+                    }
+                    if(DEBUG) {
+                      $fp = fopen($debug_file, 'a');
+                      $debug_string=date("Y-m-d H:i:s",time())." : About to update timestamp, SQL is $sql \n";
+                      fwrite($fp, $debug_string);
+                    }
+                    $update_result = $wpdb->query($sql);
+                    if(DEBUG) {
+                      $fp = fopen($debug_file, 'a');
+                      $debug_string=date("Y-m-d H:i:s",time())." : Updated timestamp, rows affected $wpdb->num_rows \n";
+                      fwrite($fp, $debug_string);
+                    } 
+                  } // end of foreach user
+                } // end of if fbuserinfo is array
               } // end of new comment process for user stream
             } // end of comments for this post
-          } // end of user_stream_id
-          if ($meta_post->meta_key == '_wpbook_page_stream_id') {
-            $my_timestamp_results = $wpdb->get_row("Select meta_value from $wpdb->postmeta WHERE meta_key LIKE %_wpbook_page_stream_time% AND post_id = $wordpress_post_id",ARRAY_A);
-            $my_timestamp = $my_timestamp_results->meta_value;
-            $fbsql="select time,text,fromid,xid,post_id from comment where post_id=$meta_post->meta_value and time > $my_timestamp order by time ASC"; 
-            $fbcomments=$facebook->fql_query($fbsql);
-            if (is_array($fbcomments)) {
-              foreach ($fbcomments as $comment) {
-                $fbuserinfo=$fbclient->users_getInfo($comment[fromid],'name,profile_url');
-                $time = date("Y-m-d H:i:s",$comment[time]);
-                $data = array(
-                              'comment_post_ID' => $wordpress_post_id,
-                              'comment_author' => $fbuserinfo[0][name],
-                              'comment_author_email' => get_bloginfo( 'admin_email' ),
-                              'comment_author_url' => $fbuserinfo[0][profile_url],
-                              'comment_content' => $comment[text],
-                              'comment_author_IP' => '127.0.0.1',
-                              'comment_agent' => 'WPBook Comment Import',
-                              'comment_date' => $time,
-                              'comment_date_gmt' => $time,
-                              'comment_approved' => $comment_approve,
-                              );
-                wp_new_comment($data); 
-                $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$meta_post->post_id and meta_key='_wpbook_page_stream_time'";
-                $result = $wpdb->query($sql);
-              } // end of new comment process for user stream
-            } // end of comments for this post
-          } // end of if meta_key = stream_id
-        } // end of is_array for fb comments
-      } // end of meta posts > 0
+          } // end of user_stream_id or page_stream_id metas
+        }// end of meta_posts foreach
+      }// end of meta posts > 0
     } // end of for each row of posts to examine
   } else {
+    if(DEBUG) {
+      $fp = fopen($debug_file, 'a');
+      $debug_string=date("Y-m-d H:i:s",time())." : No posts to examine\n";
+      fwrite($fp, $debug_string);
+    }
     return;
   } // end of if rows to examine   
 } // end of function

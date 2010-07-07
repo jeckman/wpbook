@@ -2,11 +2,11 @@
 /*
 Plugin Name: WPBook
 Plugin URI: http://www.openparenthesis.org/code/wp
-Date: 2010, March 28th
+Date: 2010, July 7th
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 1.5.6
+Version: 2.0.0
 */
   
 
@@ -14,7 +14,8 @@ Version: 1.5.6
 Note: This plugin draws from: 
    Alex King's WP-Mobile plugin (http://alexking.org/projects/wordpress ) 
    and BraveNewCode's WPTouch (http://www.bravenewcode.com/wptouch/
-   as well as Devbit's List Pages Plus (http://skullbit.com/wordpress-plugin/list-pages-plus/) )
+   as well as Devbit's List Pages Plus (http://skullbit.com/wordpress-plugin/list-pages-plus/) 
+   and Steve Atty's Wordbooker (http://wordpress.org/extend/plugins/wordbooker/ )
 */
 
 /*  
@@ -107,7 +108,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                          $show_pages_list, $show_recent_post_list, 
                          $recent_post_amount,$stream_publish,$stream_publish_pages,
                          $show_errors,$promote_external,$import_comments,
-                         $approve_imported_comments,$num_days_import) {
+                         $approve_imported_comments,$num_days_import,$imported_comments_email) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -145,7 +146,8 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'promote_external' => $promote_external,
                               'import_comments' => $import_comments,
                               'approve_imported_comments' => $approve_imported_comments,
-                              'num_days_import' => $num_days_import
+                              'num_days_import' => $num_days_import,
+                              'imported_comments_email' => $imported_comments_email
                               );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
@@ -239,6 +241,7 @@ function wpbook_subpanel() {
     $import_comments = $_POST['import_comments'];
     $approve_imported_comments = $_POST['approve_imported_comments'];
     $num_days_import = $_POST['num_days_import'];  
+    $imported_comments_email = $_POST['imported_comments_email'];  
       
 	  // Handle custom gravatar_deault   code modified from wp-admin/options.php
 		if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
@@ -271,7 +274,7 @@ function wpbook_subpanel() {
                     $exclude_true,$show_pages_menu,$show_pages_list,
                     $show_recent_post_list, $recent_post_amount,$stream_publish,
                     $stream_publish_pages,$show_errors,$promote_external,
-                    $import_comments,$approve_imported_comments,$num_days_import);
+                    $import_comments,$approve_imported_comments,$num_days_import,$imported_comments_email);
       $flash = "Your settings have been saved. ";
     } 
     elseif (($wpbookAdminOptions['fb_api_key'] != "") || ($wpbookAdminOptions['fb_secret'] != "") || ($wpbookAdminOptions['fb_app_url'] != "")
@@ -448,10 +451,20 @@ function wpbook_subpanel() {
       echo("checked");
     }
     echo ' id="approve_imported_comments" >Automatically approve comments imported from FB Walls <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="approve_imported_comments" /></p>';
-   
+    
     echo '<p>For how many days should WPBook look for comments on Facebook Walls? (I recommend less than 7 days)</p>';
     echo '&nbsp;<input type="text" name="num_days_import" value="';
     echo htmlentities($wpbookAdminOptions['num_days_import']) .'" size="2" /></p>';      
+
+    echo '<p>What email address should WPBook associate with imported comments? ';
+    echo '(Because people commenting on your wall will not have granted WPBook permission ';
+    echo 'to get their email, a generic address must be used. If you set this to an ';
+    echo 'email address under your control, you can then create an appropriate gravatar ';
+    echo 'for display alongside FB comments. If not set, this will default to ';
+    echo 'facebook@openparenthsis.org which has no gravatar at all). ';
+    echo '&nbsp;<input type="text" name="imported_comments_email" value="';
+    echo htmlentities($wpbookAdminOptions['imported_comments_email']) .'" size="20" /></p>';      
+    
     
 echo'<p><strong> Socialize Options:</strong></p>';	
 // Here starts the "invite friends" section
