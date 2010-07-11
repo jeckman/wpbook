@@ -361,13 +361,42 @@ $("input[name='show_recent_post_list']").change(function(){
 	viewpoint:true
 			});
 //get help tooltip
-		$('.need_help').simpletip('Look, i\'m a useful tooltip :)', {
+$('.need_help').simpletip('Look, i\'m a useful tooltip :)', {
 	stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
 	hook: {tooltip: 'leftMiddle'},
 	contentClass: 'tooltip_content',
 	viewpoint:true
 			});
-			
+
+// attribution line tooltip
+$('.attribution_line').simpletip('This is the string which will be used as the message when posting to Facebook walls or pages', {
+    stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+    hook: {tooltip: 'leftMiddle'},
+    contentClass: 'tooltip_content',viewpoint:true
+                                 });
+
+// external links tooltip
+$('.promote_external').simpletip('This tells WPBook to use your external, WordPress permalink when posting to walls or pages', {
+                                                            stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+                                                            hook: {tooltip: 'leftMiddle'},
+                                                            contentClass: 'tooltip_content',viewpoint:true
+                                                            });
+
+// import comments tooltip
+$('.import_comments').simpletip('This tells WPBook to import comments made in response to your posts on walls or pages', {
+                                                            stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+                                                            hook: {tooltip: 'leftMiddle'},
+                                                            contentClass: 'tooltip_content',viewpoint:true
+                                                            });
+
+// approve imported comments tooltip
+$('.approve_imported_comments').simpletip('If enabled, WPBook will automatically mark as approved comments imported from Facebook Walls or Pages. This will NOT impact comments posted from the application canvas page itself', {
+                                                           stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+                                                           hook: {tooltip: 'leftMiddle'},
+                                                           contentClass: 'tooltip_content',viewpoint:true
+                                                           });
+ 
+                           
 //date/time jquary from wp-admin/options-general.php
 			$("input[name='timestamp_date_format']").click(function(){
 			if ( "date_format_custom_radio" != $(this).attr("id") )
