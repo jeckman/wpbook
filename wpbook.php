@@ -108,7 +108,8 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                          $show_pages_list, $show_recent_post_list, 
                          $recent_post_amount,$stream_publish,$stream_publish_pages,
                          $show_errors,$promote_external,$import_comments,
-                         $approve_imported_comments,$num_days_import,$imported_comments_email) {
+                         $approve_imported_comments,$num_days_import,
+                         $imported_comments_email,$infinite_session_key) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -147,7 +148,8 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'import_comments' => $import_comments,
                               'approve_imported_comments' => $approve_imported_comments,
                               'num_days_import' => $num_days_import,
-                              'imported_comments_email' => $imported_comments_email
+                              'imported_comments_email' => $imported_comments_email,
+                              'infinite_session_key' => $infinite_session_key
                               );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
@@ -242,6 +244,7 @@ function wpbook_subpanel() {
     $approve_imported_comments = $_POST['approve_imported_comments'];
     $num_days_import = $_POST['num_days_import'];  
     $imported_comments_email = $_POST['imported_comments_email'];  
+    $infinite_session_key = $_POST['infinite_session_key']; 
       
 	  // Handle custom gravatar_deault   code modified from wp-admin/options.php
 		if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
@@ -274,7 +277,7 @@ function wpbook_subpanel() {
                     $exclude_true,$show_pages_menu,$show_pages_list,
                     $show_recent_post_list, $recent_post_amount,$stream_publish,
                     $stream_publish_pages,$show_errors,$promote_external,
-                    $import_comments,$approve_imported_comments,$num_days_import,$imported_comments_email);
+                    $import_comments,$approve_imported_comments,$num_days_import,$imported_comments_email,$infinite_session_key);
       $flash = "Your settings have been saved. ";
     } 
     elseif (($wpbookAdminOptions['fb_api_key'] != "") || ($wpbookAdminOptions['fb_secret'] != "") || ($wpbookAdminOptions['fb_app_url'] != "")
@@ -404,22 +407,29 @@ function wpbook_subpanel() {
       echo("checked");
     }
     echo ' id="stream_publish_pages" > Publish new posts to the Wall of Facebook Fan Page below <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" /></p>';
-    echo '<p>You can check to see if permission has been granted by visiting the "grant permissions" link below.</p>';
+    echo '<p>You can check to see if permission has been granted by visiting the "check permissions" link below.</p>';
     if( !empty($wpbookAdminOptions['fb_app_url'])  
        && !empty($wpbookAdminOptions['fb_secret'])
        && !empty($wpbookAdminOptions['fb_api_key'])
        ) {  
       echo '<p>Once your Facebook application is established, <a href="http://apps.facebook.com/'
-      . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true" target="_new">click here to grant '
-      . 'WPBook the permission to publish to your stream.</a> Then return and enter your FB profile id below.</p>';
+      . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true" target="_new">check '
+      . 'WPBook permissions for stream publishing, reading, and offline access.</a> Then return and enter your FB profile id below.</p>';
     }  
     echo '<p>Enter Your Facebook Profile ID';
     echo '<br /><input type="text" name="fb_admin_target" value="';
     echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="45" /></p>';  
 
-    echo '<p>Enter the PageID of the target FB page (you can get this at the grant permissions link above): ';
+    echo '<p>Enter the PageID of the target FB page (you can get this at the check permissions link above): ';
     echo '<br /><input type="text" name="fb_page_target" value="';
-    echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="45" /></p>';  
+    echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="45" /></p>'; 
+    
+    echo '<p>Your infinite session key: ';
+    echo '&nbsp;<input type="text" name="infinite_session_key" value="';
+    echo htmlentities($wpbookAdminOptions['infinite_session_key']) .'" disabled size="30" /></p>';
+    echo '<p>(Note: You should NOT change this here. To set your infinite session key you need to visit the "check permissions" link above.</p>';
+    
+    
     echo '<p>If you have trouble with Stream publishing you can enable error messages below. This will trigger WPBook to '
     . ' capture and display errors it receives back from the Facebook client.</p>';
     echo '<p class="options"><input type="checkbox" name="show_errors" value="true" ';
@@ -464,7 +474,6 @@ function wpbook_subpanel() {
     echo 'facebook@openparenthesis.org which has no gravatar at all). ';
     echo '&nbsp;<input type="text" name="imported_comments_email" value="';
     echo htmlentities($wpbookAdminOptions['imported_comments_email']) .'" size="20" /></p>';      
-    
     
 echo'<p><strong> Socialize Options:</strong></p>';	
 // Here starts the "invite friends" section
@@ -1176,6 +1185,23 @@ function wpbook_parse_request($wp) {
       } // end try catch
       $redirect_url = $wpbookAdminOptions['app_url'];
       header( 'Location: ' . $redirect_url );
+    }
+    if($wp->query_vars['wpbook'] == 'catch_permissions') {  // do something with infinite session key
+      /* need to capture the fb_sig_session_key that came in the _POST,
+       * store that in the db for this user, and then redirect back to somewhere
+       * useful, probably the is_permissions page
+       */
+      $my_session_key = $_GET['fb_sig_session_key'];
+      //echo "<p>Your session key is $my_session_key.</p>";
+      //echo "<p>Please copy that into the appropriate place in WPBook settings</p>";
+      $wpbookOptions = get_option('wpbookAdminOptions');
+      if (!empty($wpbookOptions)) {
+        foreach ($wpbookOptions as $key => $option)
+        $wpbookAdminOptions[$key] = $option;
+      }
+      $wpbookAdminOptions['infinite_session_key'] = $my_session_key;
+      $result = update_option('wpbookAdminOptions',$wpbookAdminOptions);
+      echo 'Successfully captured permissions';
     }
   }
 }

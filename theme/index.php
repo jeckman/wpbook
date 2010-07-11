@@ -66,7 +66,16 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
    publish to your personal wall and/or to the walls of fan pages.</p>
   <p>Your userid is <?php echo $user; ?> </p>
   <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
-  <p><a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=<?php echo $api_key; ?>&next=http://www.facebook.com/connect/login_success.html&display=popup&ext_perm=read_stream,publish_stream,offline_access">Click here to grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
+  <p><a href="
+<?php 
+  $my_permissions_url = 'http://www.facebook.com/connect/prompt_permissions.php?api_key='.
+                        $api_key .'&display=popup&ext_perm=read_stream,publish_stream,offline_access&extern=1'.
+                        '&next=http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) 
+                        .'/?wpbook=catch_permissions';
+
+  echo $my_permissions_url;
+?>
+" target="_top">Grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
 <p>You are also listed as the admin of these pages:
   <ul>
   <?php 
@@ -104,9 +113,11 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
           echo 'This page has NOT granted stream.publish permissions to this app. ';
           echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
           echo $api_key;
-          echo '&v=1.0&next=http://www.facebook.com/connect/login_success.html?xxRESULTTOKENxx&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
+          echo '&v=1.0&next=';
+          echo urlencode($wpbookAdminOptions['fb_app_url']);
+          echo '?wpbook=catch_perms&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
           echo $page['page_id'];
-          echo '">Grant stream.publish for this page</a>. ';          
+          echo '" target="_top">Grant stream.publish for this page</a>. ';          
         } else { 
           echo 'This page has granted stream.publish permissions to this app. ';
         }  
