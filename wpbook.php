@@ -735,7 +735,7 @@ function wpbook_subpanel() {
 		if (!empty($groupby)) { $groupby = ' GROUP BY '.$groupby; }
 	
 		$request = "SELECT ID, post_title, post_excerpt FROM $wpdb->posts "
-      . "$join WHERE post_status = 'publish' AND post_type != 'page' ";
+      . "$join WHERE post_status = 'publish' AND post_type = 'post' ";
 		if ($hide_pass_post) $request .= "AND post_password ='' ";
 		$request .= "AND post_date_gmt < '$now' $where $groupby ORDER BY "
       . "post_date DESC LIMIT $skip_posts, $count";
@@ -778,7 +778,7 @@ function wpbook_profile_recent_posts($count = 5, $before = '<li>', $after = '</l
   if (!empty($groupby)) { $groupby = ' GROUP BY '.$groupby; }
   
   $request = "SELECT ID, post_title, post_excerpt FROM $wpdb->posts "
-    . "$join WHERE post_status = 'publish' AND post_type != 'page' ";
+    . "$join WHERE post_status = 'publish' AND post_type = 'post' ";
   if ($hide_pass_post) $request .= "AND post_password ='' ";
   $request .= "AND post_date_gmt < '$now' $where $groupby ORDER BY "
     . "post_date DESC LIMIT $skip_posts, $count";
