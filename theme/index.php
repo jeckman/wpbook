@@ -114,8 +114,8 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
           echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
           echo $api_key;
           echo '&v=1.0&next=';
-          echo urlencode($wpbookAdminOptions['fb_app_url']);
-          echo '?wpbook=catch_perms&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
+          echo 'http://apps.facebook.com/'. urlencode($wpbookAdminOptions['fb_app_url']);
+          echo '/?wpbook=catch_perms&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
           echo $page['page_id'];
           echo '" target="_top">Grant stream.publish for this page</a>. ';          
         } else { 
