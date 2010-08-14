@@ -375,6 +375,13 @@ $('.attribution_line').simpletip('This is the string which will be used as the m
     contentClass: 'tooltip_content',viewpoint:true
                                  });
 
+// attribution line tooltip
+$('.wpbook_enable_debug').simpletip('If you enable this, WPBook will create a debug.txt file in the wpbook directory', {
+    stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
+    hook: {tooltip: 'leftMiddle'},
+    contentClass: 'tooltip_content',viewpoint:true
+                                 });
+
 // external links tooltip
 $('.promote_external').simpletip('This tells WPBook to use your external, WordPress permalink when posting to walls or pages', {
                                                             stem: { corner: 'leftMiddle', color:'#DFDFDF', size: 12 }, 
