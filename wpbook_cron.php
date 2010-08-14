@@ -35,7 +35,7 @@ function wpbook_import_comments() {
   }
   $wpbookOptions = get_option('wpbookAdminOptions');
   define ('DEBUG', true);
-  define ('WPBOOK_COMMENT_METHOD','comments');
+  define ('WPBOOK_COMMENT_METHOD','comment');
 
   $debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_debug.txt';
   if(DEBUG) {

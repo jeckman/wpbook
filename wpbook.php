@@ -296,7 +296,9 @@ function wpbook_subpanel() {
       //set the "smart" defaults on install this only works once the page has been refeshed
       if ($wpbookAdminOptions['wpbook_installation'] != 1) {  
         $gravatar_default = WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif';
-        setAdminOptions(1, null,null,null,null,null,null,"true",null,"true","top",null,null,"F j, Y","g:i a","true",null,null,null,"disabled",null,"g",$gravatar_default,null,null,null,null,true,true,10,false,false,false);
+        setAdminOptions(1, null,null,null,null,null,true,true,true,true,true,top,null,null,"F j, Y","g:i a",
+                        true,null,null,null,disabled,null,"g",$gravatar_default,null,null,null,null,true,true,10,
+                        false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null);
       }
       if ($flash != '') echo '<div id="message"class="updated fade">'
         . '<p>' . $flash . '</p></div>'; 
@@ -424,13 +426,12 @@ function wpbook_subpanel() {
       echo '<br /><input type="text" name="fb_page_target" value="';
       echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="45" /></p>'; 
     
-      echo '<p>Infinite Session Key: ' . htmlentities($wpbookAdminOptions['infinite_session_key']) .'<br/>';
-      echo '(This key is used for posting to your personal wall, and retrieving comments from your personal wall. ';
+      echo '<p>Infinite Session Key: ';
+      echo '<input type="text" name="infinite_session_key" value ="';
+      echo htmlentities($wpbookAdminOptions['infinite_session_key']) .'" size="45" /></p>';      
+      echo '<p>(This key is used for posting to your personal wall, and retrieving comments from your personal wall. ';
       echo 'If you are not importing comments from a personal wall, it is not necessary. If you are importing comments ';
       echo ' from a personal wall, and no Infinite Session Key is set, visit the check permissions link above)</p>';
-      echo '<input type="hidden" name="infinite_session_key" value="';
-      echo htmlentities($wpbookAdminOptions['infinite_session_key']) .'"/>';
-    
       echo'<p><strong>Attribution Line</strong><br/> Here you can set the attribution line'
           .' that will be used when posting to facebook.</p>';
       echo '<strong>Predefined Options:</strong><br/> '
@@ -1229,21 +1230,13 @@ function wpbook_parse_request($wp) {
       header( 'Location: ' . $redirect_url );
     }
     if($wp->query_vars['wpbook'] == 'catch_permissions') {  // do something with infinite session key
-      /* need to capture the fb_sig_session_key that came in the _POST,
-       * store that in the db for this user, and then redirect back to somewhere
-       * useful, probably the is_permissions page
+      /* reverted to showing the infinite session key and asking user to enter
+       * into WPBook settings - all the other settings are done that way, and
+       * this avoids the oddity of trying to 'hide' it on the settings page
        */
       $my_session_key = $_GET['fb_sig_session_key'];
-      //echo "<p>Your session key is $my_session_key.</p>";
-      //echo "<p>Please copy that into the appropriate place in WPBook settings</p>";
-      $wpbookOptions = get_option('wpbookAdminOptions');
-      if (!empty($wpbookOptions)) {
-        foreach ($wpbookOptions as $key => $option)
-        $wpbookAdminOptions[$key] = $option;
-      }
-      $wpbookAdminOptions['infinite_session_key'] = $my_session_key;
-      $result = update_option('wpbookAdminOptions',$wpbookAdminOptions);
-      echo 'Successfully captured permissions';
+      echo "<p>Your session key is $my_session_key.</p>";
+      echo "<p>Please copy that into the appropriate place in WPBook settings</p>";
     }
   }
 }
@@ -1285,3 +1278,4 @@ add_action('wpbook_cron_job', 'wpbook_import_comments');
 
 include("wpbook_cron.php");
 ?>
+

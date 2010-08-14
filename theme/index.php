@@ -1,7 +1,82 @@
 <?php
 // set up occurs in the config.php
-include_once(WP_PLUGIN_DIR . '/wpbook/theme/config.php');
+if(isset($_GET['app_tab'])) { // this is an app tab
+  // output tab
+  ?>
+  <fb:fbml>
+  <div id="content">
+  <?php 	
+  have_posts();
+  if (have_posts()) : 
+    while (have_posts()) : 
+      the_post(); 
+      echo '<div class="box_head clearfix" id="post-'.  get_the_ID() .'">';
+      echo  '<h3 class="wpbook_box_header">';
+      if($show_date_title == "true"){
+        the_time($timestamp_date_format); 
+        echo(" - ");
+      }
+      echo '<a href="'. get_permalink() .'" target="_top">'. get_the_title() .'</a></h3>';
+      if(($show_custom_header_footer == "header") || ($show_custom_header_footer == "both")){
+        echo( '<div id="custom_header">'.custom_header_footer($custom_header,$timestamp_date_format,$timestamp_time_format) .'</div>');
+      } // end if for showing customer header
   
+      if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "top")) { 
+        echo '<p>';
+        if($enable_share == "true"){
+          echo '<span class="wpbook_share_button">';
+          echo '<a onclick="window.open(\'http://www.facebook.com/sharer.php?s=100&amp;p[title]=';
+          echo urlencode(get_the_title());
+          echo '&amp;p[summary]=';
+          echo urlencode(get_the_excerpt());
+          echo '&amp;p[url]=';
+          echo urlencode(get_permalink());
+          echo "','sharer','toolbar=0,status=0,width=626,height=436'); return false;\""; 
+          echo ' class="share" title="Send this to friends or post it on your profile.">Share This Post</a>';
+          echo '</span>';
+        } // end if for enable_share
+        if($enable_external_link == "true"){ 
+          echo '<span class="wpbook_external_post"><a href="'. get_external_post_url(get_permalink()) .'" title="View this post outside Facebook at '. get_bloginfo('name') .'">View post on '. get_bloginfo('name') .'</a></span>';
+        } // end if for enable external_link
+          echo '</p>';
+      } // end links_position _top
+            
+      the_content();
+            
+      // echo custom footer
+      if(($show_custom_header_footer == "footer") || ($show_custom_header_footer == "both")){	
+        echo('<div id="custom_footer">'.custom_header_footer($custom_footer,$timestamp_date_format,$timestamp_time_format) .'</div>');
+      } // endif for footer 
+            
+      // get share link 
+      if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "bottom")) { 
+        echo '<p>';
+        if($enable_share == "true"){
+          echo '<span class="wpbook_share_button">';
+          echo '<a onclick="window.open(\'http://www.facebook.com/sharer.php?s=100&amp;p[title]=';
+          echo urlencode(get_the_title());
+          echo '&amp;p[summary]=';
+          echo urlencode(get_the_excerpt());
+          echo '&amp;p[url]=';
+          echo urlencode(get_permalink());
+          echo "','sharer','toolbar=0,status=0,width=626,height=436'); return false;\""; 
+          echo ' class="share" title="Send this to friends or post it on your profile.">Share This Post</a>';
+          echo '</span>';
+        } // end enable_share = true 
+        if($enable_external_link == "true"){
+          ?><span class="wpbook_external_post"><a href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span><?php
+        }
+        echo '</p>';
+      } // end if for enable share, external, bottom
+      echo '</div>';	
+    endwhile; // while have posts
+  endif; // if have posts	
+  echo '</div>';
+  echo '</fb:fbml>';  
+} else { // not the tab page
+  
+include_once(WP_PLUGIN_DIR . '/wpbook/theme/config.php');
+
 if(isset($_GET['is_invite'])) { // this is the invite page
   if(isset($_POST["ids"])) { // this means we've already added some stuff
     echo "<center>Thank you for inviting ".sizeof($_POST["ids"])
@@ -385,4 +460,5 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
   </html>
 <?php
 } // end if not invite, not permissions condition 
+  } // end of not tab
 ?>
