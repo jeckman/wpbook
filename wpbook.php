@@ -999,6 +999,13 @@ function wp_update_profile_boxes($post_ID) {
     else 
       $wpbook_description = stripslashes(wp_filter_nohtml_kses($my_post->post_content));
     
+    if(strlen($wpbook_description) >= 995) {
+      $space_index = strrpos(substr($wpbook_description, 0, 995), ' ');
+      $short_desc = substr($wpbook_description, 0, $space_index);
+      $short_desc .= '...';
+      $wpbook_description = $short_desc;
+    }
+    
     $images = get_children('post_type=attachment&post_mime_type=image&post_parent='. $my_post->ID );
     
     if ( $images ) {
