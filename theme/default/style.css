@@ -104,6 +104,8 @@ ul.pagenav li {
 .wpbook_share_button,.wpbook_external_post {
     margin-top: 5px;
     margin-bottom: 10px;
+    padding-left: 5px;
+    height: 25px;
 }
 
 .wpbook_share_button a ,.wpbook_invite_button a {  

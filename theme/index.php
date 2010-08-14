@@ -34,7 +34,7 @@ if(isset($_GET['app_tab'])) { // this is an app tab
           echo '<fb:share-button href="'. urlencode(get_permalink()) .'" /> ';
         } // end if for enable_share
         if($enable_external_link == "true"){ 
-          echo '<span class="wpbook_external_post"><a href="'. get_external_post_url(get_permalink()) .'" title="View this post outside Facebook at '. get_bloginfo('name') .'">View post on '. get_bloginfo('name') .'</a></span>';
+          echo '<span class="uiButton uiButtonMedium"><a href="'. get_external_post_url(get_permalink()) .'" title="View this post outside Facebook at '. get_bloginfo('name') .'">View post on '. get_bloginfo('name') .'</a></span>';
         } // end if for enable external_link
           echo '</p>';
       } // end links_position _top
@@ -53,7 +53,7 @@ if(isset($_GET['app_tab'])) { // this is an app tab
           echo '<fb:share-button class="url" href="'. urlencode(get_permalink()) .'" />';
         } // end enable_share = true 
         if($enable_external_link == "true"){
-          ?><span class="wpbook_external_post"><a href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span><?php
+          ?><span class="uiButton uiButtonMedium"><a class="uiButtonText" href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span><?php
         }
         echo '</p>';
       } // end if for enable share, external, bottom
