@@ -993,8 +993,9 @@ function wp_update_profile_boxes($post_ID) {
       $my_permalink = wpbook_always_filter_postlink(get_permalink($post_ID));
     }
     $message = wpbook_attribution_line($wpbook_attribution_line,$my_post->author);
+
+    $wpbook_description = stripslashes(wp_filter_nohtml_kses($my_post->post_content));
     $images = get_children('post_type=attachment&post_mime_type=image&post_parent='. $my_post->ID );
-    $wpbook_description = $my_post->get_the_excerpt;
     
     if ( $images ) {
       $img = array();
