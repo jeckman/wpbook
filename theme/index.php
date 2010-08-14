@@ -28,16 +28,16 @@ if(isset($_GET['app_tab'])) { // this is an app tab
         echo( '<div id="custom_header">'.custom_header_footer($custom_header,$timestamp_date_format,$timestamp_time_format) .'</div>');
       } // end if for showing customer header
   
-      if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "top")) { 
-        echo '<p>';
-        if($enable_share == "true"){
-          echo '<fb:share-button href="'. urlencode(get_permalink()) .'" /> ';
-        } // end if for enable_share
-        if($enable_external_link == "true"){ 
-          echo '<span class="uiButton uiButtonMedium"><a href="'. get_external_post_url(get_permalink()) .'" title="View this post outside Facebook at '. get_bloginfo('name') .'">View post on '. get_bloginfo('name') .'</a></span>';
-        } // end if for enable external_link
-          echo '</p>';
-      } // end links_position _top
+    if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "bottom")) { 
+      echo '<p>';
+      if($enable_share == "true"){
+        echo '<fb:share-button class="url" href="'. urlencode(get_permalink()) .'" />';
+      } // end enable_share = true 
+      if($enable_external_link == "true"){
+        ?><span class="uiButton uiButtonMedium"><a class="uiButtonText" href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span><?php
+      }
+        echo '</p>';
+    } // end if for enable share, external, top
             
       the_content();
             
