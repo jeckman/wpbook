@@ -28,7 +28,7 @@ if(isset($_GET['app_tab'])) { // this is an app tab
         echo( '<div id="custom_header">'.custom_header_footer($custom_header,$timestamp_date_format,$timestamp_time_format) .'</div>');
       } // end if for showing customer header
   
-    if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "bottom")) { 
+    if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "top")) { 
       echo '<p>';
       if($enable_share == "true"){
         echo '<fb:share-button class="url" href="'. urlencode(get_permalink()) .'" />';
