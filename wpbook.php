@@ -110,7 +110,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                          $show_errors,$promote_external,$import_comments,
                          $approve_imported_comments,$num_days_import,
                          $imported_comments_email,$infinite_session_key,
-                         $attribution_line) {
+                         $attribution_line,$wpbook_enable_debug) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -151,7 +151,8 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'num_days_import' => $num_days_import,
                               'imported_comments_email' => $imported_comments_email,
                               'infinite_session_key' => $infinite_session_key,
-                              'attribution_line' => $attribution_line
+                              'attribution_line' => $attribution_line,
+                              'wpbook_enable_debug' => $wpbook_enable_debug
                               );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
@@ -280,7 +281,8 @@ function wpbook_subpanel() {
                     $show_recent_post_list, $recent_post_amount,$stream_publish,
                     $stream_publish_pages,$show_errors,$promote_external,
                     $import_comments,$approve_imported_comments,$num_days_import,
-                    $imported_comments_email,$infinite_session_key,$attribution_line);
+                    $imported_comments_email,$infinite_session_key,
+                    $attribution_line,$wpbook_enable_debug);
       $flash = "Your settings have been saved. ";
     } elseif (($wpbookAdminOptions['fb_api_key'] != "") || ($wpbookAdminOptions['fb_secret'] != "") || ($wpbookAdminOptions['fb_app_url'] != "")
             || (!empty($_POST['fb_api_key']))  || (!empty($_POST['fb_secret'])) || (!empty($_POST['fb_app_url']))){
@@ -298,7 +300,7 @@ function wpbook_subpanel() {
         $gravatar_default = WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif';
         setAdminOptions(1, null,null,null,null,null,true,true,true,true,true,top,null,null,"F j, Y","g:i a",
                         true,null,null,null,disabled,null,"g",$gravatar_default,null,null,null,null,true,true,10,
-                        false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null);
+                        false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null);
       }
       if ($flash != '') echo '<div id="message"class="updated fade">'
         . '<p>' . $flash . '</p></div>'; 
@@ -328,6 +330,11 @@ function wpbook_subpanel() {
       echo '<strong>NOT</strong> INCLUDING "http://apps.facebook.com/"<br />';
       echo '<input type="text" name="fb_app_url" value="';
       echo htmlentities($wpbookAdminOptions['fb_app_url']) .'" size="45" /></p>';
+      echo '<p class="options"><input type="checkbox" name="wpbook_enable_debug" value="true" ';
+      if( htmlentities($wpbookAdminOptions['wpbook_enable_debug']) == "true") {
+        echo("checked");
+      }
+      echo ' id="wpbook_enable_debug" > Enable WPBook to create a debug file <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="wpbook_enable_debug" /></p>';
       echo '</div>';
       echo '<div id="customization_options"><h3> Customization Options: </h3>';
       echo '<p>These options will allow you to customize wpbook to your liking.</p>';
