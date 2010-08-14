@@ -994,11 +994,8 @@ function wp_update_profile_boxes($post_ID) {
     }
     $message = wpbook_attribution_line($wpbook_attribution_line,$my_post->author);
     $images = get_children('post_type=attachment&post_mime_type=image&post_parent='. $my_post->ID );
-    if(!empty($my_post->post_excerpt)) {
-      $wpbook_description = $my_post->post_excerpt; 
-    } else {
-      $wpbook_description = $my_post->post_content; // need to trim here
-    }
+    $wpbook_description = $my_post->get_the_excerpt;
+    
     if ( $images ) {
       $img = array();
       foreach( $images as $imageID => $imagePost ) {
