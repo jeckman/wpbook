@@ -34,7 +34,15 @@ function wpbook_import_comments() {
     include_once(WP_PLUGIN_DIR . '/wpbook/client/facebook.php');
   }
   $wpbookOptions = get_option('wpbookAdminOptions');
-  define ('DEBUG', true);
+  if (!empty($wpbookOptions)) {
+    foreach ($wpbookOptions as $key => $option)
+    $wpbookAdminOptions[$key] = $option;
+	}
+  
+  if($wpbookOptions['wpbook_enable_debug'] == "true")
+    define ('DEBUG',true);
+  else
+    defin ('DEBUG',false);
   define ('WPBOOK_COMMENT_METHOD','comment');
 
   $debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_debug.txt';
@@ -43,10 +51,6 @@ function wpbook_import_comments() {
     $debug_string=date("Y-m-d H:i:s",time())." : Cron Running\n";
     fwrite($fp, $debug_string);
   }
-  if (!empty($wpbookOptions)) {
-    foreach ($wpbookOptions as $key => $option)
-      $wpbookAdminOptions[$key] = $option;
-	}
 
   $api_key = $wpbookAdminOptions['fb_api_key'];
   $secret  = $wpbookAdminOptions['fb_secret'];
