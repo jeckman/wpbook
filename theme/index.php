@@ -5,6 +5,12 @@ if(isset($_GET['app_tab'])) { // this is an app tab
   // output tab
   ?>
   <fb:fbml>
+  <style type="text/css">
+  <?php 
+    // online inline styles allowed in fbml, so echo 'em out 
+    echo file_get_contents(WP_PLUGIN_DIR . '/wpbook/theme/default/style.css');
+  ?>
+    </style>
   <div id="content">
   <?php 	
   have_posts();
@@ -25,16 +31,7 @@ if(isset($_GET['app_tab'])) { // this is an app tab
       if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "top")) { 
         echo '<p>';
         if($enable_share == "true"){
-          echo '<span class="wpbook_share_button">';
-          echo '<a onclick="window.open(\'http://www.facebook.com/sharer.php?s=100&amp;p[title]=';
-          echo urlencode(get_the_title());
-          echo '&amp;p[summary]=';
-          echo urlencode(get_the_excerpt());
-          echo '&amp;p[url]=';
-          echo urlencode(get_permalink());
-          echo "','sharer','toolbar=0,status=0,width=626,height=436'); return false;\""; 
-          echo ' class="share" title="Send this to friends or post it on your profile.">Share This Post</a>';
-          echo '</span>';
+          echo '<fb:share-button href="'. urlencode(get_permalink()) .'" /> ';
         } // end if for enable_share
         if($enable_external_link == "true"){ 
           echo '<span class="wpbook_external_post"><a href="'. get_external_post_url(get_permalink()) .'" title="View this post outside Facebook at '. get_bloginfo('name') .'">View post on '. get_bloginfo('name') .'</a></span>';
@@ -53,16 +50,7 @@ if(isset($_GET['app_tab'])) { // this is an app tab
       if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "bottom")) { 
         echo '<p>';
         if($enable_share == "true"){
-          echo '<span class="wpbook_share_button">';
-          echo '<a onclick="window.open(\'http://www.facebook.com/sharer.php?s=100&amp;p[title]=';
-          echo urlencode(get_the_title());
-          echo '&amp;p[summary]=';
-          echo urlencode(get_the_excerpt());
-          echo '&amp;p[url]=';
-          echo urlencode(get_permalink());
-          echo "','sharer','toolbar=0,status=0,width=626,height=436'); return false;\""; 
-          echo ' class="share" title="Send this to friends or post it on your profile.">Share This Post</a>';
-          echo '</span>';
+          echo '<fb:share-button class="url" href="'. urlencode(get_permalink()) .'" />';
         } // end enable_share = true 
         if($enable_external_link == "true"){
           ?><span class="wpbook_external_post"><a href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span><?php
