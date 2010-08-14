@@ -249,7 +249,7 @@ function wpbook_subpanel() {
       $imported_comments_email = $_POST['imported_comments_email'];  
       $infinite_session_key = $_POST['infinite_session_key']; 
       $attribution_line = $_POST['attribution_line'];
-      
+      $wpbook_enable_debug = $_POST['wpbook_enable_debug'];
       // Handle custom gravatar_deault   code modified from wp-admin/options.php
       if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
         $_POST['gravatar_default'] = urlencode($_POST['gravatar_rating_custom']);
