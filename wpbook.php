@@ -979,7 +979,6 @@ function wp_update_profile_boxes($post_ID) {
   if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && (($stream_publish == "true") || $stream_publish_pages == "true")) {
   // here we should also post to the author's stream
     $my_post = get_post($post_ID);
-    setup_postdata($my_post);
     if(!empty($my_post->post_password)) { // post is password protected, don't post
       return;
     }
@@ -995,8 +994,12 @@ function wp_update_profile_boxes($post_ID) {
     }
     $message = wpbook_attribution_line($wpbook_attribution_line,$my_post->author);
 
-    $wpbook_description = stripslashes(wp_filter_nohtml_kses(get_the_excerpt()));
-      $images = get_children('post_type=attachment&post_mime_type=image&post_parent='. $my_post->ID );
+    if(($my_post->post_excerpt) && ($my_post->post_excerpt != ''))
+      $wpbook_description = stripslashes(wp_filter_nohtml_kses($my_post->post_excerpt));
+    else 
+      $wpbook_description = stripslashes(wp_filter_nohtml_kses($my_post->post_content));
+    
+    $images = get_children('post_type=attachment&post_mime_type=image&post_parent='. $my_post->ID );
     
     if ( $images ) {
       $img = array();
