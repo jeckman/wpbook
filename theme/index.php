@@ -1,5 +1,6 @@
 <?php
-// set up occurs in the config.php
+/* first include just sets up WP settings */  
+include_once(WP_PLUGIN_DIR . '/wpbook/theme/config_wp_settings.php');
 if(isset($_GET['app_tab'])) { // this is an app tab
   // output tab
   ?>
@@ -75,6 +76,7 @@ if(isset($_GET['app_tab'])) { // this is an app tab
   echo '</fb:fbml>';  
 } else { // not the tab page
   
+/* this include sets up the FB client, needed for the other parts but not the tab */  
 include_once(WP_PLUGIN_DIR . '/wpbook/theme/config.php');
 
 if(isset($_GET['is_invite'])) { // this is the invite page
