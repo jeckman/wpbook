@@ -982,7 +982,7 @@ function wp_update_profile_boxes($post_ID) {
     if(!empty($my_post->post_password)) { // post is password protected, don't post
       return;
     }
-    if(get_post_type($post_ID) != 'post') { // only do this for posts
+    if(get_post_type($my_post->ID) != 'post') { // only do this for posts
       return;
     }
     $publish_meta = get_post_meta($my_post->ID,'wpbook_fb_publish',true); // for some reason these are empty
@@ -1056,8 +1056,8 @@ function wp_update_profile_boxes($post_ID) {
         } // end if for show errors
       } // end try-catch
       if($fb_response != '') {
-        add_post_meta($post_ID->ID,'_wpbook_user_stream_id', $fb_response);
-        add_post_meta($post_ID->ID,'_wpbook_user_stream_time',0); // no comments imported yet
+        add_post_meta($my_post->ID,'_wpbook_user_stream_id', $fb_response);
+        add_post_meta($my_post->ID,'_wpbook_user_stream_time',0); // no comments imported yet
       } // end of if $response
     } // end of if stream_publish 
     
@@ -1084,8 +1084,8 @@ function wp_update_profile_boxes($post_ID) {
           } // end if for show errors
         } // end try catch
         if($fb_response != '') {
-          add_post_meta($post_ID->ID,'_wpbook_page_stream_id',$fb_response);
-          add_post_meta($post_ID->ID,'_wpbook_page_stream_time',0); // no comments imported
+          add_post_meta($my_post->ID,'_wpbook_page_stream_id',$fb_response);
+          add_post_meta($my_post->ID,'_wpbook_page_stream_time',0); // no comments imported
         }
       } // if permissions 
     } // end of if stream_publish_pages is true AND target_page non-empty
@@ -1168,6 +1168,9 @@ function wpbook_add_meta_box() {
 }
   
 function wpbook_store_post_options($post_id, $post = false) {
+  if (!$post || $post->post_type == 'revision') { // store the metadata with the post, not the revision
+		return;
+	}  
   $wpbookAdminOptions = wpbook_getAdminOptions();
   $post = get_post($post_id);
   $notify_meta = get_post_meta($post_id, 'wpbook_fb_publish', true);
