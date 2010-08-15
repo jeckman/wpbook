@@ -1162,7 +1162,7 @@ function wpbook_parse_request($wp) {
       header( 'Location: ' . $redirect_url );
     }
     if($wp->query_vars['wpbook'] == 'update_profile_boxes') {  // first process requests with "wpbook=comment-handler"
-      if(!class_exists('FacebookRestClient')) {
+      if((!class_exists('FacebookRestClient')) && (!version_compare(PHP_VERSION, '5.0.0', '<'))) {
         include_once(WP_PLUGIN_DIR . '/wpbook/client/facebook.php');
       }
       $wpbookOptions = get_option('wpbookAdminOptions');
