@@ -1042,6 +1042,9 @@ function wp_update_profile_boxes($post_ID) {
     $action_links = json_encode($action_links); 
     
     if($stream_publish == "true") {
+      if((get_post_meta($post_id, 'wpbook_fb_publish', true) == 'no')) {
+        return;
+      }
       $fb_response = '';
       try{
         $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_admin,$target_admin);
