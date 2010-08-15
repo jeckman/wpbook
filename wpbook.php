@@ -345,8 +345,8 @@ your application's url.</p>
         echo '<p>Once your Facebook application is established, return and enter data below.</p>';
       } else {
         echo '<p>These settings all impact how WPBook publishes to Facebook walls, and depend on appropriate permissions being set in Facebook.</p>';
-        echo '<a href="http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true">check '
-          . 'permissions for stream publishing, reading, and offline access.</a>';
+        echo '<a href="http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true">Check '
+          . 'permissions</a> for stream publishing, reading, and offline access.';
       }
       echo '<p class="options"><input type="checkbox" name="stream_publish" value="true" ';
       if( htmlentities($wpbookAdminOptions['stream_publish']) == "true") {
@@ -376,32 +376,34 @@ your application's url.</p>
       if( htmlentities($wpbookAdminOptions['wpbook_enable_debug']) == "true") {
         echo("checked");
       }
-      echo ' id="wpbook_enable_debug" > Enable WPBook to create a debug file <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="wpbook_enable_debug" /></p>';
-      echo '<p>Attribution line: <input type="text" name="attribution_line" size="40" value="'. $wpbookAdminOptions['attribution_line'] .'" />';
-      echo '<img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="attribution_line"/><br />';
-      echo 'Predefined Strings (you can use these in your attribution line): %author%, %blogname%.</p>';
-
-      echo '<p class="options"><input type="checkbox" name="show_errors" value="true" ';
+      echo ' id="wpbook_enable_debug" > Enable WPBook to create a debug file <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="wpbook_enable_debug" /> ';
+      echo '&nbsp;&nbsp;&nbsp;<input type="checkbox" name="show_errors" value="true" ';
       if( htmlentities($wpbookAdminOptions['show_errors']) == "true") {
         echo("checked");
       }
       echo ' id="show_errors" > Show errors posting to Facebook Stream <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="show_errors" /></p>';
+
+      echo '<p>Attribution line: <input type="text" name="attribution_line" size="40" value="'. $wpbookAdminOptions['attribution_line'] .'" />';
+      echo '<img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="attribution_line"/><br />';
+      echo 'Predefined Strings (you can use these in your attribution line): %author%, %blogname%.</p>';
+
+
       echo '<p class="options"><input type="checkbox" name="promote_external" value="true" ';
       if( htmlentities($wpbookAdminOptions['promote_external']) == "true") {
         echo("checked");
       }
-      echo ' id="promote_external" >Use external permalinks on Walls <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="promote_external" /></p>';
+      echo ' id="promote_external" > Use external permalinks on Walls <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="promote_external" /></p>';
 
       echo '<p class="options"><input type="checkbox" name="import_comments" value="1" ';
       if( htmlentities($wpbookAdminOptions['import_comments']) == "1") {
         echo("checked");
       }
-      echo ' id="import_comments" >Import comments from Facebook Walls <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="import_comments" /></p>';
-      echo '<p class="options"><input type="checkbox" name="approve_imported_comments" value="1" ';
+      echo ' id="import_comments" > Import comments from Facebook Walls <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="import_comments" /> ';
+      echo '&nbsp;&nbsp;&nbsp;<input type="checkbox" name="approve_imported_comments" value="1" ';
       if( htmlentities($wpbookAdminOptions['approve_imported_comments']) == "1") {
         echo("checked");
       }
-      echo ' id="approve_imported_comments" >Automatically approve comments imported from FB Walls <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="approve_imported_comments" /></p>';
+      echo ' id="approve_imported_comments" > Automatically approve imported Wall comments <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="approve_imported_comments" /></p>';
 
       echo '<p>For how many days should WPBook look for comments on Facebook Walls?: ';
       echo '&nbsp;<input type="text" name="num_days_import" value="';
@@ -409,7 +411,7 @@ your application's url.</p>
 
       echo '<p>What email address should WPBook associate with imported comments? ';
       echo '&nbsp;<input type="text" name="imported_comments_email" value="';
-      echo htmlentities($wpbookAdminOptions['imported_comments_email']) .'" size="20" /></p>';      
+      echo htmlentities($wpbookAdminOptions['imported_comments_email']) .'" size="40" /></p>';      
       echo '</div>'; 
       /* end of stream_publish_options */
 
@@ -418,7 +420,7 @@ your application's url.</p>
       echo '<p>These options will allow you to customize the behavior and display ';
       echo 'of blog posts in the <a href="http://apps.facebook.com/'. $wpbookAdminOptions['fb_app_url'] .'/';
       echo '">Facebook application view</a>.</p>';
-      // Now let's handle commenting - only show require_email if comments on
+      /* Now let's handle commenting - only show require_email if comments on */
       echo'<p><strong> Commenting Options:</strong></p>';
       echo '<p class="options"><input type="checkbox" name="allow_comments" value="true" ';
       if( htmlentities($wpbookAdminOptions['allow_comments']) == "true") {
@@ -430,9 +432,9 @@ your application's url.</p>
       if( htmlentities($wpbookAdminOptions['require_email']) == "true"){ 
         echo("checked");
       }
-      echo '> Require Comment Authors E-mail Address <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="require_email" /></p></div> ';
+      echo '> Require Comment Authors E-mail Address <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="require_email" /> ';
       //gravatar options
-      echo '<p class="options"><input type="checkbox" name="use_gravatar" value="true" ';
+echo '&nbsp;&nbsp;&nbsp;<input type="checkbox" name="use_gravatar" value="true" ';
       if( htmlentities($wpbookAdminOptions['use_gravatar']) == "true") {
         echo("checked");
       }
