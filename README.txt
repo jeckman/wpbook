@@ -149,6 +149,7 @@ as well as some other files for processing comments and the like.
  * Moved infinite_session_key to a setting user enters (consistency)
  * Added "publish this post to FB" setting, which allows users to suppress
    stream publishing for an individual post
+ * Changed saving of postmeta to be on PostID, not the id of the current revision
 
 = 2.0.1 =
  * Capture of infinite_session_key 
