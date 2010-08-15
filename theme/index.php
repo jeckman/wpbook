@@ -317,15 +317,15 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
     <div class="wpbook_header">
     <?php 
     if($invite_friends == "true"){
-      $invite_link = '<a href="http://apps.facebook.com/' . $app_url 
-        .'/index.php?is_invite=true&fb_force_mode=fbml" class="share"> Invite Friends</a>';
+      $invite_link = '<a class="FB_UIButton FB_UIButton_Gray FB_UIButton_CustomIcon" href="http://apps.facebook.com/' . $app_url 
+        .'/index.php?is_invite=true&fb_force_mode=fbml" class="share"><span class="FB_UIButton_Text"><span class="FB_Bookmark_Icon"></span> Invite Friends </span></a>';
       ?>
-      <div style="float:right;"><span class="wpbook_invite_button"><?php echo("$invite_link") ?></span> </div>	
+      <div style="float:right; margin-left: 3px; margin-bottom: 3px;"> <?php echo("$invite_link") ?> </div>	
       <?php 
     } 
     if($enable_profile_link == "true"){ 
       ?>
-      <div> <div id="addProfileButton" style="float:right;"></div></div>
+<div> <div id="addProfileButton" style="float:right;"><fb:add-profile-tab /></div></div>
       <?php 
     }
     ?>
@@ -510,8 +510,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
           FB.Facebook.init('<?php echo $api_key; ?>',
                      '<?php echo $receiver_url; ?>',
                       null);
-          FB.Connect.showAddSectionButton('profile',
-                                          document.getElementById('addProfileButton'));
+            FB.XFBML.parse(document.getElementById('addProfileButton'));
                            });   
       </script>
       <?php 

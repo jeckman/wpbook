@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" 
+  xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+<title>WPBook Instructions: Step Four</title>
+<link rel="stylesheet" href="instructions/styles/style.css" type="text/css" media="screen" />
+<!--[if lt IE 7]>
+        <script type="text/javascript" src="instructions/scripts/unitpngfix.js"></script>
+<![endif]--> 
+</head>
+<body>
+<div id="container">
+<div class="rounded_corner_box">
+   <div class="rounded_corner_top"><div></div></div>
+      <div class="rounded_corner_content">
+	  <img src="instructions/images/layout/wpbook_logo.png" border="0" class="logo" />
+<br><br>
+<p>Back to <a href="install_instructions.html">instructions</a>.</p>
+
+<h1>Step Four: Import Comments From Wall(s)</h1>
+
+<p>Once you have publishing to walls working (see Step 3), you can also have WPBook import comments made in response to those wall postings in Facebok.</p> 
+
+<h2>A. Import Comments</h2>
+
+<p>In your WPBook settings in WordPress, under the &quot;Stream Publishing Options&quot; be sure that &quot;Import comments from Facebook Walls&quot; is checked:</p>
+
+<p align="center"><a href="instructions/images/screenshots/stream_publish_options.png"><img src="instructions/images/screenshots/stream_publish_options_small.png" border="0" alt="click for full size" /></a></p>
+
+<p>There are also other options:
+
+<ul>
+<li>Automatically approve imported wall comments: If this is NOT selected, comments imported from Facebook walls will await moderation in WordPress like other comments. (But note that since these comments will all appear to WordPress to come from the same email address, you may not see all comments for moderation, depending on your WordPress settings).</li>
+<li>For how many days should WPBook look for comments on Facebook Walls?: I'd recommend keeping this setting relatively short. Facebook Wall posts tend to disappear from view after a few days, and the longer period of time WPBook needs to look back for posts, the more resources will be consumed by the cron job which does the checking - it may even time out and start to fail.</li>
+<li>What email address should WPBook associate with imported comments?: This setting is provided for those of you who use gravatars on your WordPress blog. You can create your own email address and associate a gravatar to it, or just use facebook@openparenthesis.org which has a nice facebooky avatar.</li>
+</ul>
+</p>
+
+<p>That's all there is too it, provided all the other connections are working. If you're not getting imports after an hour (which is how frequently the cron job runs), you can enable the &quot;Enable WPBook to create a debug file&quot; setting; when the cron task next gets called, WPBook will create a debug.txt file in the wp-plugins/wpbook/ directory with helpful debugging information in it. Check the <a href="http://wordpress.org/tags/wpbook?forum_id=10">support forum</> for help.</p>
+    
+<p><a href="install_instructions.html">Up to Install Instructions</a> | <a href="install_step3.html">Back to Step 3: Publish to Facebook Wall(s)</a>
+</div>
+   <div class="rounded_corner_bottom"><div></div></div>
+</div>	  
+</div>
+
