@@ -985,7 +985,11 @@ function wp_update_profile_boxes($post_ID) {
     if(get_post_type($post_ID) != 'post') { // only do this for posts
       return;
     }
-    $my_title=$my_post->post_title;
+    $publish_meta = get_post_meta($my_post->ID,'wpbook_fb_publish',true); // for some reason these are empty
+    if(($publish_meta == 'no')) { // user chose not to post this one
+      return;
+    }
+    $my_title=$my_post->post_title . 'publish meta was ' . $publish_meta;
     $my_author=get_userdata($my_post->post_author)->display_name;
     if($wpbook_promote_external) { 
       $my_permalink = get_permalink($post_ID);
@@ -1042,9 +1046,6 @@ function wp_update_profile_boxes($post_ID) {
     $action_links = json_encode($action_links); 
     
     if($stream_publish == "true") {
-      if((get_post_meta($post_id, 'wpbook_fb_publish', true) == 'no')) {
-        return;
-      }
       $fb_response = '';
       try{
         $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_admin,$target_admin);
@@ -1169,10 +1170,6 @@ function wpbook_add_meta_box() {
 function wpbook_store_post_options($post_id, $post = false) {
   $wpbookAdminOptions = wpbook_getAdminOptions();
   $post = get_post($post_id);
-  if (!$post || $post->post_type == 'revision') {
-    return;
-  }
-  
   $notify_meta = get_post_meta($post_id, 'wpbook_fb_publish', true);
   $posted_meta = $_POST['wpbook_fb_publish'];
     
