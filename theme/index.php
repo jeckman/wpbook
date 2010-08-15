@@ -320,7 +320,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
       $invite_link = '<a class="FB_UIButton FB_UIButton_Gray FB_UIButton_CustomIcon" href="http://apps.facebook.com/' . $app_url 
         .'/index.php?is_invite=true&fb_force_mode=fbml" class="share"><span class="FB_UIButton_Text"><span class="FB_Bookmark_Icon"></span> Invite Friends </span></a>';
       ?>
-      <div style="float:right; margin-left: 3px; margin-bottom: 3px;"> <?php echo("$invite_link") ?> </div>	
+      <div style="float:right; margin-left: 3px; margin-bottom: 3px;  "> <?php echo("$invite_link") ?> </div>	
       <?php 
     } 
     if($enable_profile_link == "true"){ 

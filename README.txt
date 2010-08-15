@@ -1,8 +1,8 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 1.5.7
-Tested up to: 3.0
+Stable tag: 2.0.2
+Tested up to: 3.0.1
 Requires at least: 2.6
 
 Plugin to embed Wordpress Blog into Facebook Platform.
@@ -19,8 +19,8 @@ Comments are shared - meaning comments made by users on your blog at its
 regular domain and comments made by users inside Facebook are all shown to 
 users of either "view" of your content. 
 
-Facebook users can also - at their option - add a profile box to their profile,
-using the "add to profile" button at the top of the default canvas page. 
+Facebook users can also - at their option - add a profile tab to their profile,
+using the "add profile tab" button at the top of the default canvas page. 
 
 That profile box shows the N most recent posts from your blog, as links. 
 (N = user configurable). 
@@ -28,6 +28,10 @@ That profile box shows the N most recent posts from your blog, as links.
 WPBook also post notifications automatically to your wall, or the wall
 of pages for which you are an admin, to which you've added the app, and 
 for which you've granted stream publish permission, when you write a new post.
+
+Finally, WPBook can also import comments made on your wall (or the wall of
+a Fan page) in response to excerpts it has posted, and show those in your 
+WordPress blog as full comments. 
 
 WPBook *DOES NOT* (yet) do any of these:
   - Post notifications into your users feeds (except for your posts to your wall) 
@@ -86,44 +90,9 @@ As of 1.5, this plugin requires PHP 5.
    in the appropriate information including Facebook application secret 
    and API keys, as well as your application canvas url. 
 
-   Enabling the "Show Invite Friends Link" will show a link inside 
-   Facebook when viewing your application which allows users to send
-   invites to their friends. 
-
-   Comments inside Facebook can be enabled or disabled without any impact
-   on comments when your blog is viewed outside Facebook. If you have comments
-   enabled, you can optionally require users to provide their email address. 
-   (Facebook does not allow access to the user's email address, so you can 
-   really only ask users to provide one, not prefill it automatically). 
-
-   Similarly, you can enable or disable gravatars within Facebook
-   independent of what you do on your regular blog. 
-
-   The "Give WPBook credit" option adds a line at the bottom of your Facebook
-   application pages which says "This Facebook application powered by the 
-   WPBook plugin for Wordpress" - I'd love it if you would leave this enabled
-   but it is not required.  
-
-   The "Share this post" links can also be enabled or disabled. If they are
-   enabled, they will allow the user to "share" your blog posts using the 
-   built in Facebook Share mechanism, including sending a message to friends
-   or posting in their profile. 
-
-   The "Enable 'view post at external site' link" enables a link to each blog post 
-   at your full blog url (outside Facebook). This is useful to get folks going
-   to your blog outside Facebook, to see it full size/theme etc. 
-
-   The "Link position for share button and external link button" option determines
-   where, within each post, those two links will appear - either at the top of the 
-   post (before the post content) or at the bottom of the post (after the post
-   content). 
-
-   "Enable Facebook users to add your app to their profile" will show an "Add to 
-   Profile" button for users viewing the app inside Facebook - this lets them choose
-   to add the application to their profile. 
-
-5. To add the application to "Pages" not just "Profiles" - see the instructions linked to from the "settings" page for the plugin. 
-     
+Full directions included with the plugin - linked from the plugin's page or see:
+	http://www.openparenthesis.org/wp-content/plugins/wpbook/install_instructions.html
+       
 == Frequently Asked Questions ==
 
 = How do I edit the way my Facebook Application (mirrored blog) looks? =
@@ -152,6 +121,10 @@ as well as some other files for processing comments and the like.
  * Changed saving of postmeta to be on PostID, not the id of the current revision
  * moved try/catch blocks into conditional includes to avoid error messages
    when installed on PHP4 hosts
+ * Rearranged options to simplify, and better group settings
+ * Rewrote install instructions with new screenshots to show changed FB screens
+ * Updating profile references to tabs as profile boxes are going away (already
+   gone from Fan Pages)
 
 = 2.0.1 =
  * Capture of infinite_session_key 
