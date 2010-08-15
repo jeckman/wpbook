@@ -150,6 +150,8 @@ as well as some other files for processing comments and the like.
  * Added "publish this post to FB" setting, which allows users to suppress
    stream publishing for an individual post
  * Changed saving of postmeta to be on PostID, not the id of the current revision
+ * moved try/catch blocks into conditional includes to avoid error messages
+   when installed on PHP4 hosts
 
 = 2.0.1 =
  * Capture of infinite_session_key 

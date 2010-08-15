@@ -937,7 +937,7 @@ function fb_filter_catlink($catlink) {
   }
 }  
 function wpbook_publish_to_facebook($post_ID) {
-  if(!class_exists('FacebookRestClient')) {
+  if((!class_exists('FacebookRestClient')) && (!version_compare(PHP_VERSION, '5.0.0', '<'))) {
     include_once(WP_PLUGIN_DIR.'/wpbook/client/facebook.php');
   }           
 	$wpbookOptions = get_option('wpbookAdminOptions');
@@ -1231,6 +1231,10 @@ add_action('draft_to_publish','wpbook_publish_to_facebook');
 // cron job task  
 add_action('wpbook_cron_job', 'wpbook_import_comments');
 
-include("wpbook_cron.php");
+if (version_compare(PHP_VERSION, '5.0.0', '<')) {
+    wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
+} else { 
+  include("wpbook_cron.php");
+}
 ?>
 
