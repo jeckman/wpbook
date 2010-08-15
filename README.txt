@@ -142,10 +142,13 @@ as well as some other files for processing comments and the like.
  * Fixed excerpt issues with posts with no custom excerpt, teaser, or manual
  * Catch excerpt over 1000 characters
  * Use nohtml filter on excerpts for walls
- * Use less restrictive filter for application tabs - still no "object" though
+ * Use less restrictive filter for application tabs - still no embedded
+   videos though
  * Made debug log generation a setting
  * Fixed typo in wpbook_cron.php - declaring constant for method comments vs comment
  * Moved infinite_session_key to a setting user enters (consistency)
+ * Added "publish this post to FB" setting, which allows users to suppress
+   stream publishing for an individual post
 
 = 2.0.1 =
  * Capture of infinite_session_key 
@@ -400,23 +403,17 @@ as well as some other files for processing comments and the like.
 * First push to WP-Plugins Directory
 
 == To Do ==
-* Add option to enable publishing to stream with direct links to 
-  external blog rather than to application
-* Import comments posted in the wall (page or individual) to the wordpress
-  blog
+* Use settings API better / clean up settings (maybe a whole new
+  box for settings in left nav? enabling sub-pages)
 * Convert to new API from Facebook for OAuth based authorization
+* Enable multi-author blogs. (Separate FB publish destinations 
+  for each author? Separate FB app for each author? Filter tab 
+  view to only show each author's posts?)
 * Leverage Facebook API to publish notifications to stream when
   user leaves a comment (comment poster's stream and users streams)
 * Threaded comments. (If user has them enabled - requires WP 2.7.x)
 * Error handling - do something with the FB exceptions caught
   Probably use set_transient to show - will require WP 2.8 or greater
 * Update instructions in readme to match new options available
-* Deal with non-standard front pages (where user has set
-  a static page in WordPress options) - right now these configurations
-  aren't really supported, and I'm not sure what support will mean - 
-  just listing posts and pages? (That actually works now if you just
-  use your wordpress home url as your canvas callback)
-* Enable pages for things like categories and tags, and enable links to 
-  those pages from the header/footer of the post 
 * Enable users to select a theme, overriding the default
   theme/index.php for ease of updates

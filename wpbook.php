@@ -1139,25 +1139,29 @@ function wpbook_attribution_line($attribution_line,$author){
  */
 function wpbook_meta_box() {
   global $post;
-  $wpbookAdminOptions = wpbook_getAdminOptions();
-  if (($wpbookAdminOptions['stream_publish']) || ($wpbookAdminOptions['stream_publish_pages'])) {
-    $wpbook_publish = get_post_meta($post->ID, 'wpbook_fb_publish', true);
-    if ($wpbook_publish == '') {
-      $wpbook_publish = 'yes';
-    }
-    echo '<p>'.__('Publish this post to Facebook Wall?', 'wpbook').'&nbsp;';
-    echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_yes" value="yes" '.checked('yes', $wpbook_publish, false).' /> <label for="wpbook_fb_publish_yes">'.__('Yes', 'wpbook').'</label> &nbsp;&nbsp;';
-    echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_no" value="no" '.checked('no', $wpbook_publish, false).' /> <label for="wpbook_fb_publish_no">'.__('No', 'wpbook').'</label>';
-    echo '</p>';
-    do_action('wpbook_post_options');
+  $wpbook_publish = get_post_meta($post->ID, 'wpbook_fb_publish', true);
+  if ($wpbook_publish == '') {
+    $wpbook_publish = 'yes';
   }
+  echo '<p>'.__('Publish this post to Facebook Wall?', 'wpbook').'&nbsp;';
+  echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_yes" value="yes" ';
+  checked('yes', $wpbook_publish, false);
+  echo ' /> <label for="wpbook_fb_publish_yes">'.__('Yes', 'wpbook').'</label> &nbsp;&nbsp;';
+  echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_no" value="no" ';
+  checked('no', $wpbook_publish, false);
+  echo ' /> <label for="wpbook_fb_publish_no">'.__('No', 'wpbook').'</label>';
+  echo '</p>';
+  do_action('wpbook_post_options');
 }
   
 function wpbook_add_meta_box() {
-  add_meta_box('wpbook_post_form', __('WPBook', 'wpbook'), 'wpbook_meta_box', 'post', 'side');
+  global $wp_version;
+  if (version_compare($wp_version, '2.7', '< ')) {
+    add_meta_box('wpbook_post_form','WPBook', 'wpbook_meta_box', 'post', 'side');
+  } else {
+    add_meta_box('wpbook_post_form','WPBook','wpbook_meta_box','post','normal');
+  }
 }
-
-add_action('admin_init', 'wpbook_add_meta_box');
   
 function wpbook_store_post_options($post_id, $post = false) {
   $wpbookAdminOptions = wpbook_getAdminOptions();
@@ -1335,6 +1339,9 @@ function wpbook_activation_check(){
     deactivate_plugins(basename(__FILE__)); // Deactivate ourself
     wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
   }
+  if (version_compare($wp_version, '2.6', '< ')) {
+    wp_die("This plugin requires WordPress 2.6 or greater.");
+  }
 }
 
 register_activation_hook(__FILE__, 'wpbook_activate');
@@ -1347,7 +1354,8 @@ add_filter('tag_link','fb_filter_taglink',1,1);
 add_filter('category_link','fb_filter_catlink',1,1); 
 add_action('admin_menu', 'wpbook_options_page');
 add_action('wp', 'wpbook_parse_request');
-
+add_action('admin_menu', 'wpbook_add_meta_box');
+  
 	
 // these capture new posts, not edits of previous posts	
 add_action('future_to_publish','wp_update_profile_boxes');	
