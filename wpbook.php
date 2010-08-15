@@ -372,6 +372,13 @@ your application's url.</p>
       echo '<p>(This key is used for posting to your personal wall, and retrieving comments from your personal wall. ';
       echo 'If you are not importing comments from a personal wall, it is not necessary. If you are importing comments ';
       echo ' from a personal wall, and no Infinite Session Key is set, visit the check permissions link above)</p>';
+
+      echo '<p class="options"><input type="checkbox" name="promote_external" value="true" ';
+      if( htmlentities($wpbookAdminOptions['promote_external']) == "true") {
+        echo("checked");
+      }
+      echo ' id="promote_external" > Use external permalinks on Walls <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="promote_external" /></p>';
+
       echo '<p class="options"><input type="checkbox" name="wpbook_enable_debug" value="true" ';
       if( htmlentities($wpbookAdminOptions['wpbook_enable_debug']) == "true") {
         echo("checked");
@@ -386,13 +393,6 @@ your application's url.</p>
       echo '<p>Attribution line: <input type="text" name="attribution_line" size="40" value="'. $wpbookAdminOptions['attribution_line'] .'" />';
       echo '<img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="attribution_line"/><br />';
       echo 'Predefined Strings (you can use these in your attribution line): %author%, %blogname%.</p>';
-
-
-      echo '<p class="options"><input type="checkbox" name="promote_external" value="true" ';
-      if( htmlentities($wpbookAdminOptions['promote_external']) == "true") {
-        echo("checked");
-      }
-      echo ' id="promote_external" > Use external permalinks on Walls <img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="promote_external" /></p>';
 
       echo '<p class="options"><input type="checkbox" name="import_comments" value="1" ';
       if( htmlentities($wpbookAdminOptions['import_comments']) == "1") {
