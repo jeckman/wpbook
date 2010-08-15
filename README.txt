@@ -136,6 +136,30 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
+= 2.0.2 =
+ * Added option which enables app and profile tabs
+   (/?app_tab=true&fb_force_mode=fbml )
+ * Fixed excerpt issues with posts with no custom excerpt, teaser, or manual
+ * Catch excerpt over 1000 characters
+ * Use nohtml filter on excerpts for walls
+ * Use less restrictive filter for application tabs - still no "object" though
+ * Made debug log generation a setting
+ * Fixed typo in wpbook_cron.php - declaring constant for method comments vs comment
+ * Moved infinite_session_key to a setting user enters (consistency)
+
+= 2.0.1 =
+ * Capture of infinite_session_key 
+ * Introduced debug log
+ * Attribution line setting
+
+= 2.0.0 = 
+ * Added promote external links
+ * Introduced the ability to import comments from post walls, using wp_cron
+
+
+= 1.5.7 =
+ * Bugfix - typo in index.php, only visible when specific exception was triggered. 
+
 = 1.5.6 =
  * Changed mechanism for getting pageID for publishing to page's wall. 
    Rather than getting this each time via FQL, we only get it the first

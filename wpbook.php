@@ -11,7 +11,7 @@ Version: 2.0.1
   
 
 /*
-Note: This plugin draws from: 
+Note: This plugin draws inspiration (and sometimes code) from: 
    Alex King's WP-Mobile plugin (http://alexking.org/projects/wordpress ) 
    and BraveNewCode's WPTouch (http://www.bravenewcode.com/wptouch/
    as well as Devbit's List Pages Plus (http://skullbit.com/wordpress-plugin/list-pages-plus/) 
@@ -1131,9 +1131,74 @@ function wpbook_attribution_line($attribution_line,$author){
   $attribution_line = str_replace('%blogname%',html_entity_decode(get_bloginfo('name'),ENT_QUOTES),$attribution_line);
   return $attribution_line;
 }  
+  
+/*
+ * Use postmeta to enable users to turn off streaming on case-by-case basis
+ * Based on how Alex King's Twitter Tools handles the same case for pushing
+ * posts to twitter
+ */
+function wpbook_meta_box() {
+  global $post;
+  $wpbookAdminOptions = wpbook_getAdminOptions();
+  if (($wpbookAdminOptions['stream_publish']) || ($wpbookAdminOptions['stream_publish_pages'])) {
+    $wpbook_publish = get_post_meta($post->ID, 'wpbook_fb_publish', true);
+    if ($wpbook_publish == '') {
+      $wpbook_publish = 'yes';
+    }
+    echo '<p>'.__('Publish this post to Facebook Wall?', 'wpbook').'&nbsp;';
+    echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_yes" value="yes" '.checked('yes', $wpbook_publish, false).' /> <label for="wpbook_fb_publish_yes">'.__('Yes', 'wpbook').'</label> &nbsp;&nbsp;';
+    echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_no" value="no" '.checked('no', $wpbook_publish, false).' /> <label for="wpbook_fb_publish_no">'.__('No', 'wpbook').'</label>';
+    echo '</p>';
+    do_action('wpbook_post_options');
+  }
+}
+  
+function wpbook_add_meta_box() {
+  add_meta_box('wpbook_post_form', __('WPBook', 'wpbook'), 'wpbook_meta_box', 'post', 'side');
+}
 
+add_action('admin_init', 'wpbook_add_meta_box');
+  
+function wpbook_store_post_options($post_id, $post = false) {
+  $wpbookAdminOptions = wpbook_getAdminOptions();
+  $post = get_post($post_id);
+  if (!$post || $post->post_type == 'revision') {
+    return;
+  }
+  
+  $notify_meta = get_post_meta($post_id, 'wpbook_fb_publish', true);
+  $posted_meta = $_POST['wpbook_fb_publish'];
+    
+  $save = false;
+  if (!empty($posted_meta)) {
+    $posted_meta == 'yes' ? $meta = 'yes' : $meta = 'no';
+    $save = true;
+  }
+  else if (empty($notify_meta)) {
+    if (($wpbookAdminOptions['stream_publish']) || ($wpbookAdminOptions['stream_publish_pages'])) {
+      $meta = 'yes';
+    } else {
+      $meta = 'no';
+    }
+    $save = true;
+  }
+  else {
+    $save = false;
+  }
+    
+  if ($save) {
+    if (!update_post_meta($post_id, 'wpbook_fb_publish', $meta)) {
+      add_post_meta($post_id, 'wpbook_fb_publish', $meta);
+    }
+  }
+}
+add_action('draft_post', 'wpbook_store_post_options', 1, 2);
+add_action('publish_post', 'wpbook_store_post_options', 1, 2);
+add_action('save_post', 'wpbook_store_post_options', 1, 2);
+
+  
 // based on sample code here:
-//      http://willnorris.com/2009/06/wordpress-plugin-pet-peeve-2-direct-calls-to-plugin-files  
+// http://willnorris.com/2009/06/wordpress-plugin-pet-peeve-2-direct-calls-to-plugin-files  
 // thanks will  
 function wpbook_parse_request($wp) {
   if (array_key_exists('wpbook', $wp->query_vars)){
