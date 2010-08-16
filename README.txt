@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 Tested up to: 3.0.1
 Requires at least: 2.6
 
@@ -51,8 +51,7 @@ As of 1.5, this plugin requires PHP 5.
 
 == Installation ==
 
-(Note: installation instructions are also included in HTML and as a PDF
- along with the plugin)
+(Note: installation instructions are also included in HTML along with the plugin)
 
 1. Copy the entire wpbook directory into your wordpress plugins folder,
    /wp-content/plugins/
@@ -61,14 +60,7 @@ As of 1.5, this plugin requires PHP 5.
    /wp-content/plugins/wpbook/wpbook.php
    /wp-content/plugins/wpbook/theme/
    /wp-content/plugins/wpbook/client/
-   /wp-content/plugins/wpbook/php4client/
 
-   NOTE: If you've used previous versions, you no longer need to copy
-   the wp-facebook folder (which no longer exists) to your themes directory. 
-   
-   If you've used versions prior to 0.9.5, you can DELETE the following 
-   directory and all it's contents: 
-		/wp-content/themes/wp-facebook/ 
 
 2. Set up a New Application at http://www.facebook.com/developers/, obtaining
    a secret and API key.  
