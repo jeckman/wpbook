@@ -56,7 +56,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     if(($publish_meta == 'no')) { // user chose not to post this one
       return;
     }
-    $my_title=$my_post->post_title . 'publish meta was ' . $publish_meta;
+    $my_title=$my_post->post_title;
     $my_author=get_userdata($my_post->post_author)->display_name;
     if($wpbook_promote_external) { 
       $my_permalink = get_permalink($post_ID);

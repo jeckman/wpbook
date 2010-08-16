@@ -1015,10 +1015,10 @@ function wpbook_meta_box() {
   
 function wpbook_add_meta_box() {
   global $wp_version;
-  if (version_compare($wp_version, '2.7', '>= ')) {
+  if (version_compare($wp_version, '2.7', '>=')) {
     add_meta_box('wpbook_post_form','WPBook', 'wpbook_meta_box', 'post', 'side');
   } else {
-    add_meta_box('wpbook_post_form','WPBook','wpbook_meta_box','post','normal');
+    add_meta_box('wpbook_post_form','WPBook', 'wpbook_meta_box', 'post', 'normal');
   }
 }
   
