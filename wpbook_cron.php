@@ -348,6 +348,4 @@ function wpbook_import_comments() {
     return;
   } // end of if wp_post ids   
 } // end of function
-      
-  
 ?>

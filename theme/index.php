@@ -530,5 +530,5 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
   </html>
 <?php
 } // end if not invite, not permissions condition 
-  } // end of not tab
+} // end of not tab
 ?>

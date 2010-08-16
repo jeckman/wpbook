@@ -95,8 +95,4 @@ function custom_header_footer($custom_template_header_footer,$date,$time){
   
   return $custom_template_header_footer;
 }  // end function custom_header/footer
-  
 ?>
-
-
-

@@ -19,7 +19,6 @@ $user_id = $params[user];
 if (isset($_GET['fb_page_id'])) {
   $user_id = $_GET['fb_page_id'];
 }
-  
 $ProfileContent = '<h3>Recent posts</h3><div class="wpbook_recent_posts">'
                 . '<ul>' . wpbook_profile_recent_posts(5) . '</ul></div>';
 
@@ -42,10 +41,4 @@ try{
 } catch (Exception $e) {
   // failed to setFBML for profile boxes
 }
-// utility functions after here
-
-    
- ?>
-
-
-
+?>

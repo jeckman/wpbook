@@ -99,4 +99,5 @@ $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = "
      <!-- close commentform-container -->
 </div><!-- close COMMENTS-POST -->
 
-<?php endif; // end of included comments ?> 
+<?php endif; // end of included comments 
+?>

@@ -2,14 +2,13 @@
 /*
 Plugin Name: WPBook
 Plugin URI: http://www.openparenthesis.org/code/wp
-Date: 2010, July 7th
+Date: 2010, August 16th
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 2.0.2
+Version: 2.0.3
 */
   
-
 /*
 Note: This plugin draws inspiration (and sometimes code) from: 
    Alex King's WP-Mobile plugin (http://alexking.org/projects/wordpress ) 
@@ -34,6 +33,13 @@ Note: This plugin draws inspiration (and sometimes code) from:
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+if (version_compare(PHP_VERSION, '5.0.0', '<')) {
+  wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
+} else { 
+  include("wpbook_cron.php");
+}
+  
+  
 // Pre-2.6 compatibility - which may be unnecessary if we require 2.7
   
 if ( ! defined( 'WP_CONTENT_URL' ) )
@@ -925,37 +931,21 @@ function fb_filter_catlink($catlink) {
 	} else {
 		return $catlink; 
   }
-}  
+} 
+
+/*
+ * This function updates profile boxes (if they still exist)
+ * and handles streaming publish to Facebook. 
+ * It includes publish_to_facebook.php
+ */
 function wpbook_publish_to_facebook($post_ID) {
-  if((!class_exists('FacebookRestClient')) && (!version_compare(PHP_VERSION, '5.0.0', '<'))) {
-    include_once(WP_PLUGIN_DIR.'/wpbook/client/facebook.php');
-  }           
-	$wpbookOptions = get_option('wpbookAdminOptions');
-	
-	if (!empty($wpbookOptions)) {
-		foreach ($wpbookOptions as $key => $option)
-		$wpbookAdminOptions[$key] = $option;
-	}
-	
-	$api_key = $wpbookAdminOptions['fb_api_key'];
-	$secret  = $wpbookAdminOptions['fb_secret'];
-  $target_admin = $wpbookAdminOptions['fb_admin_target'];
-  $target_page = $wpbookAdminOptions['fb_page_target'];
-  $stream_publish = $wpbookAdminOptions['stream_publish'];
-  $stream_publish_pages = $wpbookAdminOptions['stream_publish_pages'];
-  $wpbook_show_errors = $wpbookAdminOptions['show_errors'];
-  $wpbook_promote_external = $wpbookAdminOptions['promote_external'];
-  $wpbook_attribution_line = $wpbookAdminOptions['attribution_line'];
-	$facebook = new Facebook($api_key, $secret);
-	
-  $ProfileContent = '<h3>Recent posts</h3><div class="wpbook_recent_posts">'
-  . '<ul>' . wpbook_profile_recent_posts(5) . '</ul></div>';
-  if (version_compare(PHP_VERSION, '5.0.0', '>')) {
-    include(WP_PLUGIN_DIR.'/wpbook/publish_to_facebook.php');
+  if (!version_compare(PHP_VERSION, '5.0.0', '<')) {
+    include(WP_PLUGIN_DIR .'/wpbook/publish_to_facebook.php');
   } else {
     wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
   }
-} // end of function
+  wpbook_safe_publish_to_facebook($post_ID);
+} // end of function wpbook_publish_to_facebook
 
 function get_external_post_url($my_permalink){
   $my_options = wpbook_getAdminOptions();
@@ -1025,7 +1015,7 @@ function wpbook_meta_box() {
   
 function wpbook_add_meta_box() {
   global $wp_version;
-  if (version_compare($wp_version, '2.7', '>=')) {
+  if (version_compare($wp_version, '2.7', '>= ')) {
     add_meta_box('wpbook_post_form','WPBook', 'wpbook_meta_box', 'post', 'side');
   } else {
     add_meta_box('wpbook_post_form','WPBook','wpbook_meta_box','post','normal');
@@ -1038,23 +1028,26 @@ function wpbook_store_post_options($post_id, $post = false) {
 	}  
   $wpbookAdminOptions = wpbook_getAdminOptions();
   $post = get_post($post_id);
-  $notify_meta = get_post_meta($post_id, 'wpbook_fb_publish', true);
+  $stored_meta = get_post_meta($post_id, 'wpbook_fb_publish', true);
   $posted_meta = $_POST['wpbook_fb_publish'];
     
   $save = false;
-  if (!empty($posted_meta)) {
+  /* if there is $posted_meta, that takes priority over stored */
+  if (!empty($posted_meta)) { 
     $posted_meta == 'yes' ? $meta = 'yes' : $meta = 'no';
     $save = true;
   }
-  else if (empty($notify_meta)) {
+  /* if no posted meta, check stored meta */ 
+  else if (empty($stored_meta)) {
+    /* if no stored meta, but streaming publishing is on, default to yes */
     if (($wpbookAdminOptions['stream_publish']) || ($wpbookAdminOptions['stream_publish_pages'])) {
       $meta = 'yes';
     } else {
       $meta = 'no';
     }
     $save = true;
-  }
-  else {
+  /* if there is stored meta, and user didn't touch it, don't save */ 
+  } else {
     $save = false;
   }
     
@@ -1152,23 +1145,12 @@ function wpbook_parse_request($wp) {
       header( 'Location: ' . $redirect_url );
     }
     if($wp->query_vars['wpbook'] == 'update_profile_boxes') {  // first process requests with "wpbook=comment-handler"
-      if((!class_exists('FacebookRestClient')) && (!version_compare(PHP_VERSION, '5.0.0', '<'))) {
-        include_once(WP_PLUGIN_DIR . '/wpbook/client/facebook.php');
-      }
-      $wpbookOptions = get_option('wpbookAdminOptions');
-      if (!empty($wpbookOptions)) {
-        foreach ($wpbookOptions as $key => $option)
-        $wpbookAdminOptions[$key] = $option;
-      }
-
       if (version_compare(PHP_VERSION, '5.0.0', '>')) {
         include(WP_PLUGIN_DIR.'/wpbook/update_profile_boxes.php');
       } else {
         wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
       }
-      
-      $redirect_url = $wpbookAdminOptions['app_url'];
-      header( 'Location: ' . $redirect_url );
+      wpbook_safe_update_profile_boxes();
     }
     if($wp->query_vars['wpbook'] == 'catch_permissions') {  // do something with infinite session key
       /* reverted to showing the infinite session key and asking user to enter
@@ -1195,7 +1177,7 @@ function wpbook_activation_check(){
     deactivate_plugins(basename(__FILE__)); // Deactivate ourself
     wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
   }
-  if (version_compare($wp_version, '2.6', '< ')) {
+  if (version_compare($wp_version, '2.6', '<')) {
     wp_die("This plugin requires WordPress 2.6 or greater.");
   }
 }
@@ -1220,11 +1202,4 @@ add_action('draft_to_publish','wpbook_publish_to_facebook');
   
 // cron job task  
 add_action('wpbook_cron_job', 'wpbook_import_comments');
-
-if (version_compare(PHP_VERSION, '5.0.0', '<')) {
-    wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
-} else { 
-  include("wpbook_cron.php");
-}
 ?>
-

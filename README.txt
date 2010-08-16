@@ -105,6 +105,12 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
+= 2.0.3 = 
+ * Quick bugfix release
+ * Elminate extra whitespace on includes
+ * Clean up include structure to break on full functions no mid-stream
+ * Update checking for post_meta for 'suppress' function
+
 = 2.0.2 =
  * Added option which enables app and profile tabs
    (/?app_tab=true&fb_force_mode=fbml )
