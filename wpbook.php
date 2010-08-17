@@ -1173,6 +1173,7 @@ function wpbook_query_vars($vars) {
   * Thanks Otto - http://lists.automattic.com/pipermail/wp-hackers/2009-July/026759.html
   */
 function wpbook_activation_check(){
+  global $wp_version;
   if (version_compare(PHP_VERSION, '5.0.0', '<')) {
     deactivate_plugins(basename(__FILE__)); // Deactivate ourself
     wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
