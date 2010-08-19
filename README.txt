@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.0.5
+Stable tag: 2.0.6
 Tested up to: 3.0.1
 Requires at least: 2.6
 
@@ -96,6 +96,10 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.0.6 =
+ * Misc bug fixes: gravatar strtolower, htmlspecialchars on blog titles,
+   link to instructions wrong in admin, adding <script> tag to allowed html
 
 = 2.0.5 = 
  * left out a key global for $wp_version
