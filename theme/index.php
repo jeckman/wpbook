@@ -101,6 +101,7 @@ if(isset($_GET['app_tab'])) { // this is an app tab
                               'li' => array ('align' => array (),'class' => array ()),
                               'p' => array('class' => array (),'align' => array (),'dir' => array(),'lang' => array(),'style' => array (),'xml:lang' => array()),
                               'pre' => array('style' => array(),'width' => array ()),
+                              'script' => array('type' => array()),
                               'span' => array ('class' => array (),'dir' => array (),'align' => array (),'lang' => array (),'style' => array (),'title' => array (),'xml:lang' => array()),
                               'strike' => array(),'strong' => array(),'sub' => array(),
                               'table' => array('align' => array (),'bgcolor' => array (),'border' => array (),'cellpadding' => array (),'cellspacing' => array (),'class' => array (),'dir' => array(),'id' => array(),'rules' => array (),'style' => array (),'summary' => array (),'width' => array ()),
