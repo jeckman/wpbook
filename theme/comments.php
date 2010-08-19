@@ -36,7 +36,7 @@ $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = "
 		<?php if ($use_gravatar == "true"){ 
 		echo'<div class="gravatarr">';
 				$grav_url = "http://www.gravatar.com/avatar/" . 
-				md5(get_comment_author_email()) . "?d=" . $gravatar_default . "&s=60&r=".$gravatar_rating;
+				md5(strtolower(get_comment_author_email())) . "?d=" . $gravatar_default . "&s=60&r=".$gravatar_rating;
       echo "<img src='$grav_url'/></div>";
 	  echo '<div class="gravatarpadding">';	
 	  			  		  }
