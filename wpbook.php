@@ -317,7 +317,7 @@ function wpbook_subpanel() {
       <p>This plugin allows you to embed your blog into the Facebook canvas, 
 allows Facebook users to comment on or share your blog posts, and puts your 5 
 most recent posts in users profiles (with their permission).</p>
-      <p><a href="<?php echo WP_PLUGIN_URL .'/wpbook/instructions/index.html' ?>" 
+      <p><a href="<?php echo WP_PLUGIN_URL .'/wpbook/install_instructions.html' ?>" 
       target="_blank">Detailed instructions</a></p>
       <?php
         echo '<form action="'. $_SERVER["REQUEST_URI"] .'" method="post">';
