@@ -751,8 +751,8 @@ echo '&nbsp;&nbsp;&nbsp;<input type="checkbox" name="enable_profile_link" value=
 				$permalink = get_permalink($post->ID);
 				$output .= $before . '<a href="' . $permalink . '" rel="bookmark" '
           . 'title="Permanent Link: ' 
-          . htmlspecialchars($post_title, ENT_COMPAT) . '">'
-          . htmlspecialchars($post_title) . '</a>';
+          . $post_title .'">'
+          . $post_title . '</a>';
 				if($show_excerpts) {
 					$post_excerpt = stripslashes($post->post_excerpt);
 					$output.= '<br />' . $post_excerpt;
@@ -807,8 +807,8 @@ function wpbook_profile_recent_posts($count = 5, $before = '<li>', $after = '</l
       }
       $output .= $before . '<a href="' . $permalink . '" rel="bookmark" '
         . 'title="Permanent Link: ' 
-        . htmlspecialchars($post_title, ENT_COMPAT) . '">'
-        . htmlspecialchars($post_title) . '</a>';
+        . $post_title .'">'
+        . $post_title . '</a>';
       if($show_excerpts) {
         $post_excerpt = stripslashes($post->post_excerpt);
         $output.= '<br />' . $post_excerpt;
