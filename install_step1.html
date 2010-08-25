@@ -34,36 +34,26 @@
 <h2>B. Create Facebook App</h2>
 
 <p>Set up a New Application at <a href="http://www.facebook.com/developers/">http://www.facebook.com/developers/</a>, obtaining
-   a secret and API key. You can use the following image (click for full size) to see an example of all the fields on the &quot;Basic&quot; tab in Facebook:</p>
+   a secret and API key. You can use the following image (click for full size) to see an example of all the fields on the &quot;About&quot; tab in Facebook:</p>
 
-   <p align="center"><a href="instructions/images/screenshots/basic.png"><img src="instructions/images/screenshots/basic_small.png" border="0" alt="click for full size"  /></a></p>
+   <p align="center"><a href="instructions/images/screenshots/fb_about.png"><img src="instructions/images/screenshots/fb_about_sm.png" border="0" alt="click for full size"  /></a></p>
 	
-    <p>I believe the icon, logo, user support address, and bookmark url are all optional, but it might be a good idea to fill them out.</p>
+    <p>I believe the icon, logo, and user support address are all optional, but it might be a good idea to fill them out. (Of course you could point your user support address to a page on your blog rather than an email address if you prefer).</p>
     
-    <p>On the &quot;Authentication&quot; tab, check both &quot;Users&quot; and &quot;Facebook Pages&quot; if you intend to make any use of the functions associated with Pages, or just &quot;Users&quot; if you only want users to be able to add to profile. (If in doubt, check both). </p> 
-   
-   <p align="center"><a href="instructions/images/screenshots/authentication.png"><img src="instructions/images/screenshots/authentication_small.png" border="0" alt="click for full size" /></a></p>
-
-    <p>On the &quot;Profiles&quot; tab: set the Tab Name to something that represents your blog. In the tab url section, put: <code>?app_tab=true&amp;fb_force_mode=fbml</code></p>
-
+    <p>On the &quot;Web Site&quot; you'll need to provide the site url, which should be the url of your WordPress install. (The url users use to hit the main page of your WordPress powered site, whether that is a static front page or your blog listing page - NOT including index.php, but including a trailing slash).</p>
     
-   <p align="center"><a href="instructions/images/screenshots/profiles.png"><img src="instructions/images/screenshots/profiles_small.png" border="0" alt="click for full size" /></a></p> 
-
-<p>On the &quot;Canvas&quot; tab: Set the canvas callback url to your blog url, including  a trailing slash. (Example: http://www.yourblogurl.com/)</p>
-   <p>For canvas url, you just need something <em>all lower case</em>, unique, with no spaces, and no trailing slash.</p>
-   <p>Set the application to use an iFrame, not fbml, 
-   and to &quot;resizable&quot; NOT &quot;smart size.&quot; Set &quot;Canvas Width&quot; to full width.</p>
-   <p align="center"><a href="instructions/images/screenshots/canvas.png"><img src="instructions/images/screenshots/canvas_small.png" border="0" alt="click for full size" /></a></p> 
-
-<p>On the "Connect" tab, set the connect url to your WordPress site url, including  a trailing slash. (Example: <code>http://www.yourblogurl.com/</code>). I don't believe the account preview URL is required; if yu set it, use the url of your Facebook application (as shown).</p>
+   <p align="center"><a href="instructions/images/screenshots/fb_web_site.png"><img src="instructions/images/screenshots/fb_web_site_sm.png" border="0" alt="click for full size" /></a></p>
+    
+    <p>On the &quot;Facebook Integration&quot; tab, set the "Canvas Page" to the same page you used above - the default home page of your WordPress site outside Facebook. For canvas url, you just need something <em>all lower case</em>, unique, with no spaces, and no trailing slash. Set the application to use an iFrame, not fbml, 
+   and to &quot;Auto-resize&quot; NOT &quot;Show scrollbars&quot;.</p>
+    
+<p>Set the Tab Name to something that represents your blog. In the tab url section, put: <code>?app_tab=true&amp;fb_force_mode=fbml</code>. Check both &quot;Users&quot; and &quot;Facebook Pages&quot; if you intend to make any use of the functions associated with Pages, or just &quot;Users&quot; if you only want users to be able to add to profile. (If in doubt, check both). </p> 
    
+   <p align="center"><a href="instructions/images/screenshots/fb_fb_integration.png"><img src="instructions/images/screenshots/fb_fb_integration_sm.png" border="0" alt="click for full size" /></a></p>
    
-   <p align="center"><a href="instructions/images/screenshots/connect.png"><img src="instructions/images/screenshots/connect_small.png" border="0" alt="click for full size" /></a></p> 
-   
-<p>For the &quot;Widgets&quot; and &quot;Advanced&quot; and &quot;Migrations&quot; tabs, you should be able to accept the defaults, but just in case:
-<ul><li>Widgets: Make sure permissions is set to Blacklist mode</li>
-<li>Advanced: Make sure Application Type is set to &quot;Web&quot; and Sandbox mode is set to &quot;Disabled&quot;</li>
-<li>Migrations: All four settings here should be disabled</li>
+<p>For the &quot;Mobile&quot; and &quot;Advanced&quot; tabs, you should be able to accept the defaults, but just in case:
+<ul><li>Mobile: Make sure Application Type is set to HTML5/mobile web</li>
+<li>Advanced: Make sure Sandbox mode is set to &quot;Disabled&quot;, and all of the "migrations" settings are set to disabled. All the rest should be empty or defaulted. </li>
 </ul>
  </p>   
 
