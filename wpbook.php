@@ -365,7 +365,7 @@ your application's url.</p>
       
       if ($wpbookAdminOptions['fb_admin_target'] != '') {
         echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
-        echo $wpbookAdminOptions['api_key'];
+        echo $wpbookAdminOptions['fb_api_key'];
         echo '&v=1.0&next=http://apps.facebook.com/';
         echo htmlentities($wpbookAdminOptions['fb_app_url']);
         echo '/?wpbook=catch_perms&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
@@ -383,7 +383,7 @@ your application's url.</p>
       echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" />&nbsp;';
       if ($wpbookAdminOptions['fb_page_target'] != '') {
         echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
-        echo $wpbookAdminOptions['api_key'];
+        echo $wpbookAdminOptions['fb_api_key'];
         echo '&v=1.0&next=http://apps.facebook.com/';
         echo htmlentities($wpbookAdminOptions['fb_app_url']);
         echo '/?wpbook=catch_perms&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
