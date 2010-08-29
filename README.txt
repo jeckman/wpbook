@@ -97,6 +97,14 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
+= 2.0.7 = 
+ * Added new way to grant permissions directly for a pageID entered into
+   the wpbook settings interface. Should improve capability for folks looking
+   to publish to a page for which they aren't necessarily an admin, but
+   for which permissions can be granted
+ * Removed instructions, replaced with pointer to online version 
+   (easier to keep updated, limit size of download)
+
 = 2.0.6 =
  * Misc bug fixes: gravatar strtolower, htmlspecialchars on blog titles,
    link to instructions wrong in admin, adding <script> tag to allowed html
