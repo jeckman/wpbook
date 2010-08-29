@@ -361,7 +361,17 @@ your application's url.</p>
       echo ' id="stream_publish" > Publish new posts to YOUR Facebook Wall ';
       echo 'Profile ID: <input type="text" name="fb_admin_target" value="';
       echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="15" />';
-      echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish" /></p>';  
+      echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish" />';  
+      if ($wpbookAdminOptions['fb_admin_target != '') {
+        echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
+        echo $wpbookAdminOptions['api_key'];
+        echo '&v=1.0&next=http://apps.facebook.com/';
+        echo htmlentities($wpbookAdminOptions['fb_app_url']);
+        echo '/?wpbook=catch_perms&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
+        echo $wpbookAdminOptions['fb_admin_target'];
+        echo '" target="_new">Grant Permissions for this user</a>';
+      }
+      echo '</p>';
       echo '<p class="options"><input type="checkbox" name="stream_publish_pages" value="true" ';
       if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
         echo("checked");
@@ -370,7 +380,7 @@ your application's url.</p>
       echo 'PageID: <input type="text" name="fb_page_target" value="';
       echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="15" />'; 
       echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" />';
-      if ($wpbook['fb_page_target != '') {
+      if ($wpbookAdminOptions['fb_page_target != '') {
         echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
         echo $wpbookAdminOptions['api_key'];
         echo '&v=1.0&next=http://apps.facebook.com/';
