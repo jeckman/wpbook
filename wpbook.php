@@ -381,7 +381,7 @@ your application's url.</p>
       echo 'PageID: <input type="text" name="fb_page_target" value="';
       echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="15" />'; 
       echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" />';
-      if ($wpbookAdminOptions['fb_page_target != '') {
+      if ($wpbookAdminOptions['fb_page_target'] != '') {
         echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
         echo $wpbookAdminOptions['api_key'];
         echo '&v=1.0&next=http://apps.facebook.com/';
