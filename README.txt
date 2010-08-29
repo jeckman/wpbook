@@ -51,7 +51,7 @@ As of 1.5, this plugin requires PHP 5.
 
 == Installation ==
 
-(Note: installation instructions are also included in HTML along with the plugin)
+(Note: installation instructions: http://wpbook.net/docs/install/ ))
 
 1. Copy the entire wpbook directory into your wordpress plugins folder,
    /wp-content/plugins/
