@@ -317,7 +317,7 @@ function wpbook_subpanel() {
       <p>This plugin allows you to embed your blog into the Facebook canvas, 
 allows Facebook users to comment on or share your blog posts, and puts your 5 
 most recent posts in users profiles (with their permission).</p>
-      <p><a href="<?php echo WP_PLUGIN_URL .'/wpbook/install_instructions.html' ?>" 
+      <p><a href="http://wpbook.net/docs/install/" 
       target="_blank">Detailed instructions</a></p>
       <?php
         echo '<form action="'. $_SERVER["REQUEST_URI"] .'" method="post">';
@@ -369,8 +369,17 @@ your application's url.</p>
       echo ' id="stream_publish_pages" > Publish new posts to the Wall of Fan Page ';
       echo 'PageID: <input type="text" name="fb_page_target" value="';
       echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="15" />'; 
-      echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" /></p>';
-  
+      echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" />';
+      if ($wpbook['fb_page_target != '') {
+        echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
+        echo $wpbookAdminOptions['api_key'];
+        echo '&v=1.0&next=http://apps.facebook.com/';
+        echo htmlentities($wpbookAdminOptions['fb_app_url']);
+        echo '/?wpbook=catch_perms&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
+        echo $wpbookAdminOptions['fb_page_target'];
+        echo '" target="_new">Grant Permissions for this page</a>';
+      }
+      echo '</p>';
 
       echo '<p>Infinite Session Key: ';
       echo '<input type="text" name="infinite_session_key" value ="';
@@ -1183,9 +1192,6 @@ function wpbook_activation_check(){
   }
 }
 
-register_activation_hook(__FILE__, 'wpbook_activate');
-#register_deactivation_hook(__FILE__, 'wpbook_deactivate');
-  
 add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
 add_filter('page_link','fb_filter_pagelink',1,1); 
@@ -1203,4 +1209,8 @@ add_action('draft_to_publish','wpbook_publish_to_facebook');
   
 // cron job task  
 add_action('wpbook_cron_job', 'wpbook_import_comments');
+
+register_activation_hook(__FILE__, 'wpbook_activate');
+register_deactivation_hook(__FILE__, 'wpbook_deactivate');
+
 ?>
