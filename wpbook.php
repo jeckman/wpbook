@@ -361,7 +361,7 @@ your application's url.</p>
       echo ' id="stream_publish" > Publish new posts to YOUR Facebook Wall ';
       echo 'Profile ID: <input type="text" name="fb_admin_target" value="';
       echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="15" />';
-      echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish" />';  
+      echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish" />&nbsp;';  
       
       if ($wpbookAdminOptions['fb_admin_target'] != '') {
         echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
@@ -380,7 +380,7 @@ your application's url.</p>
       echo ' id="stream_publish_pages" > Publish new posts to the Wall of Fan Page ';
       echo 'PageID: <input type="text" name="fb_page_target" value="';
       echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="15" />'; 
-      echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" />';
+      echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" />&nbsp;';
       if ($wpbookAdminOptions['fb_page_target'] != '') {
         echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
         echo $wpbookAdminOptions['api_key'];
