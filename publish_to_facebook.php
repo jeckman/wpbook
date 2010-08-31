@@ -153,6 +153,9 @@ function wpbook_safe_publish_to_facebook($post_ID) {
         if($fb_response != '') {
           add_post_meta($my_post->ID,'_wpbook_page_stream_id',$fb_response);
           add_post_meta($my_post->ID,'_wpbook_page_stream_time',0); // no comments imported
+        } else {
+          $wpbook_message = 'No post id returned from Facebook, $fb_response was ' .$fb_response;
+          wp_die($wpbook_message,'WPBook Error publishing to page'); 
         }
       } // if permissions 
     } // end of if stream_publish_pages is true AND target_page non-empty
