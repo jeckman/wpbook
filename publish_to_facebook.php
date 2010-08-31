@@ -147,7 +147,9 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       if ($permission) { 
         $fb_page_type = '';
         try {
-          $fb_page_type = $facebook->api_client->pages_getInfo('type',null,$target_page,$target_admin);
+          $my_fields = "type";
+          // function signature from client: $page_ids, $fields, $uid, $type
+          $fb_page_type = $facebook->api_client->pages_getinfo($target_page,'type');
         } catch (Exception $e) {
           if($wpbook_show_errors) {
             $wpbook_message = 'Caught exception in getting page type for page: ' 
