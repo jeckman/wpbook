@@ -29,6 +29,9 @@ WPBook also post notifications automatically to your wall, or the wall
 of pages for which you are an admin, to which you've added the app, and 
 for which you've granted stream publish permission, when you write a new post.
 
+(This includes Application Profile pages and group walls, if you are an admin
+and have enabled fans to write on your walls). 
+
 Finally, WPBook can also import comments made on your wall (or the wall of
 a Fan page) in response to excerpts it has posted, and show those in your 
 WordPress blog as full comments. 
@@ -96,6 +99,13 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.0.8 =
+ * Changed the "catch permissions" logic for retrieving the infinite session key
+   again - hopefully eliminate conflict with theme-my-login plugin and any other
+   plugin trying to set cookies. 
+ * Adapted logic to allow for posting to the walls of Application Profile
+   pages, Group pages, and regular Fan Pages
 
 = 2.0.7 = 
  * Added new way to grant permissions directly for a pageID entered into
