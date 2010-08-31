@@ -509,7 +509,6 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
   
         endwhile; // while have posts
       endif; // if have posts	
-
       echo '</div>';
     } //end if else for if_page() - blog or archive 
 
