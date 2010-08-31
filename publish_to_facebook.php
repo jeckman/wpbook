@@ -170,7 +170,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
             wp_die($wpbook_message,'WPBook Error');
           }  // end if for show errors
         } // end try catch
-      } else {
+      } 
+      if (($fb_page_type != "GROUP") && ($fb_page_type != "APPLICATION")){
         try{
           $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$target_page);
         } catch (Exception $e) {
