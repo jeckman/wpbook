@@ -1,4 +1,4 @@
-  <?php
+<?php
 /*
 Plugin Name: WPBook
 Plugin URI: http://www.openparenthesis.org/code/wp

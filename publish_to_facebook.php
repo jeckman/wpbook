@@ -136,11 +136,10 @@ function wpbook_safe_publish_to_facebook($post_ID) {
        * not sure yet about group pages and what they take - hopefully just like
        * profile pages
        */
-      $fb_page_type = '';
       try {
         $my_fields = "type";
         // function signature from client: $page_ids, $fields, $uid, $type
-        $fb_page_type = $facebook->api_client->pages_getinfo($target_page,'type',$target_admin,'');
+        $fb_page_type_array = $facebook->api_client->pages_getinfo($target_page,'type',$target_admin,'');
       } catch (Exception $e) {
         if($wpbook_show_errors) {
           $wpbook_message = 'Caught exception in getting page type for page: ' 
@@ -148,7 +147,11 @@ function wpbook_safe_publish_to_facebook($post_ID) {
           wp_die($wpbook_message,'WPBook Error');
         } // end if for show errors
       } // end catch
-      $fb_page_type = $fb_page_type[0]['type'];  // from array back to string
+      if (is_array($fb_page_type_array)) {
+        $fb_page_type = $fb_page_type_array[0]['type'];  // from array back to string
+      } else {
+        $fb_page_type = "PAGE";
+      }
       // post to page
       $fb_response = '';
       if ($fb_page_type == "APPLICATION") {
