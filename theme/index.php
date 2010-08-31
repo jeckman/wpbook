@@ -218,7 +218,7 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
   $my_permissions_url = 'http://www.facebook.com/connect/prompt_permissions.php?api_key='.
                         $api_key .'&display=popup&ext_perm=read_stream,publish_stream,offline_access&extern=1'.
                         '&next=http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) 
-                        .'/?wpbook=catch_permissions';
+                        .'/?catch_permissions=true';
 
   echo $my_permissions_url;
 ?>
@@ -246,7 +246,7 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
     echo $api_key;
     echo '&v=1.0&next=';
     echo 'http://apps.facebook.com/'. urlencode($wpbookAdminOptions['fb_app_url']);
-    echo '/?wpbook=catch_perms&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
+    echo '/?catch_permissions=true&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
     echo $wpbookAdminOptions['fb_page_target'];
     echo '" target="_top">Grant stream.publish for this page</a>. ';          
   } else { 
@@ -293,7 +293,7 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
           echo $api_key;
           echo '&v=1.0&next=';
           echo 'http://apps.facebook.com/'. urlencode($wpbookAdminOptions['fb_app_url']);
-          echo '/?wpbook=catch_perms&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
+          echo '/?catch_permissions=true&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
           echo $page['page_id'];
           echo '" target="_top">Grant stream.publish for this page</a>. ';          
         } else { 
@@ -322,6 +322,11 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
 } // end of the permissions page, now regular themed page
 
 if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this is the regular blog page
+  if((isset($_GET['catch_permissions'])) && (isset($_GET['fb_sig_session_key']))) {
+    $infinite_session_key = $_GET['fb_sig_session_key'];
+  } else {
+     $infinite_session_key = '';
+  }
   $receiver_url = WP_PLUGIN_URL . '/wpbook/theme/default/xd_receiver.html';
   ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
@@ -344,6 +349,11 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
     echo "<p>Thanks!</p></div>";
     echo "</body></html>";
   } else {
+    if(($infinite_session_key != '')) { //uid from FB
+      echo '<div><h3>Infinite Session Key</h3>';
+      echo '<p>Your infinite session key is ' . $infinite_session_key .'.</p>';
+      echo '<p>Please copy this to the appropriate location in WPBook settings</p>';
+    }
     ?>
     <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
     <div class="wpbook_header">
