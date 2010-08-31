@@ -351,7 +351,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
   } else {
     if(($infinite_session_key != '')) { //uid from FB
       echo '<div><h3>Infinite Session Key</h3>';
-      echo '<p>Your infinite session key is ' . $infinite_session_key .'.</p>';
+      echo '<p>Your infinite session key is ' . $infinite_session_key .'</p>';
       echo '<p>Please copy this to the appropriate location in WPBook settings</p>';
     }
     ?>
