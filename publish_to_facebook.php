@@ -144,18 +144,39 @@ function wpbook_safe_publish_to_facebook($post_ID) {
           wp_die($wpbook_message,'WPBook Error');
         } // end if for show errors
       }
-    
       if ($permission) { 
-        // post to page
-        $fb_response = '';
-        try{
-          $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$target_page);
+        $fb_page_type = '';
+        try {
+          $fb_page_type = $facebook->api_client->pages_getInfo('type',null,$target_page,$target_admin);
         } catch (Exception $e) {
           if($wpbook_show_errors) {
-            $wpbook_message = 'Caught exception in actually publishing to page '. $target_page .': '. $e->getMessage() .' Error code: '. $e->getCode(); 
+            $wpbook_message = 'Caught exception in getting page type for page: ' 
+            .  $target_page .' message was: '. $e->getMessage() .' Error code: '. $e->getCode(); 
             wp_die($wpbook_message,'WPBook Error');
-          }  // end if for show errors
-        } // end try catch
+          } // end if for show errors
+        } // end catch
+        $fb_page_type = $fb_page_type[0]['type'];  // from array back to string
+        // post to page
+        $fb_response = '';
+        if ($fb_page_type == "APPLICATION") {
+          try{
+            $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_page,$target_page);
+          } catch (Exception $e) {
+            if($wpbook_show_errors) {
+              $wpbook_message = 'Caught exception in actually publishing to APPLICATION type page '. $target_page .': '. $e->getMessage() .' Error code: '. $e->getCode(); 
+              wp_die($wpbook_message,'WPBook Error');
+            }  // end if for show errors
+          } // end try catch
+        } else {
+          try{
+            $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$target_page);
+          } catch (Exception $e) {
+            if($wpbook_show_errors) {
+              $wpbook_message = 'Caught exception in actually publishing to page '. $target_page .': '. $e->getMessage() .' Error code: '. $e->getCode(); 
+              wp_die($wpbook_message,'WPBook Error');
+            }  // end if for show errors
+          } // end try catch
+        } // end else for if fb_page_type == APPLICATION
         if($fb_response != '') {
           add_post_meta($my_post->ID,'_wpbook_page_stream_id',$fb_response);
           add_post_meta($my_post->ID,'_wpbook_page_stream_time',0); // no comments imported
