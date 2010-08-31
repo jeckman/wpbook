@@ -24,7 +24,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   $wpbook_promote_external = $wpbookAdminOptions['promote_external'];
   $wpbook_attribution_line = $wpbookAdminOptions['attribution_line'];
 	$facebook = new Facebook($api_key, $secret);
-	
+  
   $ProfileContent = '<h3>Recent posts</h3><div class="wpbook_recent_posts">'
     . '<ul>' . wpbook_profile_recent_posts(5) . '</ul></div>';
   

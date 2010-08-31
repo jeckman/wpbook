@@ -377,7 +377,7 @@ your application's url.</p>
       if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
         echo("checked");
       }
-      echo ' id="stream_publish_pages" > Publish new posts to the Wall of Fan Page ';
+echo ' id="stream_publish_pages" > Publish new posts to the Wall of this Fan Page, Application Profile Page, or Group: ';
       echo 'PageID: <input type="text" name="fb_page_target" value="';
       echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="15" />'; 
       echo '<img src="'. WP_PLUGIN_URL . '/wpbook/admin_includes/images/help.png" class="stream_publish_pages" />&nbsp;';
