@@ -130,6 +130,12 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   
     if(($stream_publish_pages == "true") && (!empty($target_page))) {      
       // try to publish to page
+      /* If it is an application profile page, we have to pass the app id as target,
+       * and the uid of the admin as source.
+       * If it is a Fan page, we have to pass null as target, and pageid as source.
+       * not sure yet about group pages and what they take - hopefully just like
+       * profile pages
+       */
       try { 
         $permission = $facebook->api_client->users_hasAppPermission('publish_stream',$target_page);
       } catch (Exception $e) {
