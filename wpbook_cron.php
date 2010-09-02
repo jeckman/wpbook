@@ -276,10 +276,11 @@ function wpbook_import_comments() {
                     $debug_string=date("Y-m-d H:i:s",time())." : In fb_user, name is $fb_user[name], url is $fb_user[url] \n";
                     fwrite($fp, $debug_string);
                   }
-                  $time = date("Y-m-d H:i:s",$comment[time]);
+                  $local_time = $comment[time] - (get_option( 'gmt_offset' ) * 3600;);
+                  $time = date("Y-m-d H:i:s",$local_time);
                   $data = array(
                                 'comment_post_ID' => $wordpress_post_id,
-                                'comment_author' => $fb_user[name],
+                                'comment_author' => htmlentities($fb_user[name]),
                                 'comment_author_email' => $wpbook_comment_email,
                                 'comment_author_url' => $fb_user[url],
                                 'comment_content' => $comment[text],
