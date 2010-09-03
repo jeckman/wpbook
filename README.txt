@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.0.8.1
+Stable tag: 2.0.9
 Tested up to: 3.0.1
 Requires at least: 2.6
 
@@ -96,6 +96,17 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.0.9 =
+ * Fixed the lost navigation issue - previous and next page of posts
+   listed at bottom of archive pages (Though not on tabs)
+ * %category_link% and %tab_link% in header/footer were broken - fixed. 
+ * Attempt at fix for comment authors with non-ascii characters in their names
+ * Removing old profilebox code and references - Facebook no longer allows
+   profile boxes - replaced by tabs
+ * Excerpts posting to walls with [caption] shortcodes - fixed
+ * Timestamp on imported comments - fixed
+ * Added user_ID to comment-data array for comment import
 
 = 2.0.8.1 = 
  * Ouch! Checked in version had extra whitespace before opening php tag
@@ -407,6 +418,7 @@ as well as some other files for processing comments and the like.
 * First push to WP-Plugins Directory
 
 == To Do ==
+* Use featured_image instead of first image when present
 * Use settings API better / clean up settings (maybe a whole new
   box for settings in left nav? enabling sub-pages)
 * Convert to new API from Facebook for OAuth based authorization
