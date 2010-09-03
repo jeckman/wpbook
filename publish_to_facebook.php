@@ -65,11 +65,12 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     }
     $message = wpbook_attribution_line($wpbook_attribution_line,$my_post->author);
   
-    if(($my_post->post_excerpt) && ($my_post->post_excerpt != ''))
-      $wpbook_description = stripslashes(wp_filter_nohtml_kses($my_post->post_excerpt));
-    else 
-      $wpbook_description = stripslashes(wp_filter_nohtml_kses($my_post->post_content));
-  
+    if(($my_post->post_excerpt) && ($my_post->post_excerpt != '')) {
+      $wpbook_description = stripslashes(wp_filter_nohtml_kses(apply_filters('the_content',$my_post->post_excerpt)));
+    }
+    else { 
+      $wpbook_description = stripslashes(wp_filter_nohtml_kses(apply_filters('the_content',$my_post->post_content)));
+    }
     if(strlen($wpbook_description) >= 995) {
       $space_index = strrpos(substr($wpbook_description, 0, 995), ' ');
       $short_desc = substr($wpbook_description, 0, $space_index);
