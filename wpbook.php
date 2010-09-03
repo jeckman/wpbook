@@ -737,7 +737,7 @@ echo '> Enable Add to Profile Button (for Tab): <img src="'. WP_PLUGIN_URL .'/wp
       echo 'name="wpbook_save_button" /></p></form>';
       echo'<div id="help">';
       echo '<h2>Need Help?</h2>';
-      echo '<p>If you need help setting up this application first read the <a href="'. WP_PLUGIN_URL .'/wpbook/instructions/index.html" target="_blank"> install instructions</a>. If you need help about an option mouse-over the <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="need_help" /> for the a tooltip that we hope you\'ll find useful.';
+      echo '<p>If you need help setting up this application first read the <a href="http://wpbook.net/docs/install" target="_blank"> install instructions</a>. If you need help about an option mouse-over the <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="need_help" /> for the a tooltip that we hope you\'ll find useful.';
       echo 'Support can also be found on <a href="http://wordpress.org/extend/plugins/wpbook/" target="_blank">the plugin page</a> </p><h3>Thanks for using WPBook!</h3>';
       echo'</div>';
   } else {
@@ -906,6 +906,21 @@ function fb_filter_postlink($postlink) {
 		return $postlink; 
 	}
 }
+
+function fb_filter_postlink_no_qs($postlink) {
+	if (check_facebook()) {
+		$my_offset = strlen(get_option('home'));
+		$my_options = wpbook_getAdminOptions();
+		$app_url = $my_options['fb_app_url'];
+		$my_link = 'http://apps.facebook.com/' . $app_url . substr($postlink,$my_offset); 
+    $my_new_link_pieces = parse_url($my_link);
+		return parse_url($my_link,PHP_URL_SCHEME) .'://'. parse_url($my_link,PHP_URL_HOST) 
+    . parse_url($my_link,PHP_URL_PATH); // ignoring port 
+	} else {
+		return $postlink; 
+	}
+}
+
 
 // this version to be called when we're outside facebook too  
 function wpbook_always_filter_postlink($postlink) {
@@ -1152,13 +1167,15 @@ function wpbook_activation_check(){
 add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
 add_filter('page_link','fb_filter_postlink',1,1); 
+add_filter('get_pagenum_link','fb_filter_postlink_no_qs',1,1); 
+
 
 /* you can't actually filter the tag_link and category_links this way
  * because if you do, wordpress redirects to /app_url/tag/yourtag whenever
  * you try to access /tag/yourtag inside FB
+ *  add_filter('tag_link','fb_filter_postlink',1,1); 
+ *  add_filter('category_link','fb_filter_postlink',1,1); 
  */
-//add_filter('tag_link','fb_filter_postlink',1,1); 
-//add_filter('category_link','fb_filter_postlink',1,1); 
 add_action('admin_menu', 'wpbook_options_page');
 add_action('wp', 'wpbook_parse_request');
 add_action('admin_menu', 'wpbook_add_meta_box');

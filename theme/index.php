@@ -491,10 +491,26 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
           comments_template(); 
   
         endwhile; // while have posts
+      
+      echo '<h3 class="wpbook_box_header">More Posts</h3>'; 
+                echo '<p>';
+      $wpbook_next_page = get_next_posts_link();
+      $wpbook_prev_page = get_previous_posts_link();
+      if ($wpbook_prev_page)
+        echo $wpbook_prev_page;
+      if ($wpbook_prev_page && $wpbook_next_page) 
+        echo  ' | ';
+      if ($wpbook_next_page)
+        echo $wpbook_next_page;
+                echo '</p>';
+                
       endif; // if have posts	
       echo '</div>';
     } //end if else for if_page() - blog or archive 
 
+                
+                
+                
     if($show_pages == "true" && $show_page_list=="true"){
       ?><div class="box_head clearfix">
       <h3 class="wpbook_box_header">
