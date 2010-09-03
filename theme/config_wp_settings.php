@@ -84,6 +84,13 @@ function custom_header_footer($custom_template_header_footer,$date,$time){
   }
   else {$write_category  = "no categories";}
   
+  $num_comments = get_comments_number('No Comments','1 Comment','% Comments'); 
+  if ( comments_open() ){
+    $write_comments = '<a href="' . get_comments_link() .'">'. $num_comments.'</a>';
+  } else{
+    $write_comments = 'Comments are off for this post';
+  }
+  
   $custom_template_header_footer = str_replace("%author%", "$author", "$custom_template_header_footer");
   $custom_template_header_footer = str_replace("%category%", "$write_category", "$custom_template_header_footer");
   $custom_template_header_footer = str_replace("%category_link%", "$postcategory_link_data", "$custom_template_header_footer");
@@ -92,7 +99,7 @@ function custom_header_footer($custom_template_header_footer,$date,$time){
   $custom_template_header_footer = str_replace("%tags%", "$write_tags", "$custom_template_header_footer");
   $custom_template_header_footer = str_replace("%tag_link%", "$posttags_link_data", "$custom_template_header_footer");
   $custom_template_header_footer = str_replace("%permalink%","$permalink","$custom_template_header_footer");
-  
+  $custom_template_header_footer = str_replace("%comments%","$write_comments","$custom_template_header_footer");
   return $custom_template_header_footer;
 }  // end function custom_header/footer
 ?>
