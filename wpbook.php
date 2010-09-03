@@ -6,7 +6,7 @@ Date: 2010, September 3rd
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 2.0.9
+Version: 2.0.9.1
 */
   
 /*
