@@ -688,7 +688,8 @@ echo '> Enable Add to Profile Button (for Tab): <img src="'. WP_PLUGIN_URL .'/wp
           .'%tag_link% - The Post\'s tags with link to archive page <br/>'
           .'%category% - The Post Category <br/> '
           .'%category_link% - The Post Category with link to archive page <br/>'
-          .'%permalink% - The Post Permalink<br><br/>'
+          .'%permalink% - The Post Permalink<br/>'
+          .'%comments% - Link to the Post\'s Comments<br/><br/>'
           .'<strong>Example Usage</strong><br/> Written by %author% and posted to %category% on %date% at %time%.</div> </p><br/>';
       echo'<div class="options">';
 
