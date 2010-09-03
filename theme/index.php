@@ -361,79 +361,62 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
     if($invite_friends == "true"){
       $invite_link = '<a class="FB_UIButton FB_UIButton_Gray FB_UIButton_CustomIcon" href="http://apps.facebook.com/' . $app_url 
         .'/index.php?is_invite=true&fb_force_mode=fbml" class="share"><span class="FB_UIButton_Text"><span class="FB_Bookmark_Icon"></span> Invite Friends </span></a>';
-      ?>
-      <div style="float:right; margin-left: 3px; margin-bottom: 3px;  "> <?php echo("$invite_link") ?> </div>	
-      <?php 
+      echo '<div style="float:right; margin-left: 3px; margin-bottom: 3px;  ">'. $invite_link .'</div>';	
     } 
     if($enable_profile_link == "true"){ 
-      ?>
-<div> <div id="addProfileButton" style="float:right;"><fb:add-profile-tab /></div></div>
-      <?php 
+      echo '<div><div id="addProfileButton" style="float:right;"><fb:add-profile-tab /></div></div>';
     }
-    ?>
-    <h3><a href="http://apps.facebook.com/<?php echo $app_url; ?>/" 
-      target="_top"><?php bloginfo('name'); ?></a></h3>
-    <?php 
-    if($show_pages_menu == "true"){ ?>
-      <div id="underlinemenu" class="clearfix">
-        <ul>
-    	    <li>Pages:</li>
-    	    <?php if ($exclude_pages_true == "true"){wp_list_pages("sort_column=menu_order&depth=1&title_li=&exclude=$exclude_pages_list");}
-				else{wp_list_pages("sort_column=menu_order&depth=1&title_li=");} ?>
-    	    </ul>
-    	    </div>
-    <?php 
+    echo '<h3><a href="http://apps.facebook.com/'. $app_url .'/" target="_top">'. get_bloginfo('name') .'</a></h3>';
+    if($show_pages_menu == "true"){
+      echo '<div id="underlinemenu" class="clearfix"><ul><li>Pages:</li>';
+      if ($exclude_pages_true == "true"){
+        wp_list_pages("sort_column=menu_order&depth=1&title_li=&exclude=$exclude_pages_list");
+      } else {
+        wp_list_pages("sort_column=menu_order&depth=1&title_li=");
+      }
+      echo '</ul></div>';
     } //end show pages menu
-    ?>
-    </div>
-    <?php 
+    echo '</div>';
     if(is_page()){ // is a page 
-      ?>
-      <div id="content">
-				<div class="box_head clearfix">
-				<h3 class="wpbook_box_header"><?php the_title(); ?></a></h3>
-				<?php if (have_posts()) : while (have_posts()) : the_post();
-					the_content();
-				endwhile; else: ?>
-					<p>
-					<?php _e('Sorry, page does not exist.'); ?>
-					</p>
-			<?php endif; ?> 
-      </div>	
-	    <?php 
+      echo '<div id="content"><div class="box_head clearfix">';
+      echo '<h3 class="wpbook_box_header">'. the_title() .'</a></h3>';
+      if (have_posts()) : while (have_posts()) : the_post();
+        the_content();
+        endwhile; 
+      else: 
+        echo '<p>';
+        _e('Sorry, page does not exist.');
+        echo '</p>';
+			endif;
+      echo '</div>';	
     } // end if is_page()
-    else{
-      if(is_archive()){ //is an archive page  
-        ?><div class="archive">
-        <?php 			/*If this is a category archive */ 
+    else {
+      if(is_archive()){   
+        echo '<div class="archive">';
         if (is_category()) { 
-          ?><p><b><?php printf( __('You are currently browsing the %1$s archives for the \'%2$s\' category.'), $app_name, single_cat_title('', false) ) ?></b></p>
-          <?php /* If this is a yearly archive */ 
+          echo '<p><b>';
+          printf( __('You are currently browsing the %1$s archives for the \'%2$s\' category.'), $app_name, single_cat_title('', false) );
+          echo '</b></p>';
         } elseif (is_day()) { 
-          ?><p><b>You are currently browsing the <?php $app_name; ?> archives for the day <?php the_time('l, F jS, Y'); ?>.</b></p>
-          <?php /* If this is a monthly archive */ 
+          echo '<p><b>You are currently browsing the '. $app_name .' archives for the day '. the_time('l, F jS, Y') .'.</b></p>';
         } elseif (is_month()) { 
-          ?><p><b>You are currently browsing the <?php $app_name; ?> archives 	for <?php the_time('F, Y'); ?>.</b></p>
-          <?php /* If this is a yearly archive */ 
+          echo '<p><b>You are currently browsing the '. $app_name .' archives for '. the_time('F, Y') .'.</b></p>';
         } elseif (is_year()) { 
-          ?><p><b>You are currently browsing the <?php $app_name; ?> archives  for the year <?php the_time('Y'); ?>.</b></p>
-          <?php /* If this is a monthly archive */ 
+          echo '<p><b>You are currently browsing the '. $app_name .' archives  for the year '. the_time('Y') .'.</b></p>';
         } elseif (is_search()) { 
-          ?><p><b>You have searched the <?php $app_name; ?> archives for <strong>'<?php echo wp_specialchars($s); ?>'</strong>. </b></p>
-          <?php /* If this is a monthly archive */ 
+          echo '<p><b>You have searched the '. $app_name .' archives for <strong>"'. wp_specialchars($s) .'"</strong>. </b></p>';
         } elseif (isset($_GET['paged']) && !empty($_GET['paged'])) { 
-          ?><p><b>You are currently browsing the <?php $app_name; ?> archives.</b></p><?php 
-        }/* If this is a tag archive */	
-        elseif(is_tag()){ 
-          ?><p><b><?php printf( __('You are currently browsing the %1$s archives for the \'%2$s\' tag.'), $app_name, single_tag_title('', false) ) ?></b></p>
-				<?php 
+          echo '<p><b>You are currently browsing the '. $app_name.' archives.</b></p>';
+        }	elseif(is_tag()){ 
+          echo '<p><b>';
+          printf( __('You are currently browsing the %1$s archives for the \'%2$s\' tag.'), $app_name, single_tag_title('', false) );
+          echo '</b></p>';
         } 
       } // end of if is_archive() 
       ?>
 			</div>
       <div id="content">
       <?php 	
-      have_posts();
       if (have_posts()) : 
         while (have_posts()) : 
           the_post();

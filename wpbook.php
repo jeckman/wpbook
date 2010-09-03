@@ -917,49 +917,8 @@ function wpbook_always_filter_postlink($postlink) {
   return $my_link;
   }
 
-// change links to pages as well	
-function fb_filter_pagelink($pagelink) {
-  if(check_facebook()) {
-    $my_offset = strlen(get_option('home'));
-		$my_options = wpbook_getAdminOptions();
-		$app_url = $my_options['fb_app_url'];
-		$my_link = 'http://apps.facebook.com/' . $app_url 
-    . substr($pagelink,$my_offset); 
-		return $my_link;
-	} else {
-		return $pagelink; 
-  }
-}
-// Can't forget tags 	
-function fb_filter_taglink($taglink) {
-  if(check_facebook()) {
-    $my_offset = strlen(get_option('home'));
-		$my_options = wpbook_getAdminOptions();
-		$app_url = $my_options['fb_app_url'];
-		$my_link = 'http://apps.facebook.com/' . $app_url 
-    . substr($taglink,$my_offset); 
-		return $my_link;
-	} else {
-		return $taglink; 
-  }
-}
-// and categories 	
-function fb_filter_catlink($catlink) {
-  if(check_facebook()) {
-    $my_offset = strlen(get_option('home'));
-		$my_options = wpbook_getAdminOptions();
-		$app_url = $my_options['fb_app_url'];
-		$my_link = 'http://apps.facebook.com/' . $app_url 
-    . substr($catlink,$my_offset); 
-		return $my_link;
-	} else {
-		return $catlink; 
-  }
-} 
-
 /*
- * This function updates profile boxes (if they still exist)
- * and handles streaming publish to Facebook. 
+ * This function handles streaming publish to Facebook. 
  * It includes publish_to_facebook.php
  */
 function wpbook_publish_to_facebook($post_ID) {
@@ -1192,9 +1151,14 @@ function wpbook_activation_check(){
 
 add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
-add_filter('page_link','fb_filter_pagelink',1,1); 
-add_filter('tag_link','fb_filter_taglink',1,1); 
-add_filter('category_link','fb_filter_catlink',1,1); 
+add_filter('page_link','fb_filter_postlink',1,1); 
+
+/* you can't actually filter the tag_link and category_links this way
+ * because if you do, wordpress redirects to /app_url/tag/yourtag whenever
+ * you try to access /tag/yourtag inside FB
+ */
+//add_filter('tag_link','fb_filter_postlink',1,1); 
+//add_filter('category_link','fb_filter_postlink',1,1); 
 add_action('admin_menu', 'wpbook_options_page');
 add_action('wp', 'wpbook_parse_request');
 add_action('admin_menu', 'wpbook_add_meta_box');

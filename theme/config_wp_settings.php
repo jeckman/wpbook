@@ -45,17 +45,44 @@ $wpbook_show_errors = $wpbookAdminOptions['show_errors'];
 //write the custom header and footer 
 function custom_header_footer($custom_template_header_footer,$date,$time){
   $author = get_the_author();
-  $category = get_the_category();
   $date = get_the_time($date);
   $time = get_the_time($time);
   $permalink = '<a href="' . get_permalink() . '">permalink</a>';
-  $posttags_link = get_the_tag_list(); 
-  if ($posttags_link) {$posttags_link_data = get_the_tag_list('',', ', ''); }
-  else { $posttags_link_data = "no tags";}
-    
-  $postcategory_link = get_the_category_list(); 
-  if ($posttags_link) {$postcategory_link_data = get_the_category_list(','); }
-  else { $postcategory_link_data = "no categories";}
+  if (get_the_tags()) {
+    /* need to build our own links here and filter them */
+    $i = 0;
+    foreach((get_the_tags()) as $tag) {
+      if($i > 0) {
+        $posttags_link_data .= ', ';
+      }
+      $i++;
+      $posttags_link_data .= '<a href="' 
+      . wpbook_always_filter_postlink(get_tag_link($tag->term_id)) 
+      . '" target="_top">' . $tag->name . '</a>';
+      
+    }
+  }
+  else { 
+    $posttags_link_data = "no tags";
+  }    
+
+  if (get_the_category()) {
+    /* need to build our own links here and filter them */
+    $i = 0;
+    foreach((get_the_category()) as $category) { 
+      if($i>0) {
+        $postcategory_link_data .= ', ';
+      }
+      $i++;
+      $postcategory_link_data .= '<a href="' 
+      . wpbook_always_filter_postlink(get_category_link($category->cat_ID)) 
+      . '" target="_top">' . $category->cat_name . '</a>';
+    }
+  }
+  else { 
+    $postcategory_link_data = "no categories";
+  }
+
   $posttags = get_the_tags();  
   if ($posttags) {
     $tag_count = count($posttags);
