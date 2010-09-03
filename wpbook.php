@@ -1164,14 +1164,6 @@ function wpbook_parse_request($wp) {
       // problematic and no fb session needed in this page
       header( 'Location: ' . $redirect_url );
     }
-    if($wp->query_vars['wpbook'] == 'update_profile_boxes') {  // first process requests with "wpbook=comment-handler"
-      if (version_compare(PHP_VERSION, '5.0.0', '>')) {
-        include(WP_PLUGIN_DIR.'/wpbook/update_profile_boxes.php');
-      } else {
-        wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
-      }
-      wpbook_safe_update_profile_boxes();
-    }
   }
 }
   

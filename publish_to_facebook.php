@@ -25,24 +25,6 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   $wpbook_attribution_line = $wpbookAdminOptions['attribution_line'];
 	$facebook = new Facebook($api_key, $secret);
   
-  $ProfileContent = '<h3>Recent posts</h3><div class="wpbook_recent_posts">'
-    . '<ul>' . wpbook_profile_recent_posts(5) . '</ul></div>';
-  
-  if( (!empty($api_key)) && (!empty($secret))) {
-    // this call just updates the RefHandle, already set for the user profile
-    try {
-      $facebook->api_client->call_method('facebook.Fbml.setRefHandle',
-                                       array('handle' => 'recent_posts',
-                                             'fbml' => $ProfileContent,
-                                             ) );
-    } catch (Exception $e) {
-      if($wpbook_show_errors) {
-        $wpbook_message = 'Caught exception: ' .  $e->getMessage() .' Error code: '. $e->getCode(); 
-        wp_die($wpbook_message,'WPBook Error');
-      } // end if for show errors
-    } // end try catch
-  } // end if for api_key and secret
-
   if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && (($stream_publish == "true") || $stream_publish_pages == "true")) {
     // here we should also post to the author's stream
     $my_post = get_post($post_ID);
