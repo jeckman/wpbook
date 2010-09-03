@@ -276,7 +276,12 @@ function wpbook_import_comments() {
                     $debug_string=date("Y-m-d H:i:s",time())." : In fb_user, name is $fb_user[name], url is $fb_user[url] \n";
                     fwrite($fp, $debug_string);
                   }
-                  $local_time = $comment[time] - (get_option( 'gmt_offset' ) * 3600;);
+                  $local_time = $comment[time] + (get_option('gmt_offset') * 3600);
+                  if(DEBUG) {
+                    $fp = fopen($debug_file, 'a');
+                    $debug_string=date("Y-m-d H:i:s",time())." : comment[time] was $comment[time], gmt offset is ". get_option('gmt_offset') .", local_time is $local_time   \n";
+                    fwrite($fp, $debug_string);
+                  }
                   $time = date("Y-m-d H:i:s",$local_time);
                   $data = array(
                                 'comment_post_ID' => $wordpress_post_id,
@@ -289,7 +294,8 @@ function wpbook_import_comments() {
                                 'comment_author_IP' => '127.0.0.1',
                                 'comment_agent' => 'WPBook Comment Import',
                                 'comment_date' => $time,
-                                'comment_approved' => $wpbook_comment_approval
+                                'comment_approved' => $wpbook_comment_approval,
+                                'user_ID' => ''
                                 );
                   /* I'd like to use wp_new_comment here, but:
                    *   - It ignores the timestamp passed in and uses now instead
