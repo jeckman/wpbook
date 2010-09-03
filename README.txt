@@ -20,10 +20,7 @@ regular domain and comments made by users inside Facebook are all shown to
 users of either "view" of your content. 
 
 Facebook users can also - at their option - add a profile tab to their profile,
-using the "add profile tab" button at the top of the default canvas page. 
-
-That profile box shows the N most recent posts from your blog, as links. 
-(N = user configurable). 
+using the "add profile tab" button at the top of the default canvas page.  
 
 WPBook also post notifications automatically to your wall, or the wall
 of pages for which you are an admin, to which you've added the app, and 

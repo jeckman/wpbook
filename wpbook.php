@@ -315,8 +315,11 @@ function wpbook_subpanel() {
       <div class="wrap">
       <h2>WPBook Setup</h2>
       <p>This plugin allows you to embed your blog into the Facebook canvas, 
-allows Facebook users to comment on or share your blog posts, and puts your 5 
-most recent posts in users profiles (with their permission).</p>
+allows Facebook users to comment on or share your blog posts, cross-posts your 
+blog posts to the wall of your profile, a fan page, an application profile page, 
+or a group page, and enables users (yourself and other users) to add a tab for
+your posts to their profile. It also imports comments made against wall posts 
+which originated in WordPress.</p>
       <p><a href="http://wpbook.net/docs/install/" 
       target="_blank">Detailed instructions</a></p>
       <?php
@@ -522,7 +525,7 @@ echo '&nbsp;&nbsp;&nbsp;<input type="checkbox" name="enable_profile_link" value=
       if(htmlentities($wpbookAdminOptions['enable_profile_link']) == "true") {
         echo("checked");
       }
-      echo '> Enable Facebook users to add your app to their profile <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="enable_profile" />';
+echo '> Enable Add to Profile Button (for Tab): <img src="'. WP_PLUGIN_URL .'/wpbook/admin_includes/images/help.png" class="enable_profile" />';
       echo '</p>';
   
       // show share option 
