@@ -19,26 +19,4 @@ $user_id = $params[user];
 if (isset($_GET['fb_page_id'])) {
   $user_id = $_GET['fb_page_id'];
 }
-$ProfileContent = '<h3>Recent posts</h3><div class="wpbook_recent_posts">'
-                . '<ul>' . wpbook_profile_recent_posts(5) . '</ul></div>';
-
-try{
-  $facebook->api_client->call_method('facebook.Fbml.setRefHandle',array(
-                                         'handle' => 'recent_posts',
-                                         'fbml' => $ProfileContent, // wide box
-                                    ) );
-} catch (Exception $e) {
-  // couldn't set refhandle to fbml
-}
-try{  
-  $facebook->api_client->call_method('facebook.profile.setFBML',
-                                    array(
-                                          'uid' => $user_id,
-                                          'profile' => '<fb:wide><fb:ref handle="recent_posts" /></fb:wide><fb:narrow><fb:ref handle="recent_posts" /></fb:narrow>',
-                                          'profile_main' => '<fb:ref handle="recent_posts" />'
-                                           )
-                                    );
-} catch (Exception $e) {
-  // failed to setFBML for profile boxes
-}
 ?>
