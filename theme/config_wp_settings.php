@@ -84,9 +84,18 @@ function custom_header_footer($custom_template_header_footer,$date,$time){
   }
   else {$write_category  = "no categories";}
   
-  $num_comments = get_comments_number('No Comments','1 Comment','% Comments'); 
+  $num_comments = get_comments_number(); 
   if ( comments_open() ){
-    $write_comments = '<a href="' . get_comments_link() .'">'. $num_comments.'</a>';
+    if($num_comments == 0){
+      $comments ="No Comments";
+ 	  }
+ 	  elseif($num_comments > 1){
+      $comments = $num_comments." Comments";
+ 	  }
+ 	  else{
+      $comments ="1 Comment";
+ 	  }
+    $write_comments = '<a href="' . get_comments_link() .'">'. $comments.'</a>';
   } else{
     $write_comments = 'Comments are off for this post';
   }
