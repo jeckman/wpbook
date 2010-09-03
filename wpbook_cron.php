@@ -285,7 +285,7 @@ function wpbook_import_comments() {
                   $time = date("Y-m-d H:i:s",$local_time);
                   $data = array(
                                 'comment_post_ID' => $wordpress_post_id,
-                                'comment_author' => htmlentities($fb_user[name]),
+                                'comment_author' => $fb_user[name],
                                 'comment_author_email' => $wpbook_comment_email,
                                 'comment_author_url' => $fb_user[url],
                                 'comment_content' => $comment[text],
