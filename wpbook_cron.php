@@ -42,7 +42,7 @@ function wpbook_import_comments() {
   if($wpbookOptions['wpbook_enable_debug'] == "true")
     define ('DEBUG',true);
   else
-    defin ('DEBUG',false);
+    define ('DEBUG',false);
   define ('WPBOOK_COMMENT_METHOD','comment');
 
   $debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_debug.txt';
