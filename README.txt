@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, bandonrandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.0.9.1
+Stable tag: 2.0.9.2
 Tested up to: 3.0.1
 Requires at least: 2.6
 
@@ -96,6 +96,14 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.0.9.2 =
+ * Typo in wpbook_cron.php (defin should be define) - triggered only
+   when debug disabled 
+ * Added thead to allowed tags in tab view
+
+= 2.0.9.1 =
+ * SVN issue - removing html entities from comment author
 
 = 2.0.9 =
  * Fixed the lost navigation issue - previous and next page of posts
