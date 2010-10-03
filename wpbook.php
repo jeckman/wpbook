@@ -1002,7 +1002,7 @@ function wpbook_meta_box() {
   }
   echo '<p>'.__('Publish this post to Facebook Wall?', 'wpbook').'&nbsp;';
   echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_yes" value="yes" ';
-  checked('yes', $wpbook_publish, false);
+  checked('yes', $wpbook_publish, true);
   echo ' /> <label for="wpbook_fb_publish_yes">'.__('yes', 'wpbook').'</label> &nbsp;&nbsp;';
   echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_no" value="no" ';
   checked('no', $wpbook_publish, false);
