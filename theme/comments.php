@@ -34,13 +34,10 @@ $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = "
 		<?php foreach ($comments as $comment) : ?>
 		<div class="<?php echo $comment_class ?>">
 		<?php if ($use_gravatar == "true"){ 
-		echo'<div class="gravatarr">';
-				$grav_url = "http://www.gravatar.com/avatar/" . 
-				md5(strtolower(get_comment_author_email())) . "?d=" . $gravatar_default . "&s=60&r=".$gravatar_rating;
-      echo "<img src='$grav_url'/></div>";
+		
+		echo'<div class="gravatarr">' .get_avatar($comment).'</div>';
 	  echo '<div class="gravatarpadding">';	
-	  			  		  }
-						  
+	  	 	}
     ?>
 		<span class="wpbook_comment_date"> <?php comment_date('F jS, Y') ?> at <?php comment_time() ?></span>
 		<br/><span class="wpbook_comment_author"><?php comment_author_link(); ?> Said: </span> 

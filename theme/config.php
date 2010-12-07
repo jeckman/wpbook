@@ -1,7 +1,7 @@
 <?php
 // the facebook client library
 if(!class_exists('FacebookRestClient')) {
-  include_once(WP_PLUGIN_DIR . '/wpbook/client/facebook.php');
+  include_once(WP_PLUGIN_DIR . '/wpbook/includes/client/facebook.php');
 }
 
 $facebook = new Facebook($api_key, $secret);
