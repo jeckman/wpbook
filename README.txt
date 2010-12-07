@@ -53,7 +53,7 @@ As of 1.5, this plugin requires PHP 5.
 
 == Installation ==
 
-(Note: installation instructions: http://wpbook.net/docs/install/ ))
+(Note: installation instructions: http://wpbook.net/docs/install/ )
 
 1. Copy the entire wpbook directory into your wordpress plugins folder,
    /wp-content/plugins/
@@ -104,6 +104,10 @@ as well as some other files for processing comments and the like.
    http://bandonrandon.wordpress.com/2010/10/10/wpbook-2-0-10-beta-release/
  * Move includes into their own directory
  * Incorporate FB avatar in comments imported
+ * New Admin Layout
+ * Bug fixes: default for 'post to facebook' is set to true
+ * Links in permissions page point to wpbook.net
+ * FB tabs view moved to its own file in theme directory
 
 = 2.0.9.2 =
  * Typo in wpbook_cron.php (defin should be define) - triggered only
