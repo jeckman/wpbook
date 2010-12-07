@@ -173,6 +173,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       } else {
         $wpbook_message = 'No post id returned from Facebook, $fb_response was ' .$fb_response;
         $wpbook_message = $wpbook_message . ' and $fb_page_type was ' . $fb_page_type;
+        $wpbook_message .= ' and $wpbook_description was ' . $wpbook_description;
+        $wpbook_message .= ' and $my_title was ' . $my_title;
         wp_die($wpbook_message,'WPBook Error publishing to page'); 
       }
     } // end of if stream_publish_pages is true AND target_page non-empty
