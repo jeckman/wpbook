@@ -1213,6 +1213,8 @@ add_action('admin_menu', 'wpbook_add_meta_box');
 add_action('future_to_publish','wpbook_publish_to_facebook');	
 add_action('new_to_publish','wpbook_publish_to_facebook');
 add_action('draft_to_publish','wpbook_publish_to_facebook');  
+add_action('pending_to_publish','wpbook_publish_to_facebook');
+
   
 // cron job task  
 add_action('wpbook_cron_job', 'wpbook_import_comments');
