@@ -306,7 +306,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
               echo '<a onclick="window.open(\'http://www.facebook.com/sharer.php?s=100&amp;p[title]=';
               echo urlencode(get_the_title());
               echo '&amp;p[summary]=';
-              echo stripslashes(wp_filter_nohtml_kses(apply_filters('the_content',get_the_excerpt())));
+              echo urlencode((wp_filter_nohtml_kses(apply_filters('the_content',get_the_excerpt()))));
               echo '&amp;p[url]=';
               echo urlencode(get_permalink());
               echo "','sharer','toolbar=0,status=0,width=626,height=436'); return false;\""; 
@@ -334,7 +334,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
               echo '<a onclick="window.open(\'http://www.facebook.com/sharer.php?s=100&amp;p[title]=';
               echo urlencode(get_the_title());
               echo '&amp;p[summary]=';
-              echo stripslashes(wp_filter_nohtml_kses(apply_filters('the_content',get_the_excerpt())));
+              echo urlencode((wp_filter_nohtml_kses(apply_filters('the_content',get_the_excerpt()))));
               echo '&amp;p[url]=';
               echo urlencode(get_permalink());
               echo "','sharer','toolbar=0,status=0,width=626,height=436'); return false;\""; 
