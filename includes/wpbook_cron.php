@@ -307,8 +307,33 @@ function wpbook_import_comments() {
                   $data['comment_parent'] = isset($data['comment_parent']) ? absint($data['comment_parent']) : 0;
                   $parent_status = ( 0 < $data['comment_parent'] ) ? wp_get_comment_status($data['comment_parent']) : '';
                   $data['comment_parent'] = ( 'approved' == $parent_status || 'unapproved' == $parent_status ) ? $data['comment_parent'] : 0;
+                  if(DEBUG) {
+                    $fp = fopen($debug_file, 'a');
+                    $debug_string=date("Y-m-d H:i:s",time())." : About to call wp_filter_comment on comment $my_id, approval $wpbook_comment_approval \n";
+                    fwrite($fp, $debug_string);
+                  }
+                  if(DEBUG) {
+                    $fp = fopen($debug_file, 'a');
+                    $debug_string=date("Y-m-d H:i:s",time())." : Unfiltered Data object: ". print_r($data,true) ." \n";
+                    fwrite($fp, $debug_string);
+                  }
                   $data = wp_filter_comment($data);
-                  $my_id = wp_insert_comment($data);          
+                  if(DEBUG) {
+                    $fp = fopen($debug_file, 'a');
+                    $debug_string=date("Y-m-d H:i:s",time())." : Past wp_filter_comment, about to call wp_insert_comment on comment $my_id, approval $wpbook_comment_approval \n";
+                    fwrite($fp, $debug_string);
+                  }
+                  if(DEBUG) {
+                    $fp = fopen($debug_file, 'a');
+                    $debug_string=date("Y-m-d H:i:s",time())." : Filtered Data object: ". print_r($data,true) ." \n";
+                    fwrite($fp, $debug_string);
+                  }
+                  $my_id = wp_insert_comment($data);  
+                  if(DEBUG) {
+                    $fp = fopen($debug_file, 'a');
+                    $debug_string=date("Y-m-d H:i:s",time())." : Past wp_insert_comment, now calling do_action on comment $my_id, approval $wpbook_comment_approval \n";
+                    fwrite($fp, $debug_string);
+                  }
                   do_action('comment_post', $my_id, $data['comment_approved']); // notification normally done in wp_new_comment
                   
                   if(DEBUG) {
