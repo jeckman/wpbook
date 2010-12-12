@@ -1,5 +1,5 @@
 === WPBook ===
-Contributors: johneckman, davelester, bandonrandon
+Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
 Stable tag: 2.0.9.2
 Tested up to: 3.0.2
@@ -305,7 +305,7 @@ as well as some other files for processing comments and the like.
 * Changed the mechanism for "Add to Profile" to avoid issues with
   the fb:ref url method, using fb:ref handle instead
 * Eliminated /wpbook/theme/recent_posts.php
-* Incorporated Brandon Dukes' fixes to admins screens
+* Incorporated Brooke Dukes' fixes to admins screens
 * Added timestamp to posts
 
 = 1.1.1 =
@@ -370,16 +370,16 @@ as well as some other files for processing comments and the like.
 = 0.8.2 =
 * Added option to require email address of comment author
 * Can be set separately only for Facebook comment authors
-* Functionality added by Brandon Dukes. 
+* Functionality added by Brooke Dukes. 
 
 = 0.8.1 =
-* Oops. Typo in README.txt - Brandon Dukes.
+* Oops. Typo in README.txt - Brooke Dukes.
 * Issue with some text not being displayed
   on the invite form
 * Tested with Wordpress 2.6.2
 
 = 0.8 =
-* Thanks to Brandon Dukes for contributing facebook invites - if you
+* Thanks to Brooke Dukes for contributing facebook invites - if you
   select 'display invite friends link' checkbox in the wp-admin 
   settings for WPBook, you can invite facebook friends!
 * Display email box for commentors (optional)

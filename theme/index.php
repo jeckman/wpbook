@@ -41,12 +41,12 @@ if(isset($_GET['is_invite'])) { // this is the invite page
     <fb:fbml>
     <fb:title>Invite Friends</fb:title>
     <fb:request-form action="http://apps.facebook.com/<?php echo $app_url ?>" 
-      method="post" type="<? echo $app_name; ?>" 
-      content="<? echo htmlentities($content); ?>" 
-      image="<? echo $app_image; ?>"> 
+      method="post" type="<?php echo $app_name; ?>" 
+      content="<?php echo htmlentities($content); ?>" 
+      image="<?php echo $app_image; ?>"> 
     <fb:multi-friend-selector actiontext="Here are your friends who don't 
-have <? echo $app_name; ?> yet. Invite all you want - it's free!" 
-      exclude_ids="<? echo $friends; ?>" bypass="cancel" />
+have <?php echo $app_name; ?> yet. Invite all you want - it's free!" 
+      exclude_ids="<?php echo $friends; ?>" bypass="cancel" />
     </fb:request-form> 
     </fb:fbml>
     <?php
