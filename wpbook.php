@@ -530,13 +530,9 @@ echo '<p class="wpbook_hidden wpbook_option_set_5 sub_child_options"> Gravatar D
       }
       echo '> Show Invite Friends Link</p><p> ';
   
-      //enable profile option
-echo '<input type="checkbox" name="enable_profile_link" value="true"';
-      if(htmlentities($wpbookAdminOptions['enable_profile_link']) == "true") {
-        echo("checked");
-      }
-echo '> Enable Add to Profile Button (for Tab):';
-      echo '</p>';
+      // removed enabled add-to-profile option as Facebook no longer supports
+      // this for normal users. You can still add a tab to Fan Pages, but you
+      // don't need the button for that
   
       // show share option 
       echo '<div id="enable_share_options"><p><input type="checkbox" name="enable_share" value="true"';

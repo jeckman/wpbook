@@ -223,9 +223,6 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
         .'/index.php?is_invite=true&fb_force_mode=fbml" class="share"><span class="FB_UIButton_Text"><span class="FB_Bookmark_Icon"></span> Invite Friends </span></a>';
       echo '<div style="float:right; margin-left: 3px; margin-bottom: 3px;  ">'. $invite_link .'</div>';	
     } 
-    if($enable_profile_link == "true"){ 
-      echo '<div><div id="addProfileButton" style="float:right;"><fb:add-profile-tab /></div></div>';
-    }
     echo '<h3><a href="http://apps.facebook.com/'. $app_url .'/" target="_top">'. get_bloginfo('name') .'</a></h3>';
     if($show_pages_menu == "true"){
       echo '<div id="underlinemenu" class="clearfix"><ul><li>Pages:</li>';
@@ -401,20 +398,8 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
       <p><small>This Facebook Application powered by <a href="http://www.wordpress.org/extend/plugins/wpbook/">the WPBook plugin</a>
       for <a href="http://www.wordpress.org/">WordPress</a>.</small></p>
       </div><?php 
-    } 
-    
-    if($enable_profile_link == "true" ){ 
-      ?>
-      <script type="text/javascript">
-        FB_RequireFeatures(["XFBML"],function() {
-          FB.Facebook.init('<?php echo $api_key; ?>',
-                     '<?php echo $receiver_url; ?>',
-                      null);
-            FB.XFBML.parse(document.getElementById('addProfileButton'));
-                           });   
-      </script>
-      <?php 
     } ?>
+        
     <script type="text/javascript">
       FB_RequireFeatures(["CanvasUtil"], function() {
                    FB.FBDebug.isEnabled=true;
