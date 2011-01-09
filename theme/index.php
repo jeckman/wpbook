@@ -86,32 +86,30 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
 <p>You've indicated you wish to publish to this page: <?php echo $wpbookAdminOptions['fb_page_target']; ?></p>
 <p><blockquote>
 <?php 
-  $permissions_fql = 'SELECT publish_stream FROM permissions WHERE uid = '. $wpbookAdminOptions['fb_page_target'] .' ';
-  try {
-    $perm = $facebook->api_client->fql_query($permissions_fql);
-  } catch (Exception $e) {
-    if ($wpbook_show_errors) {
-      $wpbook_message = 'Caught exception in fql_query: ' . $e->getMessage();
-      wp_die($wpbook_message,'WPBook Error');
+  if ($wpbookAdminOptions['fb_page_target'] != '') {
+    $permissions_fql = 'SELECT publish_stream FROM permissions WHERE uid = '. $wpbookAdminOptions['fb_page_target'] .' ';
+    try {
+      $perm = $facebook->api_client->fql_query($permissions_fql);
+    } catch (Exception $e) {
+      if ($wpbook_show_errors) {
+        $wpbook_message = 'Caught exception in fql_query: ' . $e->getMessage();
+        wp_die($wpbook_message,'WPBook Error');
+      }
     }
-  }
-  //This query will return an array as follows if the permission was found.
-  //Array ( [0] => Array ( [publish_stream] => 1 ) )
-  //If there was no permission set it will return an empty string. 
-  echo '<!-- perm was ' . $perm . ' -->'; 
-
-  if (($perm == '') || ($perm[0][publish_stream] != 1)) { 
-    echo 'This page has NOT granted stream.publish permissions to this app (OR this is an application profile page). ';
-    echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
-    echo $api_key;
-    echo '&v=1.0&next=';
-    echo 'http://apps.facebook.com/'. urlencode($wpbookAdminOptions['fb_app_url']);
-    echo '/?catch_permissions=true&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
-    echo $wpbookAdminOptions['fb_page_target'];
-    echo '" target="_top">Grant stream.publish for this page</a>. ';          
-  } else { 
-    echo 'This page has granted stream.publish permissions to this app. ';
-  }   
+    echo '<!-- perm was ' . $perm . ' -->';   
+    if (($perm == '') || ($perm[0][publish_stream] != 1)) { 
+      echo 'This page has NOT granted stream.publish permissions to this app (OR this is an application profile page). ';
+      echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
+      echo $api_key;
+      echo '&v=1.0&next=';
+      echo 'http://apps.facebook.com/'. urlencode($wpbookAdminOptions['fb_app_url']);
+      echo '/?catch_permissions=true&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
+      echo $wpbookAdminOptions['fb_page_target'];
+      echo '" target="_top">Grant stream.publish for this page</a>. ';          
+    } else { 
+      echo 'This page has granted stream.publish permissions to this app. ';
+    }
+ } // end if fb_page_target is set
 ?>
 </blockquote></p>
 <p>You are also listed as the admin of these pages:
