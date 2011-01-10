@@ -31,7 +31,7 @@
 function wpbook_import_comments() {
   global  $wpdb, $table_prefix;
   if(!class_exists('FacebookRestClient')) {
-    include_once(WP_PLUGIN_DIR . '/wpbook/client/facebook.php');
+    include_once(WP_PLUGIN_DIR . '/wpbook/includes/client/facebook.php');
   }
   $wpbookOptions = get_option('wpbookAdminOptions');
   if (!empty($wpbookOptions)) {
