@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.0.11
+Stable tag: 2.0.12
 Tested up to: 3.0.4
 Requires at least: 2.6
 
@@ -95,6 +95,10 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+=2.0.12 = 
+ * Fixed regression - cron was looking for FB client in wrong directory
+   (Thanks Olivier)
 
 = 2.0.11 = 
  * Removed "add to profile" tab options
