@@ -222,7 +222,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
       echo '<div style="float:right; margin-left: 3px; margin-bottom: 3px;  ">'. $invite_link .'</div>';	
     } 
     echo '<h3><a href="http://apps.facebook.com/'. $app_url .'/" target="_top">'. get_bloginfo('name') .'</a></h3>';
-    if($show_pages_menu == "true"){
+    if(($show_pages == "true") && ($show_pages_menu == "true")){
       echo '<div id="underlinemenu" class="clearfix"><ul><li>Pages:</li>';
       if ($exclude_pages_true == "true"){
         wp_list_pages("sort_column=menu_order&depth=1&title_li=&exclude=$exclude_pages_list");
