@@ -96,7 +96,7 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
- * Unhid the infinite_session_key in admin WPBook setting screen
+ * Moved and Unhid the infinite_session_key in admin WPBook setting screen
  * Fixed attribution line function which prevented %author% from working
 
 =2.0.12 = 
