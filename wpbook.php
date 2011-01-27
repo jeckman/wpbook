@@ -352,11 +352,16 @@ function wpbook_subpanel() {
       echo '<p>Facebook Canvas Page URL, ';
       echo '<strong>NOT</strong> INCLUDING "http://apps.facebook.com/" ';
       echo '<input type="text" name="fb_app_url" value="';
-      echo htmlentities($wpbookAdminOptions['fb_app_url']) .'" size="20" /></p>'; ?>
-	</div> <!-- END Required Options --> 
+      echo htmlentities($wpbookAdminOptions['fb_app_url']) .'" size="20" /></p>'; 
+      echo '<p>Infinite Session Key: ';
+      echo '<input type="text" name="infinite_session_key" value ="';
+      echo htmlentities($wpbookAdminOptions['infinite_session_key']) .'" size="45" /></p>';      
+      echo '<p>(This key is used for posting to your personal wall, and retrieving comments from your personal wall. ';
+      echo 'If you are not importing comments from a personal wall, it is not necessary. If you are importing comments ';
+      echo ' from a personal wall, and no Infinite Session Key is set, visit the check permissions link below in stream/wall options)</p>';
+  ?></div> <!-- END Required Options --> 
 	<pre><?php print_r(get_option('wpbook_admin_options')); ?></pre>
-	
-	
+		
 	<!-- START Stream Options --> 
 	<h3 class="div_wpbook_toggle" id="wpbook_stream">Stream/Wall Options <span class="div_wpbook_toggle_icon">+</span> </h3>
 	<div class="div_wpbook" id="div_wpbook_stream">
@@ -386,12 +391,6 @@ function wpbook_subpanel() {
         echo '" target="_new">Grant Permissions for this user</a>';
       } */
       echo '</p>';
-      echo '<p class="wpbook_option_set_1 sub_options">Infinite Session Key: ';
-      echo '<input type="text" name="infinite_session_key" value ="';
-      echo htmlentities($wpbookAdminOptions['infinite_session_key']) .'" size="45" /></p>';      
-      echo '<p class="wpbook_option_set_1 sub_options">(This key is used for posting to your personal wall, and retrieving comments from your personal wall. ';
-      echo 'If you are not importing comments from a personal wall, it is not necessary. If you are importing comments ';
-      echo ' from a personal wall, and no Infinite Session Key is set, visit the check permissions link above)</p>';
       echo '<p><input type="checkbox" name="stream_publish_pages" value="true" ';
       if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
         echo("checked");

@@ -96,7 +96,8 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
- * Fixed typo in attribution line function which prevented %author% from working
+ * Unhid the infinite_session_key in admin WPBook setting screen
+ * Fixed attribution line function which prevented %author% from working
 
 =2.0.12 = 
  * Fixed regression - cron was looking for FB client in wrong directory
