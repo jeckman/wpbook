@@ -972,8 +972,9 @@ function str_replace_once($needle, $replace, $haystack) {
   
 // attribution line 
 function wpbook_attribution_line($attribution_line,$author){
-  if($author='')
+  if($author == '') {
     $author = get_the_author();
+  }
   $attribution_line = str_replace('%author%',$author,$attribution_line);
   $attribution_line = str_replace('%blogname%',html_entity_decode(get_bloginfo('name'),ENT_QUOTES),$attribution_line);
   return $attribution_line;
