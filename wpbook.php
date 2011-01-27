@@ -375,7 +375,7 @@ function wpbook_subpanel() {
       echo ' id="set_1" > Publish new posts to YOUR Facebook Wall ';
       echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">YOUR Profile ID: <input type="text" name="fb_admin_target" value="';
       echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="15" /> <span id="grant_profile_permissions"></span>';  
-    /*//this should be done by the Javascript now if that doesn't work uncomment these lines  
+    /* this should be done by the Javascript now if that doesn't work uncomment these lines  
     if ($wpbookAdminOptions['fb_admin_target'] != '') {
         echo ' <a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
         echo $wpbookAdminOptions['fb_api_key'];
@@ -386,10 +386,10 @@ function wpbook_subpanel() {
         echo '" target="_new">Grant Permissions for this user</a>';
       } */
       echo '</p>';
-      echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">Infinite Session Key: ';
+      echo '<p class="wpbook_option_set_1 sub_options">Infinite Session Key: ';
       echo '<input type="text" name="infinite_session_key" value ="';
       echo htmlentities($wpbookAdminOptions['infinite_session_key']) .'" size="45" /></p>';      
-      echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">(This key is used for posting to your personal wall, and retrieving comments from your personal wall. ';
+      echo '<p class="wpbook_option_set_1 sub_options">(This key is used for posting to your personal wall, and retrieving comments from your personal wall. ';
       echo 'If you are not importing comments from a personal wall, it is not necessary. If you are importing comments ';
       echo ' from a personal wall, and no Infinite Session Key is set, visit the check permissions link above)</p>';
       echo '<p><input type="checkbox" name="stream_publish_pages" value="true" ';
