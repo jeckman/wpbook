@@ -45,7 +45,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     } else {
       $my_permalink = wpbook_always_filter_postlink(get_permalink($post_ID));
     }
-    $message = wpbook_attribution_line($wpbook_attribution_line,$my_post->author);
+    $message = wpbook_attribution_line($wpbook_attribution_line,$my_author);
   
     if(($my_post->post_excerpt) && ($my_post->post_excerpt != '')) {
       $wpbook_description = stripslashes(wp_filter_nohtml_kses(apply_filters('the_content',$my_post->post_excerpt)));
