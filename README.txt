@@ -35,20 +35,6 @@ Finally, WPBook can also import comments made on your wall (or the wall of
 a Fan page) in response to excerpts it has posted, and show those in your 
 WordPress blog as full comments. 
 
-WPBook *DOES NOT* (yet) do any of these:
-  - Post notifications into your users feeds (except for your posts to your wall) 
-    when you publish a post
-  - Post notifications back to a users feed when he/she posts a comment
-
-If you'd like to do these things, please investigate:
- - Simplaris Blogcast (http://apps.facebook.com/flogblog/)
- - The Facebook Notes application (for fan pages) 
-     (http://www.facebook.com/notes.php) 
- - The Sociable Facebook Connect plugin
-     (http://www.sociable.es/facebook-connect/)
- - The Wordbooker Plugin
-     (http://wordpress.org/extend/plugins/wordbooker/)
-
 As of 1.5, this plugin requires PHP 5. 
 
 == Installation ==
