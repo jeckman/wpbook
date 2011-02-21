@@ -41,9 +41,12 @@ $show_post_list = $wpbookAdminOptions['show_recent_post_list'];
 $recent_post_list_amount= $wpbookAdminOptions['recent_post_amount'];
 $wpbook_show_errors = $wpbookAdminOptions['show_errors'];
 
-//add gravatar/facebook avatar support
-add_filter( 'get_avatar','wpbook_get_facebook_avatar', 1, 3 );
- 
+  
+if($use_gravatar) { 
+  //add gravatar/facebook avatar support
+  add_filter( 'get_avatar','wpbook_get_facebook_avatar', 1, 3 );
+}
+  
 //write the custom header and footer 
 function custom_header_footer($custom_template_header_footer,$date,$time){
   $author = get_the_author();
