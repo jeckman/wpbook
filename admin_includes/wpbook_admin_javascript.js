@@ -136,28 +136,7 @@ position_link.change(function() {
 			}
 });
 //show hide custom header/footer depending on settings
-/*$('#header_footer_options').hide();
-switch ($("input[name=show_custom_header_footer]:checked").val()) {
-  case 'disabled':
-  	  $('#header_footer_options').fadeOut(500);
-     break;
-  case 'both':
-  	  $('#header_footer_options').fadeIn();
-	  $('#custom_header,#custom_footer').fadeIn();
-     break;
-  case 'header':
-  	  $('#header_footer_options').fadeIn();
-	  $('#custom_header').fadeIn();
-	  $('#custom_footer').hide();
-     break;
-  case 'footer':
-  	  $('#header_footer_options').fadeIn();
-	  $('#custom_footer').fadeIn();
-	  $('#custom_header').hide();
-     break;
-default: $('#header_footer_options').hide();
-  }
-*/
+
 
 //check status on change
 $("input[name='show_custom_header_footer']").change(function(){

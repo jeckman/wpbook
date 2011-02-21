@@ -96,10 +96,14 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
+= 2.0.13 = 
  * Moved and Unhid the infinite_session_key in admin WPBook setting screen
  * Fixed attribution line function which prevented %author% from working
+ * Added global gravatar setting - otherwise we only filter gravatars
+   inside facebook. (This prevents wpbook from interfering with other
+   gravatars in themes outside fb). 
 
-=2.0.12 = 
+= 2.0.12 = 
  * Fixed regression - cron was looking for FB client in wrong directory
    (Thanks Olivier)
 

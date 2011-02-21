@@ -120,7 +120,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                          $show_errors,$promote_external,$import_comments,
                          $approve_imported_comments,$num_days_import,
                          $imported_comments_email,$infinite_session_key,
-                         $attribution_line,$wpbook_enable_debug) {
+                         $attribution_line,$wpbook_enable_debug,$wpbook_use_global_gravatar) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -162,7 +162,8 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'imported_comments_email' => $imported_comments_email,
                               'infinite_session_key' => $infinite_session_key,
                               'attribution_line' => $attribution_line,
-                              'wpbook_enable_debug' => $wpbook_enable_debug
+                              'wpbook_enable_debug' => $wpbook_enable_debug,
+                              'wpbook_use_global_gravatar' => $wpbook_use_global_gravatar
                               );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
@@ -256,6 +257,7 @@ function wpbook_subpanel() {
       $infinite_session_key = $_POST['infinite_session_key']; 
       $attribution_line = $_POST['attribution_line'];
       $wpbook_enable_debug = $_POST['wpbook_enable_debug'];
+      $wpbook_use_global_gravatar = $_POST['wpbook_use_global_gravatar'];
       // Handle custom gravatar_deault code modified from wp-admin/options.php
       if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
         $_POST['gravatar_default'] = urlencode($_POST['gravatar_rating_custom']);
@@ -288,7 +290,7 @@ function wpbook_subpanel() {
                     $stream_publish_pages,$show_errors,$promote_external,
                     $import_comments,$approve_imported_comments,$num_days_import,
                     $imported_comments_email,$infinite_session_key,
-                    $attribution_line,$wpbook_enable_debug);
+                    $attribution_line,$wpbook_enable_debug,$wpbook_use_global_gravatar);
       $flash = "Your settings have been saved. ";
     } elseif (($wpbookAdminOptions['fb_api_key'] != "") || ($wpbookAdminOptions['fb_secret'] != "") || ($wpbookAdminOptions['fb_app_url'] != "")
             || (!empty($_POST['fb_api_key']))  || (!empty($_POST['fb_secret'])) || (!empty($_POST['fb_app_url']))){
@@ -306,7 +308,7 @@ function wpbook_subpanel() {
         $gravatar_default = WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif';
         setAdminOptions(1, null,null,null,null,null,true,true,true,true,true,top,null,null,"F j, Y","g:i a",
                         true,null,null,null,disabled,null,"g",$gravatar_default,null,null,null,null,true,true,10,
-                        false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null);
+                        false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null,false);
       }
       if ($flash != '') echo '<div id="message"class="updated fade">'
         . '<p>' . $flash . '</p></div>'; 
@@ -327,11 +329,13 @@ function wpbook_subpanel() {
 			<a href="http://wpbook.net/"><img src="<?php echo $plugin_url; ?>/admin_includes/images/wpbook_logo.png"></a>
 		</div>
 		<div class="wpbook_top_text">
-			      <p>This plugin allows you to embed your blog into the Facebook canvas, allows Facebook users to comment on or share your blog posts, cross-posts your 
-			      blog posts to the wall of your profile, a fan page, an application profile page, or a group page, and enables users (yourself and other users) to add a tab for
-			      your posts to their profile. It also imports comments made against wall posts which originated in WordPress.</p>
-			      <p><a href="http://wpbook.net/docs/install/" target="_blank">Detailed instructions</a></p>
-		</div>
+			      <p>This plugin allows you to embed your blog into the Facebook canvas,
+  allows Facebook users to comment on or share your blog posts, cross-posts your 
+  blog posts to the wall of your profile, a fan page, an application profile page,
+  or a group page, and enables you to add a tab for your fan page. It also imports
+  comments made against wall posts which originated in WordPress.</p>
+<p><a href="http://wpbook.net/docs/install/" target="_blank">Detailed instructions</a></p>
+  </div>
 	</div>
 	<!-- START Required Options --> 
 	<h3 class="div_wpbook_toggle" id="wpbook_required">Required Settings <span class="div_wpbook_toggle_icon">+</span></h3>
@@ -479,7 +483,7 @@ echo '<br/><input type="checkbox" name="use_gravatar" value="true" ';
       if( htmlentities($wpbookAdminOptions['use_gravatar']) == "true") {
         echo("checked");
       }
-      echo ' id="set_5" > Show Gravatar Images Inside Facebook';
+      echo ' id="set_5" > Show Gravatar Images';
       //gravatar rating
       echo '<p class="wpbook_hidden wpbook_option_set_5 sub_child_options"> Gravatar Rating: ';
       $gravatar_ratings = array('G','PG','R','X');
@@ -519,9 +523,16 @@ echo '<p class="wpbook_hidden wpbook_option_set_5 sub_child_options"> Gravatar D
       echo '/> Custom: 
             <p class="wpbook_hidden wpbook_option_set_5 sub_child_options">  <input type="text" size="70" class="gravatar_rating_custom" name="gravatar_rating_custom"'; 
       if($gravatar_defaults_custom === TRUE){echo 'value= '. urldecode($wpbookAdminOptions['gravatar_default']);}
-      echo'/> ';
+      echo'/></p>';
+      //gravatar outside Facebook
+      echo'<p class="wpbook_hidden wpbook_option_set_5 sub_child_options"<input type="checkbox" name="wpbook_use_global_gravatar" value="true"';
+      if( htmlentities($wpbookAdminOptions['wpbook_use_global_gravatar']) == "true") {
+        echo("checked");
+      }
+      echo '> Use WPBook Gravatar Globally (this will overwrite WordPress Gravatar settings and also show Facebook avatars outside of Facebook)';
       echo' </p></div>';
-       echo '<h4>Socialize Options: </h4>';
+      echo '<h4>Socialize Options: </h4>';
+      
       // Here starts the "invite friends" section
       echo '<p> <input type="checkbox" name="invite_friends" value = "true"';
       if( htmlentities($wpbookAdminOptions['invite_friends']) == "true"){ 
@@ -1141,7 +1152,6 @@ function wpbook_query_vars($vars) {
 }
 
 //show facebook avatar as gravatar
-
 function wpbook_get_facebook_avatar($avatar, $comment, $size="50") {
 	$wpbookOptions = get_option('wpbookAdminOptions');
       if (!empty($wpbookOptions)) {
@@ -1172,6 +1182,40 @@ function wpbook_get_facebook_avatar($avatar, $comment, $size="50") {
       return $avatar;
 }
 
+// show facebook avatar as gravatar even outside facebook
+function wpbook_get_global_facebook_avatar($avatar, $comment, $size="50") {
+  $wpbookOptions = get_option('wpbookAdminOptions');
+  if (!empty($wpbookOptions)) {
+    foreach ($wpbookOptions as $key => $option)
+      $wpbookAdminOptions[$key] = $option;
+  }
+  if(($wpbookAdminOptions['use_gravatar'] =="true") && ($wpbookAdminOptions['wpbook_use_global_gravatar'] =="true")){
+    $author_url = get_comment_author_url();
+    $email = get_comment_author_email();
+    $default = $wpbookAdminOptions['gravatar_default'];
+    $rating=$wpbookAdminOptions['gravatar_rating'];
+    $size="50";
+    if(preg_match("@^(?:http://)?(?:www\.)?facebook@i",trim($author_url))){
+      $parse_author_url = (parse_url($author_url));
+      $parse_author_url_q = $parse_author_url['query'];
+      if(preg_match('/id[=]([0-9]*)/', $parse_author_url_q, $match)){
+        $fb_id = "/".$match[1];
+      }
+      else { 
+        $fb_id = $parse_author_url['path'];
+      }
+      $grav_url= "http://graph.facebook.com".$fb_id."/picture?type=square";
+    }
+    else {
+      $grav_url = "http://www.gravatar.com/avatar/" . md5(strtolower($email)).
+        "?d=" . $default."&s=".$size."&r=".$rating;
+    }
+    $grav_img = "<img src='".$grav_url."'/>";
+    return $grav_img; 
+  }
+  return $avatar;
+}
+  
 /**
   * Thanks Otto - http://lists.automattic.com/pipermail/wp-hackers/2009-July/026759.html
   */
@@ -1191,8 +1235,9 @@ add_filter('post_link','fb_filter_postlink',1,1);
 add_filter('page_link','fb_filter_postlink',1,1); 
 add_filter('get_pagenum_link','fb_filter_postlink_no_qs',1,1); 
 
-//add gravatar/facebook avatar support
-add_filter( 'get_avatar','wpbook_get_facebook_avatar', 1, 3 );
+//add gravatar/facebook avatar support outside facebook
+//filter for inside facebook is in the theme/config_wp_settings.php
+add_filter('get_avatar','wpbook_get_global_facebook_avatar', 1, 3 ); 
 
 /* you can't actually filter the tag_link and category_links this way
  * because if you do, wordpress redirects to /app_url/tag/yourtag whenever
