@@ -2,7 +2,7 @@
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
 Stable tag: 2.0.12
-Tested up to: 3.0.4
+Tested up to: 3.0.5
 Requires at least: 2.6
 
 Plugin to embed Wordpress Blog into Facebook Platform.
@@ -102,6 +102,9 @@ as well as some other files for processing comments and the like.
  * Added global gravatar setting - otherwise we only filter gravatars
    inside facebook. (This prevents wpbook from interfering with other
    gravatars in themes outside fb). 
+ * Added DONOTCACHEPAGE constant when pages are viewed inside facebook - 
+   this should enable WPBook to better coordinate with wp-super-cache. 
+ * Added initial support for iFrame based tabs - still needs work
 
 = 2.0.12 = 
  * Fixed regression - cron was looking for FB client in wrong directory

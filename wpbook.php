@@ -6,8 +6,8 @@ Date: 2010, September 11th
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 2.0.12
-Stable tag: 2.0.12
+Version: 2.0.13
+Stable tag: 2.0.13
 
 */
   
@@ -525,7 +525,7 @@ echo '<p class="wpbook_hidden wpbook_option_set_5 sub_child_options"> Gravatar D
       if($gravatar_defaults_custom === TRUE){echo 'value= '. urldecode($wpbookAdminOptions['gravatar_default']);}
       echo'/></p>';
       //gravatar outside Facebook
-      echo'<p class="wpbook_hidden wpbook_option_set_5 sub_child_options"<input type="checkbox" name="wpbook_use_global_gravatar" value="true"';
+        echo'<p class="wpbook_hidden wpbook_option_set_5 sub_child_options"> <input type="checkbox" name="wpbook_use_global_gravatar" value="true"';
       if( htmlentities($wpbookAdminOptions['wpbook_use_global_gravatar']) == "true") {
         echo("checked");
       }
