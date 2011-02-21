@@ -855,7 +855,7 @@ function check_facebook() {
     return true;
 	}
   /* need to check for signed_request to trap new iframes */ 
-  if ((isset($_POST['signed_request']) || isset($_GET['signed_request'])) {
+  if (isset($_POST['signed_request']) || isset($_GET['signed_request'])) {
     defined('DONOTCACHEPAGE') or define('DONOTCACHEPAGE', 'true'); 
       return true; 
   }
