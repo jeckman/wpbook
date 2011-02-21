@@ -850,7 +850,7 @@ function check_facebook() {
 	if (!isset($_SERVER["HTTP_USER_AGENT"])) {
 		return false;
 	}
-	if ((isset($_GET['fb_sig_in_iframe']) || isset($_GET['fb_force_mode'])) {  
+	if (isset($_GET['fb_sig_in_iframe']) || isset($_GET['fb_force_mode'])) {  
 		defined('DONOTCACHEPAGE') or define('DONOTCACHEPAGE', 'true'); 
     return true;
 	}
