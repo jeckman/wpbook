@@ -850,9 +850,15 @@ function check_facebook() {
 	if (!isset($_SERVER["HTTP_USER_AGENT"])) {
 		return false;
 	}
-	if (isset($_GET['fb_sig_in_iframe']) || isset($_GET['fb_force_mode'])) {  
-		return true;
+	if ((isset($_GET['fb_sig_in_iframe']) || isset($_GET['fb_force_mode'])) {  
+		defined('DONOTCACHEPAGE') or define('DONOTCACHEPAGE', 'true'); 
+    return true;
 	}
+  /* need to check for signed_request to trap new iframes */ 
+  if ((isset($_POST['signed_request']) || isset($_GET['signed_request'])) {
+    defined('DONOTCACHEPAGE') or define('DONOTCACHEPAGE', 'true'); 
+      return true; 
+  }
 	return false;
 }
 
