@@ -14,13 +14,12 @@ $allow_comments = $wpbookAdminOptions['allow_comments'];
 $use_gravatar = $wpbookAdminOptions['use_gravatar'];
 $gravatar_rating = $wpbookAdminOptions['gravatar_rating'];
 $gravatar_default = $wpbookAdminOptions['gravatar_default'];
+ 
 
-$facebook = new Facebook($api_key, $secret);
-$user = $facebook->require_login(); 
-$rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = ".$user); 
+  
+$me = $facebook->api('/me'); // get user info
 
-?>
-
+  ?>
 <div class="comments-post">
 <?php if ($comments) : ?>
 	<span class="comments"><b>
@@ -69,7 +68,7 @@ $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = "
 
 <!-- <?php echo $allow_comments . ' ' . $rs[0]['name']; ?> -->
 <?php if (('open' == $post-> comment_status) && ($allow_comments == "true")) : ?>
-<strong>  <?php echo $rs[0]['name']; ?>, comment from your Facebook Profile, 
+<strong>  <?php echo $me["name"]; ?>, comment from your Facebook Profile, 
 
 </strong>
 	<div id="commentform-container">
@@ -86,10 +85,10 @@ $rs = $facebook->api_client->fql_query("SELECT name, pic FROM user WHERE uid = "
 		<p><input name="submit" type="submit" id="submit" tabindex="3" 
       value="Submit Comment" class="inputsubmit" />
 		<input type="hidden" name="author" id="author" value="
-      <?php echo $rs[0][name]; ?>" />
+      <?php echo $me["name"]; ?>" />
 		<input type="hidden" name="comment_post_ID" value="<?php echo $id; ?>" />
 		<input type="hidden" name="url" id="url" value="
-      <?php echo 'http://www.facebook.com/profile.php?id=' . $user; ?>" />
+      <?php echo $me["link"]; ?>" />
 		<?php do_action('comment_form', $post->ID); ?>
 		</form>
 	</div>

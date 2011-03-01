@@ -348,7 +348,7 @@ function wpbook_subpanel() {
       <?php
       echo '<code>' . get_bloginfo('url') . '</code></p>'; 
       echo '<form action="'. $_SERVER["REQUEST_URI"] .'" method="post">'; 
-      echo '<p>Facebook API Key: <input type="text" name="fb_api_key" value="';
+      echo '<p>Facebook App ID: <input type="text" name="fb_api_key" value="';
       echo htmlentities($wpbookAdminOptions['fb_api_key']) .'" size="35" /></p>';
       echo '<p>Facebook Secret: ';
       echo '<input type="text" name="fb_secret" value="';

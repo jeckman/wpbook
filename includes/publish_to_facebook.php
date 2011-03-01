@@ -71,35 +71,39 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       $my_image = $thumb[0];
     }
     if(!empty($my_image)) {
-      $attachment = array( 'name' => $my_title,
-                        'href' => $my_permalink,
-                        'description' => $wpbook_description,  
-                        'comments_xid' => $post_ID, 
-                        'media' => array(array('type' => 'image', 
-                                               'src' => $my_image, 
-                                               'href' => $my_permalink,
-                                               )
-                                         ), 
-                        ); 
+      /* message, picture, link, name, caption, description, source */
+      
+      $attachment = array( 
+                          'access_token' => '129625873775358|43619475b157e93215521953-1825518|_Mprwy3amkgAhNLAWWcAC52NrqA',
+                          'name' => $my_title,
+                          'link' => $my_permalink,
+                          'description' => $wpbook_description,  
+                          'picture' => array(array('type' => 'image', 
+                                                   'src' => $my_image, 
+                                                   'href' => $my_permalink,
+                                                   )
+                                             ), 
+                          ); 
     } else {
-      $attachment = array( 'name' => $my_title,
-                        'href' => $my_permalink,
-                        'description' => $wpbook_description,  
-                        'comments_xid' => $post_ID, 
-                        ); 
+      $attachment = array( 
+                          'access_token' => '129625873775358|43619475b157e93215521953-1825518|_Mprwy3amkgAhNLAWWcAC52NrqA',
+                          'name' => $my_title,
+                          'link' => $my_permalink,
+                          'description' => $wpbook_description,  
+                          'comments_xid' => $post_ID, 
+                          ); 
     }
     $action_links = array( array('text' => 'Read More',
                                'href' => $my_permalink
                                )
                         ); 
-    $attachment = json_encode($attachment); 
-    $action_links = json_encode($action_links); 
   
     if($stream_publish == "true") {
       $fb_response = '';
       try{
-        $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_admin,$target_admin);
-      } catch (Exception $e) {
+        // need new format for SDK API
+        $fb_response = $facebook->api('/'. $target_admin .'/feed', 'POST', $attachment);     
+      } catch (FacebookApiException $e) {
         if($wpbook_show_errors) {
           $wpbook_message = 'Caught exception in stream publish for user: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
           wp_die($wpbook_message,'WPBook Error');
@@ -122,7 +126,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       try {
         $my_fields = "type";
         // function signature from client: $page_ids, $fields, $uid, $type
-        $fb_page_type_array = $facebook->api_client->pages_getinfo($target_page,'type',$target_admin,'');
+        // $fb_page_type_array = $facebook->api_client->pages_getinfo($target_page,'type',$target_admin,'');
       } catch (Exception $e) {
         if($wpbook_show_errors) {
           $wpbook_message = 'Caught exception in getting page type for page: ' 
@@ -136,10 +140,10 @@ function wpbook_safe_publish_to_facebook($post_ID) {
         $fb_page_type = "PAGE";
       }
       // post to page
-      $fb_response = '';
+      //$fb_response = '';
       if ($fb_page_type == "APPLICATION") {
         try{
-          $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_page,$target_page);
+          //$fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_page,$target_page);
         } catch (Exception $e) {
           if($wpbook_show_errors) {
             $wpbook_message = 'Caught exception in actually publishing to APPLICATION type page '. $target_page .': '. $e->getMessage() .' Error code: '. $e->getCode(); 
@@ -149,7 +153,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       } 
       if ($fb_page_type == "GROUP") {
         try{
-          $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_page,$target_admin);
+          //$fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,$target_page,$target_admin);
         } catch (Exception $e) {
           if($wpbook_show_errors) {
             $wpbook_message = 'Caught exception in actually publishing to GROUP type page '. $target_page .': '. $e->getMessage() .' Error code: '. $e->getCode(); 
@@ -159,7 +163,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       } 
       if (($fb_page_type != "GROUP") && ($fb_page_type != "APPLICATION")){
         try{
-          $fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$target_page);
+          //$fb_response = $facebook->api_client->stream_publish($message, $attachment, $action_links,'',$target_page);
         } catch (Exception $e) {
           if($wpbook_show_errors) {
             $wpbook_message = 'Caught exception in actually publishing to page '. $target_page .': '. $e->getMessage() .' Error code: '. $e->getCode(); 

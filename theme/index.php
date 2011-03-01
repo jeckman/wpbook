@@ -71,53 +71,58 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
   <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
   <p>This page is where you can check and grant extended permissions, which enable WPBook to 
    publish to your personal wall and/or to the walls of fan pages.</p>
-  <p>Your userid is <?php echo $user; ?> </p>
+  <p>Your userid is <?php echo $data["user_id"]; ?> </p>
   <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
-  <p><a href="
-<?php 
-  $my_permissions_url = 'http://www.facebook.com/connect/prompt_permissions.php?api_key='.
-                        $api_key .'&display=popup&ext_perm=read_stream,publish_stream,offline_access&extern=1'.
-                        '&next=http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) 
-                        .'/?catch_permissions=true';
-
+<p><a href="
+<?php
+  $my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
+    . '&redirect_uri=http://apps.facebook.com/' . $app_url .'/&scope=offline_access,read_stream,publish_stream';
   echo $my_permissions_url;
-?>
-" target="_top">Grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
-<p>You've indicated you wish to publish to this page: <?php echo $wpbookAdminOptions['fb_page_target']; ?></p>
-<p><blockquote>
-<?php 
-  if ($wpbookAdminOptions['fb_page_target'] != '') {
-    $permissions_fql = 'SELECT publish_stream FROM permissions WHERE uid = '. $wpbookAdminOptions['fb_page_target'] .' ';
-    try {
-      $perm = $facebook->api_client->fql_query($permissions_fql);
-    } catch (Exception $e) {
-      if ($wpbook_show_errors) {
-        $wpbook_message = 'Caught exception in fql_query: ' . $e->getMessage();
-        wp_die($wpbook_message,'WPBook Error');
-      }
+?>" target="_top">Grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
+<?php
+
+if(!empty($wpbookAdminOptions['fb_page_target'])) {
+  echo "<p>You've indicated you wish to publish to this page: ". $wpbookAdminOptions['fb_page_target'] ."</p>";
+  echo "<p><blockquote>";
+  $permissions_fql = 'SELECT publish_stream FROM permissions WHERE uid = '. $wpbookAdminOptions['fb_page_target'] .' ';
+  $params = array(
+                  'method' => 'fql.query',
+                  'query' => $permissions_fql,
+                  );
+  try {
+    $perm = $facebook->api($params);
+  } catch (Exception $e) {
+    if ($wpbook_show_errors) {
+      $wpbook_message = 'Caught exception in fql_query: ' . $e->getMessage();
+      wp_die($wpbook_message,'WPBook Error');
     }
-    echo '<!-- perm was ' . $perm . ' -->';   
-    if (($perm == '') || ($perm[0][publish_stream] != 1)) { 
-      echo 'This page has NOT granted stream.publish permissions to this app (OR this is an application profile page). ';
-      echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
-      echo $api_key;
-      echo '&v=1.0&next=';
-      echo 'http://apps.facebook.com/'. urlencode($wpbookAdminOptions['fb_app_url']);
-      echo '/?catch_permissions=true&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
-      echo $wpbookAdminOptions['fb_page_target'];
-      echo '" target="_top">Grant stream.publish for this page</a>. ';          
-    } else { 
-      echo 'This page has granted stream.publish permissions to this app. ';
-    }
- } // end if fb_page_target is set
+  }
+    
+  if (($perm == '') || ($perm[0][publish_stream] != 1)) {
+    echo 'This page has NOT granted stream.publish permissions to this app (OR this is an application profile page). ';
+    echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
+    echo $api_key;
+    echo '&v=1.0&next=';
+    echo 'http://apps.facebook.com/'. urlencode($wpbookAdminOptions['fb_app_url']);
+    echo '/?catch_permissions=true&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
+    echo $wpbookAdminOptions['fb_page_target'];
+    echo '" target="_top">Grant stream.publish for this page</a>. ';          
+  } else { 
+    echo 'This page has granted stream.publish permissions to this app. ';
+  }
+} // end if fb_page_target is set
 ?>
 </blockquote></p>
 <p>You are also listed as the admin of these pages:
   <ul>
   <?php 
   $query = "SELECT name, page_id, has_added_app FROM page WHERE page_id IN (SELECT name, page_id FROM page WHERE page_id IN (SELECT page_id FROM page_admin WHERE uid = $user))";
+  $params = array(
+                    'method' => 'fql.query',
+                    'query' => $query,
+                    );
   try {
-    $second_result = $facebook->api_client->fql_query($query);
+    $second_result = $facebook->api($params);
   } catch (Exception $e) {
     if ($wpbook_show_errors) {
       $wpbook_message = 'Caught exception in second_result query: ' . $e->getMessage();
@@ -132,8 +137,12 @@ if(isset($_GET['is_permissions'])) { // we're looking for extended permissions
         $perm = '';
         $permissions_fql = 'SELECT publish_stream FROM permissions WHERE uid = '.$page['page_id'].' ';
         //echo '<!-- permissions_fql was ' . $permissions_fql . ' -->'; 
+        $params = array(
+                        'method' => 'fql.query',
+                        'query' => $permissions_fql,
+                        );
         try {
-          $perm = $facebook->api_client->fql_query($permissions_fql);
+          $perm = $facebook->api($params);
         } catch (Exception $e) {
           if ($wpbook_show_errors) {
             $wpbook_message = 'Caught exception in fql_query: ' . $e->getMessage();
@@ -193,6 +202,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
       xmlns:fb="http://www.facebook.com/2008/fbml">
   <head>
   <title><?php bloginfo('name'); ?> :: Facebook Blog Application</title>
+<?php echo 'access token is ' . $access_token . ' '; ?>
   <?php if ( is_singular() ) wp_enqueue_script( 'comment-reply' ); ?>
   <?php wp_head(); ?>
   <link rel="stylesheet" href="<?php echo WP_PLUGIN_URL ?>/wpbook/theme/default/style.css" 
@@ -201,6 +211,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))) {  // this i
   </head>
   <body>
   <?php
+  echo "<!-- access token is " . $access_token . " -->";
   if(isset($_GET['fb_page_id'])) { 
     echo " <div><h3>Thank You!</h3> <p>This application has been added to your page's profile.</p>";
     echo "<p>You can return to your page to see the updated information.</p>";
