@@ -2,8 +2,8 @@
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
 Stable tag: 2.0.13
-Tested up to: 3.0.5
-Requires at least: 2.6
+Tested up to: 3.1
+Requires at least: 2.9.0
 
 Plugin to embed Wordpress Blog into Facebook Platform.
 
@@ -81,6 +81,16 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.1 beta 1=
+ * Changed to Facebook Graph API, PHP SDK
+   * Posting to Profile Wall
+   * Posting to Page, App, or Group Wall
+   * OAuth authentication for Canvas
+ * Upped minimum WordPress to 2.9.0
+ * Using "featured_image" thumbnails for posting to FB wall
+ * Added Facebook Like button replacing "share" button
+   * Points to external link
 
 = 2.0.13 = 
  * Moved and Unhid the infinite_session_key in admin WPBook setting screen

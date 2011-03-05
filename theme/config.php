@@ -17,17 +17,8 @@ $data = json_decode(base64_decode(strtr($payload, '-_', '+/')), true);
 if (empty($data["user_id"])) {
   echo("<script> top.location.href='" . $auth_url . "'</script>");
 } else {
-  echo ("Welcome User: " . $data["user_id"]);
+  // need to store this somewhere, if user_id = admin
+  $access_token = $data["oauth_token"];   
 } 
-  
-$access_token = $data["oauth_token"];   
-
-  echo $data["oauth_token"];
-  
-$facebook = new Facebook(array(
-                         'appId'  => $api_key,
-                         'secret' => $secret,
-                         'cookie' => true,
-));
-  
+    
 ?>

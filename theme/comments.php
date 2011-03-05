@@ -15,7 +15,16 @@ $use_gravatar = $wpbookAdminOptions['use_gravatar'];
 $gravatar_rating = $wpbookAdminOptions['gravatar_rating'];
 $gravatar_default = $wpbookAdminOptions['gravatar_default'];
  
+/*
+ * Need another facebook object here as we're out of variable scope  
+ * for the theme itself 
+ */
 
+$facebook = new Facebook(array(
+                                'appId'  => $api_key,
+                                'secret' => $secret,
+                                'cookie' => true,
+                                ));  
   
 $me = $facebook->api('/me'); // get user info
 

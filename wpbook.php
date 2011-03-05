@@ -357,19 +357,14 @@ function wpbook_subpanel() {
       echo '<strong>NOT</strong> INCLUDING "http://apps.facebook.com/" ';
       echo '<input type="text" name="fb_app_url" value="';
       echo htmlentities($wpbookAdminOptions['fb_app_url']) .'" size="20" /></p>'; 
-      echo '<p>Infinite Session Key: ';
-      echo '<input type="text" name="infinite_session_key" value ="';
-      echo htmlentities($wpbookAdminOptions['infinite_session_key']) .'" size="45" /></p>';      
-      echo '<p>(This key is used for posting to your personal wall, and retrieving comments from your personal wall. ';
-      echo 'If you are not importing comments from a personal wall, it is not necessary. If you are importing comments ';
-      echo ' from a personal wall, and no Infinite Session Key is set, visit the check permissions link below in stream/wall options)</p>';
   ?></div> <!-- END Required Options --> 
 	<pre><?php print_r(get_option('wpbook_admin_options')); ?></pre>
 		
 	<!-- START Stream Options --> 
 	<h3 class="div_wpbook_toggle" id="wpbook_stream">Stream/Wall Options <span class="div_wpbook_toggle_icon">+</span> </h3>
 	<div class="div_wpbook" id="div_wpbook_stream">
-	<?php if(empty($wpbookAdminOptions['fb_app_url']) || empty($wpbookAdminOptions['fb_secret']) || empty($wpbookAdminOptions['fb_api_key'])) {  
+	<?php 
+      if(empty($wpbookAdminOptions['fb_app_url']) || empty($wpbookAdminOptions['fb_secret']) || empty($wpbookAdminOptions['fb_api_key'])) {  
         echo '<p><strong>Once your Facebook application is established by filling out the required information, return to edit streaming options.</strong></p>';
         } 
         else {  
@@ -383,17 +378,7 @@ function wpbook_subpanel() {
       }
       echo ' id="set_1" > Publish new posts to YOUR Facebook Wall ';
       echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">YOUR Profile ID: <input type="text" name="fb_admin_target" value="';
-      echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="15" /> <span id="grant_profile_permissions"></span>';  
-    /* this should be done by the Javascript now if that doesn't work uncomment these lines  
-    if ($wpbookAdminOptions['fb_admin_target'] != '') {
-        echo ' <a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
-        echo $wpbookAdminOptions['fb_api_key'];
-        echo '&v=1.0&next=http://apps.facebook.com/';
-        echo htmlentities($wpbookAdminOptions['fb_app_url']);
-        echo '/?catch_permissions=true&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
-        echo $wpbookAdminOptions['fb_admin_target'];
-        echo '" target="_new">Grant Permissions for this user</a>';
-      } */
+      echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="15" /> ';  
       echo '</p>';
       echo '<p><input type="checkbox" name="stream_publish_pages" value="true" ';
       if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
@@ -401,17 +386,7 @@ function wpbook_subpanel() {
       }
 echo ' id="set_2" > Publish new posts to the Wall of this Fan Page, Application Profile Page, or Group: ';
 echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">PageID: <input type="text" name="fb_page_target" value="';
-      echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="15" /> &nbsp; <span id="grant_page_permissions"></span>';
-      /* //this should be done by the Javascript now if that doesn't work uncomment these lines
-      if ($wpbookAdminOptions['fb_page_target'] != '') {
-        echo ' <a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
-        echo $wpbookAdminOptions['fb_api_key'];
-        echo '&v=1.0&next=http://apps.facebook.com/';
-        echo htmlentities($wpbookAdminOptions['fb_app_url']);
-        echo '/?catch_permissions=true&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
-        echo $wpbookAdminOptions['fb_page_target'];
-        echo '" target="_new">Grant Permissions for this page</a>';
-      }*/
+      echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="15" /> ';
       echo '</p>';
       echo '<p><input type="checkbox" name="promote_external" value="true" ';
       if( htmlentities($wpbookAdminOptions['promote_external']) == "true") {
