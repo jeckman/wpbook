@@ -82,7 +82,7 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
-= 2.1 beta 1=
+= 2.1b1=
  * Changed to Facebook Graph API, PHP SDK
    * Posting to Profile Wall
    * Posting to Page, App, or Group Wall
@@ -91,7 +91,9 @@ as well as some other files for processing comments and the like.
  * Using "featured_image" thumbnails for posting to FB wall
  * Added Facebook Like button replacing "share" button
    * Points to external link
-
+ * Updated comment import for new Graph API
+ * Updated permissions checking page for storing access_token in user_meta
+ 
 = 2.0.13 = 
  * Moved and Unhid the infinite_session_key in admin WPBook setting screen
  * Fixed attribution line function which prevented %author% from working
