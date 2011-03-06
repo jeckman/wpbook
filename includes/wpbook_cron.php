@@ -30,8 +30,8 @@
 */ 
 function wpbook_import_comments() {
   global  $wpdb, $table_prefix;
-  if(!class_exists('FacebookRestClient')) {
-    include_once(WP_PLUGIN_DIR . '/wpbook/includes/client/facebook.php');
+  if(!class_exists('Facebook')) {  
+    include_once(WP_PLUGIN_DIR . '/wpbook/includes/client/facebook.php');  
   }
   $wpbookOptions = get_option('wpbookAdminOptions');
   if (!empty($wpbookOptions)) {
@@ -55,12 +55,13 @@ function wpbook_import_comments() {
   $api_key = $wpbookAdminOptions['fb_api_key'];
   $secret  = $wpbookAdminOptions['fb_secret'];
   $fb_user = $wpbookAdminOptions['fb_admin_target'];
-  $session_key = $wpbookAdminOptions['infinite_session_key'];
   
-  $facebook = new Facebook($api_key, $secret);
-  $facebook->api_client->user = $fb_user;
-  $facebook->api_client->session_key = $session_key;
-  $facebook->api_client->expires = 0; 
+  $facebook = new Facebook(array(
+                                 'appId'  => $api_key,
+                                 'secret' => $secret,
+                                 'cookie' => true,
+                                 )
+                           );
   
   if(DEBUG) {
     $fp = fopen($debug_file, 'a');
@@ -143,99 +144,44 @@ function wpbook_import_comments() {
               $my_timestamp_results = $wpdb->get_row("Select meta_value from $wpdb->postmeta WHERE meta_key LIKE '%_wpbook_page_stream_time%' AND post_id = '$wordpress_post_id'",ARRAY_A);
             }
             $my_timestamp = $my_timestamp_results[meta_value];
-            /*
-             * Testing multiple ways of doing things here - the first uses the comment table
-             * in FQL, the second uses the stream table. 
-             * So far both are inconsistent at best. 
-             */
-            if(WPBOOK_COMMENT_METHOD == 'comment') {
-              $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE post_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC"; 
-              if(DEBUG) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : FBcomments, fbsql is $fbsql \n";
-                fwrite($fp, $debug_string);
-              }
-              try {
-                $fbcommentslist=$facebook->api_client->call_method('facebook.fql.query',
-                                                             array('query' => $fbsql) 
-                                                             );
-              } catch (Exception $e) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : Caught exception: ". $e->getMessage() ." Error code: ". $e->getCode() ."\n";
-                fwrite($fp, $debug_string);
-                return;
-              }
-              if(DEBUG) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : FBcommentslist is $fbcommentslist \n";
-                fwrite($fp, $debug_string);
-              }
-            } //end of comment method
-            /*
-             * This way uses the "stream" table in Facebook and then parses form there
-             */
-            if(WPBOOK_COMMENT_METHOD == 'stream') {
-              $fbsql="SELECT comments FROM stream WHERE post_id='$mp->meta_value'"; 
-              if(DEBUG) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : FBcomments, fbsql is $fbsql \n";
-                fwrite($fp, $debug_string);
-              }
-              try {
-                $fbstream=$facebook->api_client->call_method('facebook.fql.query',
-                                                             array('query' => $fbsql) 
-                                                             );
-              } catch (Exception $e) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : Caught exception: ". $e->getMessage() ." Error code: ". $e->getCode() ."\n";
-                fwrite($fp, $debug_string);
-                return;
-              }
-              if(DEBUG) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : fbstream is ". print_r($fbstream,true) ." and type is ". gettype($fbstream) ." \n";
-                fwrite($fp, $debug_string);
-              }
-              $fbcomments = $fbstream[0]['comments'];
-              if(DEBUG) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : fbcomments is ". print_r($fbcomments,true) ." and type is ". gettype($fbcomments) ." \n";
-                fwrite($fp, $debug_string);
-              }
-              $fb_unfiltered_commentslist = $fbcomments['comment_list']; // not yet filtered by time
-              foreach ($fb_unfiltered_commentslist as $comment) {
-                if($comment[time] > $my_timestamp) {
-                  $fbcommentslist[] = $comment;
-                }
-              } // end foreach
-            } // end stream or comment method
+            
             /* 
-             * This method uses stream.getComments
+             * now we fetch comments since that timestamp, using FQL
+             * which I've found the most reliable
              */
-            if(WPBOOK_COMMENT_METHOD == 'getComments') {
-              try {
-                //$fbstream = $facebook->api_client->stream_getComments($mp->meta_value);
-                $fbstream = $facebook->api_client->stream_get($uid,$mp->meta_value, '', '', 20, 'network', '');
-
-              } catch (Exception $e) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : Caught exception: ". $e->getMessage() ." Error code: ". $e->getCode() ."\n";
-                fwrite($fp, $debug_string);
-                return;
-              }
-              if(DEBUG) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : fbstream is ". print_r($fbstream,true) ." and type is ". gettype($fbstream) ." \n";
-                fwrite($fp, $debug_string);
-              }
-              $fbcommentslist = $fbstream[0];  
-            } // end of stream.getComments method
-            if (is_array($fbcommentslist)) {
-              if(DEBUG) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : Number of comments for this post- " . count($fbcommentslist) . " \n";
-                fwrite($fp, $debug_string);
-              }
+            $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE post_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC"; 
+            if(DEBUG) {
+              $fp = fopen($debug_file, 'a');
+              $debug_string=date("Y-m-d H:i:s",time())." : FBcomments, fbsql is $fbsql \n";
+              fwrite($fp, $debug_string);
+            }
+            $params = array(
+                            'method' => 'fql.query',
+                            'query' => $fbsql,
+                            );
+            try {
+              $fbcommentslist=$facebook->api($params);
+            } catch (FacebookApiException $e) {
+              $fp = fopen($debug_file, 'a');
+              $debug_string=date("Y-m-d H:i:s",time())." : Caught exception: ". $e->getMessage() ." Error code: ". $e->getCode() ."\n";
+              fwrite($fp, $debug_string);
+              return;
+            }
+            if(DEBUG) {
+              $fp = fopen($debug_file, 'a');
+              $debug_string=date("Y-m-d H:i:s",time())." : FBcommentslist is ". print_r($fbcommentslist) . "\n";
+              fwrite($fp, $debug_string);
+            }
+          } //end of comment method
+          
+          // now we act on the fetched comments
+          if (is_array($fbcommentslist)) {
+            if(DEBUG) {
+              $fp = fopen($debug_file, 'a');
+              $debug_string=date("Y-m-d H:i:s",time())." : Number of comments for this post- " . count($fbcommentslist) . " \n";
+              $degub_string .= print_r($fbcommentslist);
+              fwrite($fp, $debug_string);
+            }
             foreach ($fbcommentslist as $comment) {
               //sleep(30); // maybe posting these too quickly?
               if(DEBUG) {
@@ -249,11 +195,13 @@ function wpbook_import_comments() {
                 $debug_string=date("Y-m-d H:i:s",time())." : Getting author info, fbsql is $fbsql \n";
                 fwrite($fp, $debug_string);
               }
+              $params = array(
+                              'method' => 'fql.query',
+                              'query' => $fbsql,
+                              );
               try {
-                $fbuserinfo=$facebook->api_client->call_method('facebook.fql.query',
-                                                               array('query' => $fbsql) 
-                                                               );
-              } catch (Exception $e) {
+                $fbuserinfo=$facebook->api($params);
+              } catch (FacebookApiException $e) {
                 $fp = fopen($debug_file, 'a');
                 $debug_string=date("Y-m-d H:i:s",time())." : Caught exception getting info about comment author: ". $e->getMessage() ." Error code: ". $e->getCode() ."\n";
                 fwrite($fp, $debug_string);
@@ -284,19 +232,19 @@ function wpbook_import_comments() {
                   }
                   $time = date("Y-m-d H:i:s",$local_time);
                   $data = array(
-                                'comment_post_ID' => $wordpress_post_id,
-                                'comment_author' => $fb_user[name],
-                                'comment_author_email' => $wpbook_comment_email,
-                                'comment_author_url' => $fb_user[url],
-                                'comment_content' => $comment[text],
-                                'comment_type' => '',
-                                'comment_parent' => 0,
-                                'comment_author_IP' => '127.0.0.1',
-                                'comment_agent' => 'WPBook Comment Import',
-                                'comment_date' => $time,
-                                'comment_approved' => $wpbook_comment_approval,
-                                'user_ID' => ''
-                                );
+                              'comment_post_ID' => $wordpress_post_id,
+                              'comment_author' => $fb_user[name],
+                              'comment_author_email' => $wpbook_comment_email,
+                              'comment_author_url' => $fb_user[url],
+                              'comment_content' => $comment[text],
+                              'comment_type' => '',
+                              'comment_parent' => 0,
+                              'comment_author_IP' => '127.0.0.1',
+                              'comment_agent' => 'WPBook Comment Import',
+                              'comment_date' => $time,
+                              'comment_approved' => $wpbook_comment_approval,
+                              'user_ID' => ''
+                              );
                   /* I'd like to use wp_new_comment here, but:
                    *   - It ignores the timestamp passed in and uses now instead
                    *   - It calls wp_allow_comment which in turn invokes comment flood throttle
@@ -334,8 +282,12 @@ function wpbook_import_comments() {
                     $debug_string=date("Y-m-d H:i:s",time())." : Past wp_insert_comment, now calling do_action on comment $my_id, approval $wpbook_comment_approval \n";
                     fwrite($fp, $debug_string);
                   }
-                  do_action('comment_post', $my_id, $data['comment_approved']); // notification normally done in wp_new_comment
                   
+                  /* Seems like doing notification causes problems, so let's
+                   * disable it for now
+                   */ 
+                  //do_action('comment_post', $my_id, $data['comment_approved']); 
+                
                   if(DEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : Posted comment with timestamp $time, id $my_id, approval $wpbook_comment_approval \n";
@@ -360,14 +312,13 @@ function wpbook_import_comments() {
                 } // end of foreach user
               } // end of if fbuserinfo is array
             } // end of new comment process for user stream
-            } else {
-              if(DEBUG) {
-                $fp = fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : There were no comments for post $mp->meta_value  \n";
-                fwrite($fp, $debug_string);
-              } // no comments for this post
-            }// end of comments for this post
-          } // end of user_stream_id or page_stream_id metas
+          } else {
+            if(DEBUG) {
+              $fp = fopen($debug_file, 'a');
+              $debug_string=date("Y-m-d H:i:s",time())." : There were no comments for post $mp->meta_value  \n";
+              fwrite($fp, $debug_string);
+            } // no comments for this post
+          }// end of comments for this post
         }// end of meta_posts foreach
       }// end of meta posts > 0
     } // end of for each row of posts to examine

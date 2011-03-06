@@ -43,18 +43,6 @@ if (version_compare(PHP_VERSION, '5.0.0', '<')) {
   include(WP_PLUGIN_DIR .'/wpbook/includes/wpbook_cron.php');
 }
   
-  
-// Pre-2.6 compatibility - which may be unnecessary if we require 2.7
-  
-if ( ! defined( 'WP_CONTENT_URL' ) )
-  define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
-if ( ! defined( 'WP_CONTENT_DIR' ) )
-  define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-if ( ! defined( 'WP_PLUGIN_URL' ) )
-  define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
-if ( ! defined( 'WP_PLUGIN_DIR' ) )
-  define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
-  
 // this function checks for admin pages
 if (!function_exists('is_admin_page')) {
   function is_admin_page() {
@@ -207,6 +195,9 @@ function wpbook_exclude_Page(){
 
 function wpbook_subpanel() {
   if (is_authorized()) {
+    global $current_user;
+    get_currentuserinfo();
+    
     $wpbookAdminOptions = wpbook_getAdminOptions();
     if (isset($_POST['fb_api_key']) && isset($_POST['fb_secret']) && isset($_POST['fb_app_url']) 
       && (!empty($_POST['fb_api_key']))  && (!empty($_POST['fb_secret'])) && (!empty($_POST['fb_app_url']))) { 
@@ -369,7 +360,7 @@ function wpbook_subpanel() {
         } 
         else {  
         echo '<p>These settings all impact how WPBook publishes to Facebook walls, and depend on appropriate permissions being set in Facebook.</p>';
-        echo '<a href="http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true">Check '
+        echo '<a href="http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true&wp_user='. $current_user->ID .'">Check '
           . 'permissions</a> for stream publishing, reading, and offline access.';
       
       echo '<p><strong>Stream Profile/Page Options</strong><br/><input type="checkbox" name="stream_publish" value="true" ';
@@ -1206,7 +1197,7 @@ function wpbook_activation_check(){
     deactivate_plugins(basename(__FILE__)); // Deactivate ourself
     wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
   }
-  if (version_compare($wp_version, '2.6', '<')) {
+  if (version_compare($wp_version, '2.9', '<')) {
     wp_die("This plugin requires WordPress 2.6 or greater.");
   }
 }

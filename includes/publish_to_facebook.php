@@ -4,6 +4,9 @@
  * In an include to avoid PHP4 based errors
  */
 function wpbook_safe_publish_to_facebook($post_ID) {  
+  global $current_user;
+  get_currentuserinfo();
+  
   if(!class_exists('FacebookRestClient')) {
     include_once(WP_PLUGIN_DIR.'/wpbook/includes/client/facebook.php');
   }           
@@ -24,6 +27,11 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   $wpbook_promote_external = $wpbookAdminOptions['promote_external'];
   $wpbook_attribution_line = $wpbookAdminOptions['attribution_line'];
 	$facebook = new Facebook($api_key, $secret);
+  if(version_compare($wp_version, '3.0', '<')) {
+    $access_token = get_usermeta( $current_user->ID,'wpbook_access_token');
+  } else {
+    $access_token = get_user_meta($current_user->ID,'wpbook_access_token',true);
+  }
   
   if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && (($stream_publish == "true") || $stream_publish_pages == "true")) {
     // here we should also post to the author's stream
@@ -65,7 +73,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     if(!empty($my_image)) {
       /* message, picture, link, name, caption, description, source */      
       $attachment = array( 
-                          'access_token' => '129625873775358|43619475b157e93215521953-1825518|_Mprwy3amkgAhNLAWWcAC52NrqA',
+                          'access_token' => $access_token,
                           'name' => $my_title,
                           'link' => $my_permalink,
                           'description' => $wpbook_description,  
@@ -73,7 +81,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                          ); 
     } else {
       $attachment = array( 
-                          'access_token' => '129625873775358|43619475b157e93215521953-1825518|_Mprwy3amkgAhNLAWWcAC52NrqA',
+                          'access_token' => $access_token,
                           'name' => $my_title,
                           'link' => $my_permalink,
                           'description' => $wpbook_description,  
@@ -97,7 +105,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
         } // end if for show errors
       } // end try-catch
       if($fb_response != '') {
-        add_post_meta($my_post->ID,'_wpbook_user_stream_id', $fb_response);
+        add_post_meta($my_post->ID,'_wpbook_user_stream_id', $fb_response[id]);
         add_post_meta($my_post->ID,'_wpbook_user_stream_time',0); // no comments imported yet
       }  // end of if $response
     } // end of if stream_publish 
@@ -114,10 +122,10 @@ function wpbook_safe_publish_to_facebook($post_ID) {
         } // end if for show errors
       } // end try/catch for publish to page
       if($fb_response != '') {
-        add_post_meta($my_post->ID,'_wpbook_page_stream_id',$fb_response);
+        add_post_meta($my_post->ID,'_wpbook_page_stream_id',$fb_response[id]);
         add_post_meta($my_post->ID,'_wpbook_page_stream_time',0); // no comments imported
       } else {
-        $wpbook_message = 'No post id returned from Facebook, $fb_response was ' .$fb_response;
+        $wpbook_message = 'No post id returned from Facebook, $fb_response was ' . print_r($fb_response,true) . '/n';
         $wpbook_message = $wpbook_message . ' and $fb_page_type was ' . $fb_page_type;
         $wpbook_message .= ' and $wpbook_description was ' . $wpbook_description;
         $wpbook_message .= ' and $my_title was ' . $my_title;

@@ -35,8 +35,14 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
                     'method' => 'fql.query',
                     'query' => $fql,
                     );
-    $_friends = $facebook->api($params); 
-
+    try {
+      $_friends = $facebook->api($params); 
+    } catch (FacebookApiException $e) {
+      if($wpbook_show_errors) {
+        $wpbook_message = 'Caught exception in getting friends for user: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+        wp_die($wpbook_message,'WPBook Error');
+      } // end if for show errors
+    }
     // Extract the user ID's returned in the FQL request into a new array. 
     $friends = array(); 
     if (is_array($_friends) && count($_friends)) {
@@ -82,12 +88,61 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
    publish to your personal wall and/or to the walls of fan pages.</p>
   <p>Your userid is <?php echo $data["user_id"]; ?> </p>
   <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
-  <p><a href="
+  <p>This user_id has granted these permissions:
+  <?php // need to set some permissions checks here
+  $fql = 'SELECT offline_access,read_stream,publish_stream FROM permissions WHERE uid='. $data["user_id"]; 
+    $params = array(
+                    'method' => 'fql.query',
+                    'query' => $fql,
+                    );
+    try {
+      $my_permissions = $facebook->api($params); 
+    } catch (FacebookApiException $e) {
+      if($wpbook_show_errors) {
+        $wpbook_message = 'Caught exception in getting permissions for user: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+        wp_die($wpbook_message,'WPBook Error');
+      } // end if for show errors
+    }
+    ?>
+  <ul>
+    <li>offline_access - <strong><?php
+        if($my_permissions[0][offline_access] == 1) 
+      echo 'yes';
+        else 
+      echo 'no';
+        ?></strong></li>
+    <li>read_stream - <strong><?php
+      if($my_permissions[0][read_stream] == 1) 
+      echo 'yes';
+      else 
+      echo 'no';
+      ?></strong></li>
+    <li>publish_stream - <strong><?php 
+      if($my_permissions[0][publish_stream] == 1) 
+      echo 'yes';
+      else 
+      echo 'no';    
+      ?></strong></li>
+  </ul>
+  </p>
+<p>This user <strong>
+  <?php 
+  if(version_compare($wp_version, '3.0', '<')) {
+    $access_token = get_usermeta($_GET["wp_user"],'wpbook_access_token');
+  } else {
+    $access_token = get_user_meta($_GET["wp_user"],'wpbook_access_token',true);
+  }  
+  if($access_token != '')
+    echo 'has';
+    else
+    echo 'has NOT';
+  ?></strong> set an access_token for the application to use.</p>
+  <p>To correct any of these, <a href="
   <?php
   $my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
-    . '&redirect_uri=http://apps.facebook.com/' . $app_url .'/&scope=offline_access,read_stream,publish_stream';
+    . '&redirect_uri=http://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=offline_access,read_stream,publish_stream';
   echo $my_permissions_url;
-  ?>" target="_top">Grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
+  ?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
   <?php
 
   if(!empty($wpbookAdminOptions['fb_page_target'])) {
@@ -100,7 +155,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
                   );
     try {
       $perm = $facebook->api($params);
-    } catch (Exception $e) {
+    } catch (FacebookApiException $e) {
       if ($wpbook_show_errors) {
         $wpbook_message = 'Caught exception in fql_query: ' . $e->getMessage();
         wp_die($wpbook_message,'WPBook Error');
@@ -108,7 +163,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
     }
     
     if (($perm == '') || ($perm[0][publish_stream] != 1)) {
-      echo 'This page has NOT granted stream.publish permissions to this app (OR this is an application profile page). ';
+      echo 'This page has NOT granted stream.publish permissions to this app (OR this is an application profile page or group page - no way to check those currently). ';
       echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
       echo $api_key;
       echo '&v=1.0&next=';

@@ -18,7 +18,15 @@ if (empty($data["user_id"])) {
   echo("<script> top.location.href='" . $auth_url . "'</script>");
 } else {
   // need to store this somewhere, if user_id = admin
+  // and they've just granted permissions
   $access_token = $data["oauth_token"];   
 } 
-    
+  
+if ((isset($_GET["wp_user"])) && ($data["user_id"] == $target_admin)) {
+  if(version_compare($wp_version, '3.0', '<')) {
+    update_usermeta($_GET["wp_user"],'wpbook_access_token', $data["oauth_token"]);
+  } else {
+    update_user_meta($_GET["wp_user"], 'wpbook_access_token',$data["oauth_token"]);
+  }
+}
 ?>
