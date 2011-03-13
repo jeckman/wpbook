@@ -756,6 +756,7 @@ echo '<p><input type="submit" value="Save" class="button-primary"';
 	}
 }
 
+// todo: eliminate this function (not needed anymore?)
 // this is a copy of the wp_recent_posts function
 // necessary because we don't want to echo output (for profile)
 function wpbook_profile_recent_posts($count = 5, $before = '<li>', $after = '</li>',
@@ -834,8 +835,7 @@ function wpbook_theme_root($path) {
 		if(wpbook_check_custom_theme('WPBook')) {
 			$path = WP_CONTENT_DIR . '/themes/wpbook_theme';
 			return $path;
-			
-		}
+    }
 		else{
 			return $theme_root . '/theme'; 
 		}
@@ -849,13 +849,13 @@ function wpbook_theme_root_uri($url) {
 	if (check_facebook()){
 		if(wpbook_check_custom_theme('WPBook')) {
 			//apparently get_theme_dir() returns a 500 error
-			$dir  = WP_CONTENT_DIR . '/themes/wpbook_theme';
+			$dir  = WP_CONTENT_URL . '/themes/wpbook_theme';
 			return $dir;
 			
 		}
 		
 		else{
-			$dir = WP_PLUGIN_DIR . '/wpbook/theme';
+			$dir = WP_PLUGIN_ULR . '/wpbook/theme';
 			return $dir;
 		}
 	} else {
@@ -863,6 +863,16 @@ function wpbook_theme_root_uri($url) {
 	}
 }
 
+function wpbook_stylesheet($url) {
+  if (check_facebook()){
+    if(wpbook_check_custom_theme('WPBook')) {
+      return 'default';
+    }
+  } else {
+    return $url;
+  }
+}  
+  
 // this function seems to be required by WP 2.6
 function wpbook_template_directory($value) {
   if (check_facebook())  {
@@ -871,8 +881,8 @@ function wpbook_template_directory($value) {
 	  	return $theme_root;
   	  }
   	  else{
-  	  	  $theme_root = dirname(__FILE__);
-  	  	  return $theme_root . '/theme';
+  	  	  $theme_root = WP_PLUGIN_DIR;
+  	  	  return $theme_root . '/wpbook/theme';
   	  }
     } 
     else {
@@ -886,7 +896,6 @@ function wpbook_check_custom_theme($theme) {
 	$installed_themes= array();
 	$installed_themes= get_themes();
 	$wpbook_theme_check = (!empty($installed_themes[$theme])) ? TRUE : FALSE;
-	
 	return $wpbook_theme_check;
 	}
   
@@ -896,6 +905,7 @@ if (check_facebook()) {
   add_filter('template_directory', 'wpbook_template_directory');
   add_filter('theme_root', 'wpbook_theme_root');
   add_filter('theme_root_uri', 'wpbook_theme_root_uri');
+  add_filter('stylesheet', 'wpbook_stylesheet'); 
 }
              
 // also have to change permalinks, next/prev links , page links, and archive links
@@ -1234,12 +1244,13 @@ function wpbook_activation_check(){
     wp_die("This plugin requires WordPress 2.6 or greater.");
   }
 }
-
+  
 add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
 add_filter('page_link','fb_filter_postlink',1,1); 
 add_filter('get_pagenum_link','fb_filter_postlink_no_qs',1,1); 
 
+  
 //add gravatar/facebook avatar support outside facebook
 //filter for inside facebook is in the theme/config_wp_settings.php
 add_filter('get_avatar','wpbook_get_global_facebook_avatar', 1, 3 ); 

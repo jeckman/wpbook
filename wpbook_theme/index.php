@@ -207,13 +207,12 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
   <title><?php bloginfo('name'); ?> :: Facebook Blog Application</title>
   <?php if ( is_singular() ) wp_enqueue_script( 'comment-reply' ); ?>
   <?php wp_head(); ?>
-  <!-- <link rel="stylesheet" href="<?php echo WP_PLUGIN_URL ?>/wpbook/theme/default/style.css" -->
-  <!-- why this is broken i have no clue -->
-  <link rel="stylesheet" href="<?php echo WP_CONTENT_DIR ?>/themes/wpbook_theme/style.css'" 
-      type="text/css" media="screen" />
+  <link rel="stylesheet" type="text/css" media="all" 
+  <?php echo 'href="'. get_stylesheet_uri() .'"/>'; ?>
   <BASE TARGET="_top">	
   </head>
   <body>
+  <h1>in custom theme</h1>
   <?php
   if(isset($_GET['fb_page_id'])) { 
     echo " <div><h3>Thank You!</h3> <p>This application has been added to your page's profile.</p>";
@@ -222,6 +221,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
     echo "</body></html>";
   }
   ?>
+  <?php echo 'stylesheet_uri is ' . get_stylesheet_uri(); ?>
   <div class="wpbook_header">
   
   <?php 
