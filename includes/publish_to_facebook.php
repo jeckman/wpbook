@@ -26,6 +26,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   $wpbook_show_errors = $wpbookAdminOptions['show_errors'];
   $wpbook_promote_external = $wpbookAdminOptions['promote_external'];
   $wpbook_attribution_line = $wpbookAdminOptions['attribution_line'];
+  $wpbook_as_note = $wpbookAdminOptions['wpbook_as_note'];
 	$facebook = new Facebook($api_key, $secret);
   if(version_compare($wp_version, '3.0', '<')) {
     $access_token = get_usermeta( $current_user->ID,'wpbook_access_token');
@@ -97,7 +98,22 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       $fb_response = '';
       try{
         // need new format for SDK API
-        $fb_response = $facebook->api('/'. $target_admin .'/feed', 'POST', $attachment);     
+        if($wpbook_as_note) {
+          /* notes on walls don't allow much */ 
+          $allowedtags = array('img'=>array('src'=>array(), 'style'=>array()), 
+                               'span'=>array('id'=>array(), 'style'=>array()), 
+                               'a'=>array('href'=>array()), 'p'=>array(),
+                               'b'=>array(),'i'=>array(),'u'=>array(),'big'=>array(),
+                               'small'=>array(), 'ul' => array(), 'li'=>array(),
+                               'ol'=> array(), 'blockquote'=> array(),'h1'=>array(),
+                               'h2'=> array(), 'h3'=>array(),
+                               );
+          $attachment['description'] = wp_kses(stripslashes(apply_filters('the_content',$my_post->post_content)),$allowedtags);
+          $fb_response = $facebook->api('/'. $target_admin .'/notes'. 'POST', $attachment);
+        } else {
+          // post as an excerpt
+          $fb_response = $facebook->api('/'. $target_admin .'/feed', 'POST', $attachment);     
+        }
       } catch (FacebookApiException $e) {
         if($wpbook_show_errors) {
           $wpbook_message = 'Caught exception in stream publish for user: ' .  $e->getMessage() .'Error code: '. $e->getCode();  

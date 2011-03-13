@@ -108,7 +108,8 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                          $show_errors,$promote_external,$import_comments,
                          $approve_imported_comments,$num_days_import,
                          $imported_comments_email,$infinite_session_key,
-                         $attribution_line,$wpbook_enable_debug,$wpbook_use_global_gravatar) {
+                         $attribution_line,$wpbook_enable_debug,
+                         $wpbook_use_global_gravatar,$wpbook_as_note) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -151,7 +152,8 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'infinite_session_key' => $infinite_session_key,
                               'attribution_line' => $attribution_line,
                               'wpbook_enable_debug' => $wpbook_enable_debug,
-                              'wpbook_use_global_gravatar' => $wpbook_use_global_gravatar
+                              'wpbook_use_global_gravatar' => $wpbook_use_global_gravatar,
+                              'wpbook_as_note' => $wpbook_as_note
                               );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
@@ -248,6 +250,7 @@ function wpbook_subpanel() {
       $infinite_session_key = $_POST['infinite_session_key']; 
       $attribution_line = $_POST['attribution_line'];
       $wpbook_enable_debug = $_POST['wpbook_enable_debug'];
+      $wpbook_as_note = $_POST['wpbook_as_note'];
       $wpbook_use_global_gravatar = $_POST['wpbook_use_global_gravatar'];
       // Handle custom gravatar_deault code modified from wp-admin/options.php
       if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
@@ -281,7 +284,8 @@ function wpbook_subpanel() {
                     $stream_publish_pages,$show_errors,$promote_external,
                     $import_comments,$approve_imported_comments,$num_days_import,
                     $imported_comments_email,$infinite_session_key,
-                    $attribution_line,$wpbook_enable_debug,$wpbook_use_global_gravatar);
+                    $attribution_line,$wpbook_enable_debug,
+                    $wpbook_use_global_gravatar,$wpbook_as_note);
       $flash = "Your settings have been saved. ";
     } elseif (($wpbookAdminOptions['fb_api_key'] != "") || ($wpbookAdminOptions['fb_secret'] != "") || ($wpbookAdminOptions['fb_app_url'] != "")
             || (!empty($_POST['fb_api_key']))  || (!empty($_POST['fb_secret'])) || (!empty($_POST['fb_app_url']))){
@@ -299,7 +303,7 @@ function wpbook_subpanel() {
         $gravatar_default = WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif';
         setAdminOptions(1, null,null,null,null,null,true,true,true,true,true,top,null,null,"F j, Y","g:i a",
                         true,null,null,null,disabled,null,"g",$gravatar_default,null,null,null,null,true,true,10,
-                        false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null,false);
+                        false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null,false,false);
       }
       if ($flash != '') echo '<div id="message"class="updated fade">'
         . '<p>' . $flash . '</p></div>'; 
@@ -357,24 +361,28 @@ function wpbook_subpanel() {
 	<?php 
       if(empty($wpbookAdminOptions['fb_app_url']) || empty($wpbookAdminOptions['fb_secret']) || empty($wpbookAdminOptions['fb_api_key'])) {  
         echo '<p><strong>Once your Facebook application is established by filling out the required information, return to edit streaming options.</strong></p>';
-        } 
-        else {  
+      } 
+      else {  
         echo '<p>These settings all impact how WPBook publishes to Facebook walls, and depend on appropriate permissions being set in Facebook.</p>';
         echo '<a href="http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true&wp_user='. $current_user->ID .'">Check '
           . 'permissions</a> for stream publishing, reading, and offline access.';
-      
-      echo '<p><strong>Stream Profile/Page Options</strong><br/><input type="checkbox" name="stream_publish" value="true" ';
-      if( htmlentities($wpbookAdminOptions['stream_publish']) == "true") {
-        echo("checked");
-      }
-      echo ' id="set_1" > Publish new posts to YOUR Facebook Wall ';
-      echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">YOUR Profile ID: <input type="text" name="fb_admin_target" value="';
-      echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="15" /> ';  
-      echo '</p>';
-      echo '<p><input type="checkbox" name="stream_publish_pages" value="true" ';
-      if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
-        echo("checked");
-      }
+        echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">Publish as Notes: <input type="checkbox" name="fb_publish_as_note" ';
+        if($wpbookAdminOptions['wpbook_as_note']) 
+          echo 'checked';
+        echo ' ></p>';
+        echo '<p><strong>Stream Profile/Page Options</strong><br/>
+        <input type="checkbox" name="stream_publish" value="true" ';
+        if( htmlentities($wpbookAdminOptions['stream_publish']) == "true") {
+          echo("checked");
+        }
+        echo ' id="set_1" > Publish new posts to YOUR Facebook Wall ';
+        echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">YOUR Profile ID: <input type="text" name="fb_admin_target" value="';
+        echo htmlentities($wpbookAdminOptions['fb_admin_target']) .'" size="15" /> ';  
+        echo '</p>';
+        echo '<p><input type="checkbox" name="stream_publish_pages" value="true" ';
+        if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
+          echo("checked");
+        }
 echo ' id="set_2" > Publish new posts to the Wall of this Fan Page, Application Profile Page, or Group: ';
 echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">PageID: <input type="text" name="fb_page_target" value="';
       echo htmlentities($wpbookAdminOptions['fb_page_target']) .'" size="15" /> ';

@@ -149,7 +149,12 @@ function wpbook_import_comments() {
              * now we fetch comments since that timestamp, using FQL
              * which I've found the most reliable
              */
-            $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE post_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC"; 
+            $pos = strpos($mp->meta_value, '_');
+            if ($pos === false) 
+              $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE object_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC";
+            else
+              $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE post_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC";
+            
             if(DEBUG) {
               $fp = fopen($debug_file, 'a');
               $debug_string=date("Y-m-d H:i:s",time())." : FBcomments, fbsql is $fbsql \n";

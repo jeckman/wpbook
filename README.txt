@@ -70,6 +70,12 @@ As of 1.5, this plugin requires PHP 5.
    in the appropriate information including Facebook application secret 
    and API keys, as well as your application canvas url. 
 
+5. (OPTIONAL) If you'd like, copy wpbook_theme into your wp-content/themes/ 
+   directory and customize the css, or edit the html directly in 
+   index.php. If this theme (named 'WPBook') is found installed, WPBook
+   will use it rather than the built in theme. This theme will NOT 
+   be overwritten by updates unless you choose to copy it. 
+
 == Frequently Asked Questions ==
 
 = How do I edit the way my Facebook Application (mirrored blog) looks? =
@@ -81,6 +87,13 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.1 = 
+ * Added wpbook_theme which can be copied to themes directory, enabling
+   users to customize the theme without it getting overwritten
+   (Thanks to Brook Dukes / BandonRandon for the patch)
+ * Cleaned up the "More Posts" section of the index.php template
+   to not show when there is no previous or next page of posts
 
 = 2.1b1=
  * Changed to Facebook Graph API, PHP SDK
