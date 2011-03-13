@@ -88,12 +88,17 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
-= 2.1 = 
+= 2.1b2 = 
  * Added wpbook_theme which can be copied to themes directory, enabling
    users to customize the theme without it getting overwritten
    (Thanks to Brook Dukes / BandonRandon for the patch)
+   (copy the 'wpbook_theme' folder to 'wp-content/theme' and make any
+   changes to this theme. To go back to the default theme delete the
+   wpbook_theme or change the theme name in the stylesheet)
  * Cleaned up the "More Posts" section of the index.php template
    to not show when there is no previous or next page of posts
+ * Added capability, based on a patch supplied by @sebaxtian, to 
+   allow user to post to FB as notes rather than wall excerpts
 
 = 2.1b1=
  * Changed to Facebook Graph API, PHP SDK
@@ -469,10 +474,8 @@ as well as some other files for processing comments and the like.
 * First push to WP-Plugins Directory
 
 == To Do ==
-* Use featured_image instead of first image when present
 * Use settings API better / clean up settings (maybe a whole new
   box for settings in left nav? enabling sub-pages)
-* Convert to new API from Facebook for OAuth based authorization
 * Enable multi-author blogs. (Separate FB publish destinations 
   for each author? Separate FB app for each author? Filter tab 
   view to only show each author's posts?)
@@ -481,6 +484,4 @@ as well as some other files for processing comments and the like.
 * Threaded comments. (If user has them enabled - requires WP 2.7.x)
 * Error handling - do something with the FB exceptions caught
   Probably use set_transient to show - will require WP 2.8 or greater
-* Update instructions in readme to match new options available
-* Enable users to select a theme, overriding the default
-  theme/index.php for ease of updates
+
