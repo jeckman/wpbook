@@ -366,7 +366,7 @@ function wpbook_subpanel() {
         echo '<p>These settings all impact how WPBook publishes to Facebook walls, and depend on appropriate permissions being set in Facebook.</p>';
         echo '<a href="http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true&wp_user='. $current_user->ID .'">Check '
           . 'permissions</a> for stream publishing, reading, and offline access.';
-        echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">Publish as Notes: <input type="checkbox" name="fb_publish_as_note" ';
+        echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">Publish as Notes: <input type="checkbox" name="wpbook_as_note" ';
         if($wpbookAdminOptions['wpbook_as_note']) 
           echo 'checked';
         echo ' ></p>';
