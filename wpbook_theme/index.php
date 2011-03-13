@@ -207,12 +207,12 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
   <title><?php bloginfo('name'); ?> :: Facebook Blog Application</title>
   <?php if ( is_singular() ) wp_enqueue_script( 'comment-reply' ); ?>
   <?php wp_head(); ?>
-  <link rel="stylesheet" type="text/css" media="all" 
-  <?php echo 'href="'. get_stylesheet_uri() .'"/>'; ?>
+  <link rel="stylesheet" type="text/css" media="all" <?php echo 'href="'. get_stylesheet_uri() .'"/>'; ?>
+
   <BASE TARGET="_top">	
   </head>
   <body>
-  <h1>in custom theme</h1>
+  <!-- in custom theme -->
   <?php
   if(isset($_GET['fb_page_id'])) { 
     echo " <div><h3>Thank You!</h3> <p>This application has been added to your page's profile.</p>";
@@ -221,7 +221,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
     echo "</body></html>";
   }
   ?>
-  <?php echo 'stylesheet_uri is ' . get_stylesheet_uri(); ?>
+  <!-- <?php echo 'stylesheet_uri is ' . get_stylesheet_uri(); ?> -->
   <div class="wpbook_header">
   
   <?php 
@@ -352,17 +352,20 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
   
       endwhile; // while have posts
       
-      echo '<h3 class="wpbook_box_header">More Posts</h3>'; 
-      echo '<p>';
       $wpbook_next_page = get_next_posts_link();
-      $wpbook_prev_page = get_previous_posts_link();
-      if ($wpbook_prev_page)
-        echo $wpbook_prev_page;
-      if ($wpbook_prev_page && $wpbook_next_page) 
-        echo  ' | ';
-      if ($wpbook_next_page)
-        echo $wpbook_next_page;
-      echo '</p>';
+      $wpbook_prev_page = get_previous_posts_link();        
+        
+      if($wpbook_prev_page || $wpbook_next_page) {
+        echo '<h3 class="wpbook_box_header">More Posts</h3>'; 
+        echo '<p>';
+        if ($wpbook_prev_page)
+          echo $wpbook_prev_page;
+        if ($wpbook_prev_page && $wpbook_next_page) 
+          echo  ' | ';
+        if ($wpbook_next_page)
+          echo $wpbook_next_page;
+        echo '</p>';
+      }
                 
     endif; // if have posts	
     echo '</div>';
