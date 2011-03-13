@@ -130,6 +130,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       // publish to page with new api
       $fb_response = '';
       try{
+        // post as an excerpt
         $fb_response = $facebook->api('/'. $target_page .'/feed/','POST', $attachment); 
       } catch (FacebookApiException $e) {
         if($wpbook_show_errors) {
