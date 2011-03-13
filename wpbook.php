@@ -831,16 +831,33 @@ function check_facebook() {
 function wpbook_theme_root($path) {
 	$theme_root = dirname(__FILE__);
 	if (check_facebook()) {
-		return $theme_root . '/theme'; 
+		if(wpbook_check_custom_theme('WPBook')) {
+			$path = WP_CONTENT_DIR . '/themes/wpbook_theme';
+			return $path;
+			
+		}
+		else{
+			return $theme_root . '/theme'; 
+		}
+	
 	} else {
 		return $path;
 	}
 }	
 
 function wpbook_theme_root_uri($url) {
-	if (check_facebook()) {
-		$dir = WP_PLUGIN_DIR . "/wpbook/theme";
-		return $dir;
+	if (check_facebook()){
+		if(wpbook_check_custom_theme('WPBook')) {
+			//apparently get_theme_dir() returns a 500 error
+			$dir  = WP_CONTENT_DIR . '/themes/wpbook_theme';
+			return $dir;
+			
+		}
+		
+		else{
+			$dir = WP_PLUGIN_DIR . '/wpbook/theme';
+			return $dir;
+		}
 	} else {
 		return $url;
 	}
@@ -849,19 +866,35 @@ function wpbook_theme_root_uri($url) {
 // this function seems to be required by WP 2.6
 function wpbook_template_directory($value) {
   if (check_facebook())  {
-    $theme_root = dirname(__FILE__);
-      return $theme_root . '/theme';
-    } else {
+  	  if(wpbook_check_custom_theme('WPBook')){
+  	  	$theme_root = WP_CONTENT_DIR . '/themes/wpbook_theme';
+	  	return $theme_root;
+  	  }
+  	  else{
+  	  	  $theme_root = dirname(__FILE__);
+  	  	  return $theme_root . '/theme';
+  	  }
+    } 
+    else {
       return $value;
     }
 }
- 
+
+//die("template dir ".wpbook_template_directory($value)." <br/> theme root ". wpbook_theme_root($dir). " <br/> theme root uri ".wpbook_theme_root_uri($theme_root));
+//check to see if the user has a custom theme in their theme folder
+function wpbook_check_custom_theme($theme) {
+	$installed_themes= array();
+	$installed_themes= get_themes();
+	$wpbook_theme_check = (!empty($installed_themes[$theme])) ? TRUE : FALSE;
+	
+	return $wpbook_theme_check;
+	}
   
 // this is the function which adds to the template and stylesheet hooks
 // the call to wpbook_template
 if (check_facebook()) {
   add_filter('template_directory', 'wpbook_template_directory');
-	add_filter('theme_root', 'wpbook_theme_root');
+  add_filter('theme_root', 'wpbook_theme_root');
   add_filter('theme_root_uri', 'wpbook_theme_root_uri');
 }
              
