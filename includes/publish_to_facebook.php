@@ -108,8 +108,24 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                'ol'=> array(), 'blockquote'=> array(),'h1'=>array(),
                                'h2'=> array(), 'h3'=>array(),
                                );
-          $attachment['description'] = wp_kses(stripslashes(apply_filters('the_content',$my_post->post_content)),$allowedtags);
-          $fb_response = $facebook->api('/'. $target_admin .'/notes'. 'POST', $attachment);
+          if(!empty($my_image)) {
+            /* message, picture, link, name, caption, description, source */      
+            $attachment = array( 
+                                'access_token' => $access_token,
+                                'subject' => $my_title,
+                                'link' => $my_permalink,
+                                'message' => wp_kses(stripslashes(apply_filters('the_content',$my_post->post_content)),$allowedtags),  
+                                'picture' => $my_image, 
+                                ); 
+          } else {
+            $attachment = array( 
+                                'access_token' => $access_token,
+                                'subject' => $my_title,
+                                'link' => $my_permalink,
+                                'message' => wp_kses(stripslashes(apply_filters('the_content',$my_post->post_content)),$allowedtags),  
+                                ); 
+          }
+          $fb_response = $facebook->api('/'. $target_admin .'/notes', 'POST', $attachment);
         } else {
           // post as an excerpt
           $fb_response = $facebook->api('/'. $target_admin .'/feed', 'POST', $attachment);     
