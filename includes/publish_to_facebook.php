@@ -70,30 +70,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     }
   
     $my_image = get_the_post_thumbnail($post_ID, 'thumbnail'); 
-    
-    if(!empty($my_image)) {
-      /* message, picture, link, name, caption, description, source */      
-      $attachment = array( 
-                          'access_token' => $access_token,
-                          'name' => $my_title,
-                          'link' => $my_permalink,
-                          'description' => $wpbook_description,  
-                          'picture' => $my_image, 
-                         ); 
-    } else {
-      $attachment = array( 
-                          'access_token' => $access_token,
-                          'name' => $my_title,
-                          'link' => $my_permalink,
-                          'description' => $wpbook_description,  
-                          'comments_xid' => $post_ID, 
-                          ); 
-    }
-    $action_links = array( array('text' => 'Read More',
-                               'href' => $my_permalink
-                               )
-                        ); 
-  
+
     if($stream_publish == "true") {
       $fb_response = '';
       try{
@@ -128,6 +105,28 @@ function wpbook_safe_publish_to_facebook($post_ID) {
           $fb_response = $facebook->api('/'. $target_admin .'/notes', 'POST', $attachment);
         } else {
           // post as an excerpt
+          if(!empty($my_image)) {
+            /* message, picture, link, name, caption, description, source */      
+            $attachment = array( 
+                                'access_token' => $access_token,
+                                'name' => $my_title,
+                                'link' => $my_permalink,
+                                'description' => $wpbook_description,  
+                                'picture' => $my_image, 
+                                ); 
+          } else {
+            $attachment = array( 
+                                'access_token' => $access_token,
+                                'name' => $my_title,
+                                'link' => $my_permalink,
+                                'description' => $wpbook_description,  
+                                'comments_xid' => $post_ID, 
+                                ); 
+          }
+          $action_links = array( array('text' => 'Read More',
+                                       'href' => $my_permalink
+                                       )
+                                ); 
           $fb_response = $facebook->api('/'. $target_admin .'/feed', 'POST', $attachment);     
         }
       } catch (FacebookApiException $e) {
@@ -147,6 +146,28 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       $fb_response = '';
       try{
         // post as an excerpt
+        if(!empty($my_image)) {
+          /* message, picture, link, name, caption, description, source */      
+          $attachment = array( 
+                              'access_token' => $access_token,
+                              'name' => $my_title,
+                              'link' => $my_permalink,
+                              'description' => $wpbook_description,  
+                              'picture' => $my_image, 
+                              ); 
+        } else {
+          $attachment = array( 
+                              'access_token' => $access_token,
+                              'name' => $my_title,
+                              'link' => $my_permalink,
+                              'description' => $wpbook_description,  
+                              'comments_xid' => $post_ID, 
+                              ); 
+        }
+        $action_links = array( array('text' => 'Read More',
+                                     'href' => $my_permalink
+                                     )
+                              );
         $fb_response = $facebook->api('/'. $target_page .'/feed/','POST', $attachment); 
       } catch (FacebookApiException $e) {
         if($wpbook_show_errors) {
