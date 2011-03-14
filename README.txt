@@ -9,6 +9,10 @@ Plugin to embed Wordpress Blog into Facebook Platform.
 
 As of 1.5, this plugin requires PHP 5. 
 
+NOTE: Major changes between 2.0.x and versions 2.1 and greater. 
+Please see: http://www.openparenthesis.org/2011/03/14/wpbook-2-1-released
+for information on how to upgrade if you used 2.0.x previously. 
+
 == Description ==
 
 WPBook enables users to add your (self-hosted, not wordpress.com) wordpress 
@@ -87,6 +91,12 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.1.1 = 
+ * Bugfix - wrap call to get_the_post_thumbnail in function_exists() so 
+   that themes which don't support it don't break
+ * If you are not using post thumbnails (because your theme doesn't
+   support it, I can't use those thumbnails to post to the wall. 
 
 = 2.1 = 
  * Shifted from _GET and _POST to _REQUEST - to handle Facebook's changes
