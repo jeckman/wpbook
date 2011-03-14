@@ -22,11 +22,11 @@ if (empty($data["user_id"])) {
   $access_token = $data["oauth_token"];   
 } 
   
-if ((isset($_GET["wp_user"])) && ($data["user_id"] == $target_admin)) {
+if ((isset($_REQUEST["wp_user"])) && ($data["user_id"] == $target_admin)) {
   if(version_compare($wp_version, '3.0', '<')) {
-    update_usermeta($_GET["wp_user"],'wpbook_access_token', $data["oauth_token"]);
+    update_usermeta($_REQUEST["wp_user"],'wpbook_access_token', $data["oauth_token"]);
   } else {
-    update_user_meta($_GET["wp_user"], 'wpbook_access_token',$data["oauth_token"]);
+    update_user_meta($_REQUEST["wp_user"], 'wpbook_access_token',$data["oauth_token"]);
   }
 }
 ?>

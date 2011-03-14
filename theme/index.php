@@ -1,12 +1,12 @@
 <?php
 /* first include just sets up WP settings */  
 include_once(WP_PLUGIN_DIR . '/wpbook/theme/config_wp_settings.php');
-if((isset($_GET['app_tab'])) && (isset($_GET['fb_force_mode']))) {
+if((isset($_REQUEST['app_tab'])) && (isset($_REQUEST['fb_force_mode']))) {
   // output tab in FBML mode
   include_once(WP_PLUGIN_DIR . '/wpbook/theme/fbml_tabs.php');
 }
 
-if((isset($_GET['app_tab'])) && (!isset($_GET['fb_force_mode']))) { // this is an app tab
+if((isset($_REQUEST['app_tab'])) && (!isset($_REQUEST['fb_force_mode']))) { // this is an app tab
   // output tab in iFrame mode
   include_once(WP_PLUGIN_DIR . '/wpbook/theme/tab.php');
 } 
@@ -20,7 +20,7 @@ $facebook = new Facebook(array(
                               )
                          );
 
-if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the invite page
+if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this is the invite page
   if(isset($_POST["ids"])) { // this means we've already added some stuff
     echo "<center>Thank you for inviting ".sizeof($_POST["ids"])
         ." of your friends to ". $app_name .". <br><br>\n"; 
@@ -67,10 +67,10 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
     echo ' exclude_ids="'. $friends .'" bypass="cancel" />';
     echo '</fb:request-form></fb:fbml>';
   }  // end of the else for $_POST["ids"]
-} // end of the if for $_GET['is_invite']
+} // end of the if for $_REQUEST['is_invite']
 
 // Done with potential invite page, now do permissions
-  if((!isset($_GET['app_tab'])) && (!isset($_GET['is_invite'])) && (isset($_GET['is_permissions']))) { // we're looking for extended permissions
+  if((!isset($_REQUEST['app_tab'])) && (!isset($_REQUEST['is_invite'])) && (isset($_REQUEST['is_permissions']))) { // we're looking for extended permissions
   $receiver_url = WP_PLUGIN_URL . '/wpbook/theme/default/xd_receiver.html';
   ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
@@ -128,9 +128,9 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
 <p>This user <strong>
   <?php 
   if(version_compare($wp_version, '3.0', '<')) {
-    $access_token = get_usermeta($_GET["wp_user"],'wpbook_access_token');
+    $access_token = get_usermeta($_REQUEST["wp_user"],'wpbook_access_token');
   } else {
-    $access_token = get_user_meta($_GET["wp_user"],'wpbook_access_token',true);
+    $access_token = get_user_meta($_REQUEST["wp_user"],'wpbook_access_token',true);
   }  
   if($access_token != '')
     echo 'has';
@@ -140,7 +140,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
   <p>To correct any of these, <a href="
   <?php
   $my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
-    . '&redirect_uri=http://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=offline_access,read_stream,publish_stream';
+    . '&redirect_uri=http://apps.facebook.com/' . $app_url .'/?wp_user='. $_REQUEST["wp_user"] .'&scope=offline_access,read_stream,publish_stream';
   echo $my_permissions_url;
   ?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
   <?php
@@ -195,7 +195,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
   <?php 
 } // end of the permissions page, now regular themed page
 
-if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GET['app_tab']))) {  // this is the regular blog page
+if((!isset($_REQUEST['is_invite']))&&(!isset($_REQUEST['is_permissions']))&&(!isset($_REQUEST['app_tab']))) {  // this is the regular blog page
   $receiver_url = WP_PLUGIN_URL . '/wpbook/theme/default/xd_receiver.html';
   ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
@@ -212,7 +212,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
   </head>
   <body>
   <?php
-  if(isset($_GET['fb_page_id'])) { 
+  if(isset($_REQUEST['fb_page_id'])) { 
     echo " <div><h3>Thank You!</h3> <p>This application has been added to your page's profile.</p>";
     echo "<p>You can return to your page to see the updated information.</p>";
     echo "<p>Thanks!</p></div>";
@@ -265,7 +265,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
         echo '<p><b>You are currently browsing the '. $app_name .' archives  for the year '. the_time('Y') .'.</b></p>';
       } elseif (is_search()) { 
         echo '<p><b>You have searched the '. $app_name .' archives for <strong>"'. wp_specialchars($s) .'"</strong>. </b></p>';
-      } elseif (isset($_GET['paged']) && !empty($_GET['paged'])) { 
+      } elseif (isset($_REQUEST['paged']) && !empty($_REQUEST['paged'])) { 
         echo '<p><b>You are currently browsing the '. $app_name.' archives.</b></p>';
       }	elseif(is_tag()){ 
         echo '<p><b>';
