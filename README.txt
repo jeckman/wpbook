@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.0.13
+Stable tag: 2.1
 Tested up to: 3.1
 Requires at least: 2.9.0
 
