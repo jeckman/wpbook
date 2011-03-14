@@ -68,7 +68,7 @@ As of 1.5, this plugin requires PHP 5.
 
 4. Using the WPBook menu, (Dashboard->Settings->WPBook) fill 
    in the appropriate information including Facebook application secret 
-   and API keys, as well as your application canvas url. 
+   and app ID, as well as your application canvas url. 
 
 5. (OPTIONAL) If you'd like, copy wpbook_theme into your wp-content/themes/ 
    directory and customize the css, or edit the html directly in 
@@ -87,6 +87,11 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.1 = 
+ * Shifted from _GET and _POST to _REQUEST - to handle Facebook's changes
+   which deprecated _GET
+ * Released 2.1
 
 = 2.1b2 = 
  * Added wpbook_theme which can be copied to themes directory, enabling
