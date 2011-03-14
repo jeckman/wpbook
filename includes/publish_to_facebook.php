@@ -68,9 +68,13 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       $short_desc .= '...';
       $wpbook_description = $short_desc;
     }
-  
-    $my_image = get_the_post_thumbnail($post_ID, 'thumbnail'); 
 
+    if (function_exists('get_the_post_thumbnail') && has_post_thumbnail($post_ID)) {
+      $my_image = get_the_post_thumbnail($post_ID,'thumbnail');
+    } else {
+      $my_image = '';
+    }
+      
     if($stream_publish == "true") {
       $fb_response = '';
       try{
