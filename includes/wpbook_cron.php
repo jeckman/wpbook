@@ -56,13 +56,16 @@ function wpbook_import_comments() {
   $secret  = $wpbookAdminOptions['fb_secret'];
   $fb_user = $wpbookAdminOptions['fb_admin_target'];
   
+  Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
+  Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
+
   $facebook = new Facebook(array(
                                  'appId'  => $api_key,
                                  'secret' => $secret,
                                  'cookie' => true,
                                  )
                            );
-  
+    
   if(DEBUG) {
     $fp = fopen($debug_file, 'a');
     $debug_string=date("Y-m-d H:i:s",time())." : Facebook object: ". print_r($facebook,true) ." \n";

@@ -13,6 +13,10 @@ if((isset($_REQUEST['app_tab'])) && (!isset($_REQUEST['fb_force_mode']))) { // t
 
 /* this include sets up the FB client, needed for the other parts but not the tab */  
 include_once(WP_PLUGIN_DIR . '/wpbook/theme/config.php');
+  
+Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
+Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
+
 $facebook = new Facebook(array(
                               'appId'  => $api_key,
                               'secret' => $secret,

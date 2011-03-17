@@ -27,7 +27,12 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   $wpbook_promote_external = $wpbookAdminOptions['promote_external'];
   $wpbook_attribution_line = $wpbookAdminOptions['attribution_line'];
   $wpbook_as_note = $wpbookAdminOptions['wpbook_as_note'];
-	$facebook = new Facebook($api_key, $secret);
+
+	Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
+  Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
+  
+  
+  $facebook = new Facebook($api_key, $secret);
   if(version_compare($wp_version, '3.0', '<')) {
     $access_token = get_usermeta( $current_user->ID,'wpbook_access_token');
   } else {
