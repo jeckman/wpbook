@@ -95,7 +95,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
   <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
   <p>This user_id has granted these permissions:
   <?php // need to set some permissions checks here
-  $fql = 'SELECT offline_access,read_stream,publish_stream FROM permissions WHERE uid='. $data["user_id"]; 
+  $fql = 'SELECT offline_access,read_stream,publish_stream,manage_pages FROM permissions WHERE uid='. $data["user_id"]; 
     $params = array(
                     'method' => 'fql.query',
                     'query' => $fql,
@@ -109,78 +109,80 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
       } // end if for show errors
     }
     ?>
-  <ul>
-    <li>offline_access - <strong><?php
-        if($my_permissions[0][offline_access] == 1) 
-      echo 'yes';
-        else 
-      echo 'no';
-        ?></strong></li>
-    <li>read_stream - <strong><?php
-      if($my_permissions[0][read_stream] == 1) 
-      echo 'yes';
-      else 
-      echo 'no';
-      ?></strong></li>
-    <li>publish_stream - <strong><?php 
-      if($my_permissions[0][publish_stream] == 1) 
-      echo 'yes';
-      else 
-      echo 'no';    
-      ?></strong></li>
-  </ul>
-  </p>
+<ul>
+<li>offline_access - <strong><?php
+  if($my_permissions[0][offline_access] == 1) 
+  echo 'yes';
+  else 
+  echo 'no';
+  ?></strong></li>
+<li>read_stream - <strong><?php
+  if($my_permissions[0][read_stream] == 1) 
+  echo 'yes';
+  else 
+  echo 'no';
+  ?></strong></li>
+<li>publish_stream - <strong><?php 
+  if($my_permissions[0][publish_stream] == 1) 
+  echo 'yes';
+  else 
+  echo 'no';    
+  ?></strong></li>
+<li>manage_pages - <strong><?php
+  if($my_permissions[0][manage_pages] ==1)
+  echo 'yes';
+  else
+  echo 'no';
+  ?></strong></li>
+</ul>
+</p>
 <p>This user <strong>
-  <?php 
-  if(version_compare($wp_version, '3.0', '<')) {
-    $access_token = get_usermeta($_GET["wp_user"],'wpbook_access_token');
-  } else {
-    $access_token = get_user_meta($_GET["wp_user"],'wpbook_access_token',true);
-  }  
+<?php 
+  $access_token = get_option('wpbook_user_access_token','');
   if($access_token != '')
-    echo 'has';
-    else
-    echo 'has NOT';
+  echo 'has';
+  else
+  echo 'has NOT';
   ?></strong> set an access_token for the application to use.</p>
-  <p>To correct any of these, <a href="
-  <?php
-  $my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
-    . '&redirect_uri=http://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=offline_access,read_stream,publish_stream';
-  echo $my_permissions_url;
-  ?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
-  <?php
 
+<?php
+  echo "<p>You've indicated you wish to publish to this page: ". $wpbookAdminOptions['fb_page_target'] ."</p>";
+  
   if(!empty($wpbookAdminOptions['fb_page_target'])) {
-    echo "<p>You've indicated you wish to publish to this page: ". $wpbookAdminOptions['fb_page_target'] ."</p>";
-    echo "<p><blockquote>";
-    $permissions_fql = 'SELECT publish_stream FROM permissions WHERE uid = '. $wpbookAdminOptions['fb_page_target'] .' ';
-    $params = array(
-                  'method' => 'fql.query',
-                  'query' => $permissions_fql,
-                  );
-    try {
-      $perm = $facebook->api($params);
-    } catch (FacebookApiException $e) {
-      if ($wpbook_show_errors) {
-        $wpbook_message = 'Caught exception in fql_query: ' . $e->getMessage();
-        wp_die($wpbook_message,'WPBook Error');
+    ?>
+    <p>WPBook <strong>
+    <?php
+    /* 
+     * here we need to retrieve the accounts connection of the user object
+     * and find the correct access token for the page to which the user wants 
+     * to publish.
+     * Then store it. 
+     */
+    $fb_response = $facebook->api('/me/accounts/');  
+    foreach($fb_response['data'] as $page) {
+      if ($page['id'] == $wpbookAdminOptions['fb_page_target']) {
+        $my_wp_page_name = $page['name'];
+        if($page['access_token']) {
+          update_option('wpbook_page_access_token',$page['access_token']);
+          echo 'has';
+        } else {
+          echo 'has NOT';
+        }
       }
     }
-    
-    if (($perm == '') || ($perm[0][publish_stream] != 1)) {
-      echo 'This page has NOT granted stream.publish permissions to this app (OR this is an application profile page or group page - no way to check those currently). ';
-      echo '<a href="http://www.facebook.com/connect/prompt_permissions.php?api_key=';
-      echo $api_key;
-      echo '&v=1.0&next=';
-      echo 'http://apps.facebook.com/'. urlencode($wpbookAdminOptions['fb_app_url']);
-      echo '/?catch_permissions=true&extern=1&display=popup&ext_perm=publish_stream&enable_profile_selector=1&profile_selector_ids=';
-      echo $wpbookAdminOptions['fb_page_target'];
-      echo '" target="_top">Grant stream.publish for this page</a>. ';          
-    } else { 
-      echo 'This page has granted stream.publish permissions to this app. ';
-    }
-  } // end if fb_page_target is set
+    ?>
+    </strong> stored an access_token for use as <?php echo $my_wp_page_name ?> as well.</p>
+<?php     
+} // end if fb_page_target is set
   ?>
+
+<p>To correct any of these, <a href="
+<?php
+$my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
+. '&redirect_uri=http://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=offline_access,read_stream,publish_stream,manage_pages';
+echo $my_permissions_url;
+?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
+
   </blockquote></p>
   <div id="fb-root"></div>
   <script>

@@ -157,6 +157,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     if(($stream_publish_pages == "true") && (!empty($target_page))) {      
       // publish to page with new api
       $fb_response = '';
+      $access_token = get_option('wpbook_page_access_token');
       try{
         // post as an excerpt
         if(!empty($my_image)) {
