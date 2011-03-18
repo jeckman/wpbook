@@ -109,7 +109,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
 
     if(DEBUG) {
       $fp = fopen($debug_file, 'a');
-      $debug_string=date("Y-m-d H:i:s",time())." : Getting post thumbnail, its". $my_image ."\n";
+      $debug_string=date("Y-m-d H:i:s",time())." : Post thumbail is ". $my_image ."\n";
       fwrite($fp, $debug_string);
     }
     
