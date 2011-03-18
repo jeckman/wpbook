@@ -144,7 +144,7 @@ if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this 
   <p>To correct any of these, <a href="
   <?php
   $my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
-    . '&redirect_uri=http://apps.facebook.com/' . $app_url .'/?wp_user='. $_REQUEST["wp_user"] .'&scope=offline_access,read_stream,publish_stream';
+    . '&redirect_uri=http://apps.facebook.com/' . $app_url .'/?wp_user='. $_REQUEST["wp_user"] .'&scope=offline_access,read_stream,publish_stream,manage_pages';
   echo $my_permissions_url;
   ?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
   <?php
