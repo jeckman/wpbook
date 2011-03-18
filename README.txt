@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 Tested up to: 3.1
 Requires at least: 2.9.0
 
@@ -91,6 +91,15 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.1.2 = 
+ * Bugfix: Don't store access_token in usermeta but in options table
+   (Impacts users who were trying to post as authors other than admin)
+ * Bugfix: Post Thumbnails was failing, resulting in random images
+ * Bugfix: ssl options for self-signed certs (impacts posting to 
+   Facebook for users on servers with self-signed ssl certs)
+ * Store separate access token and "manage_pages" permissions so that
+   we can publish to pages as pages, not as users
 
 = 2.1.1 = 
  * Bugfix - wrap call to get_the_post_thumbnail in function_exists() so 
