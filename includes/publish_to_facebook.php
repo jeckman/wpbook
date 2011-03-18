@@ -11,7 +11,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     include_once(WP_PLUGIN_DIR.'/wpbook/includes/client/facebook.php');
   }           
 	$wpbookOptions = get_option('wpbookAdminOptions');
-	
+  
 	if (!empty($wpbookOptions)) {
 		foreach ($wpbookOptions as $key => $option)
 		$wpbookAdminOptions[$key] = $option;
@@ -33,11 +33,15 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   
   
   $facebook = new Facebook($api_key, $secret);
-  if(version_compare($wp_version, '3.0', '<')) {
-    $access_token = get_usermeta( $current_user->ID,'wpbook_access_token');
-  } else {
-    $access_token = get_user_meta($current_user->ID,'wpbook_access_token',true);
-  }
+  
+  /* TODO: move this bit of data out of usermeta and into a wpbook option */
+  //if(version_compare($wp_version, '3.0', '<')) {
+  //  $access_token = get_usermeta( $current_user->ID,'wpbook_access_token');
+  //} else {
+  //  $access_token = get_user_meta($current_user->ID,'wpbook_access_token',true);
+  //}
+  
+  $access_token = get_option('wpbook_user_access_token');
   
   if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && (($stream_publish == "true") || $stream_publish_pages == "true")) {
     // here we should also post to the author's stream

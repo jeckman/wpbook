@@ -21,12 +21,12 @@ if (empty($data["user_id"])) {
   // and they've just granted permissions
   $access_token = $data["oauth_token"];   
 } 
-  
+
+/* should not store in user_meta - need to store as an option 
+ * If a wp_user id was passed in, that lets us know they came from wp
+ * And they are the $target_admin of the FB app, so we should store their ID
+ */   
 if ((isset($_REQUEST["wp_user"])) && ($data["user_id"] == $target_admin)) {
-  if(version_compare($wp_version, '3.0', '<')) {
-    update_usermeta($_REQUEST["wp_user"],'wpbook_access_token', $data["oauth_token"]);
-  } else {
-    update_user_meta($_REQUEST["wp_user"], 'wpbook_access_token',$data["oauth_token"]);
-  }
+  update_option('wpbook_user_access_token',$access_token);
 }
 ?>
