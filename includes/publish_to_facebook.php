@@ -33,16 +33,15 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   
   
   $facebook = new Facebook($api_key, $secret);
-  
-  /* TODO: move this bit of data out of usermeta and into a wpbook option */
-  //if(version_compare($wp_version, '3.0', '<')) {
-  //  $access_token = get_usermeta( $current_user->ID,'wpbook_access_token');
-  //} else {
-  //  $access_token = get_user_meta($current_user->ID,'wpbook_access_token',true);
-  //}
-  
   $access_token = get_option('wpbook_user_access_token');
   
+  if($access_token == '') {
+    if(DEBUG) {
+      $fp = fopen($debug_file, 'a');
+      $debug_string=date("Y-m-d H:i:s",time())." : No access token\n";
+      fwrite($fp, $debug_string);
+    }
+  }
   if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && (($stream_publish == "true") || $stream_publish_pages == "true")) {
     // here we should also post to the author's stream
     $my_post = get_post($post_ID);
@@ -77,14 +76,50 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       $short_desc .= '...';
       $wpbook_description = $short_desc;
     }
+    $debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_pub_debug.txt';
 
-    if (function_exists('get_the_post_thumbnail') && has_post_thumbnail($post_ID)) {
-      $my_image = get_the_post_thumbnail($post_ID,'thumbnail');
+    
+    if (function_exists('get_the_post_thumbnail') && has_post_thumbnail($my_post->ID)) {
+      if(DEBUG) {
+        $fp = fopen($debug_file, 'a');
+        $debug_string=date("Y-m-d H:i:s",time())." : function exists, and this post has_post_thumbnail - post_Id is ". $my_post->ID ." \n";
+        fwrite($fp, $debug_string);
+      }      
+      $my_thumb_id = get_post_thumbnail_id($my_post->ID);
+      if(DEBUG) {
+        $fp = fopen($debug_file, 'a');
+        $debug_string=date("Y-m-d H:i:s",time())." : my_thumb_id is ". $my_thumb_id ." \n";
+        fwrite($fp, $debug_string);
+      }
+      $my_thumb_array = wp_get_attachment_image_src($my_thumb_id);
+      $my_image = $my_thumb_array[0]; // this should be the url
+      if(DEBUG) {
+        $fp = fopen($debug_file, 'a');
+        $debug_string=date("Y-m-d H:i:s",time())." : my_image is ". $my_image ." \n";
+        fwrite($fp, $debug_string);
+      }
     } else {
+      if(DEBUG) {
+        $fp = fopen($debug_file, 'a');
+        $debug_string=date("Y-m-d H:i:s",time())." : Function does not exist, or no thumb \n";
+        fwrite($fp, $debug_string);
+      }  
       $my_image = '';
     }
-      
+
+    if(DEBUG) {
+      $fp = fopen($debug_file, 'a');
+      $debug_string=date("Y-m-d H:i:s",time())." : Getting post thumbnail, its". $my_image ."\n";
+      fwrite($fp, $debug_string);
+    }
+    
     if($stream_publish == "true") {
+      if(DEBUG) {
+        $fp = fopen($debug_file, 'a');
+        $debug_string=date("Y-m-d H:i:s",time())." : Publish to Facebook Running\n";
+        fwrite($fp, $debug_string);
+      }
+      
       $fb_response = '';
       try{
         // need new format for SDK API
@@ -115,6 +150,11 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                 'message' => wp_kses(stripslashes(apply_filters('the_content',$my_post->post_content)),$allowedtags),  
                                 ); 
           }
+          if(DEBUG) {
+            $fp = fopen($debug_file, 'a');
+            $debug_string=date("Y-m-d H:i:s",time())." : Publishing as note, $my_image is " . $my_image ." \n";
+            fwrite($fp, $debug_string);
+          }
           $fb_response = $facebook->api('/'. $target_admin .'/notes', 'POST', $attachment);
         } else {
           // post as an excerpt
@@ -140,6 +180,11 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                        'href' => $my_permalink
                                        )
                                 ); 
+          if(DEBUG) {
+            $fp = fopen($debug_file, 'a');
+            $debug_string=date("Y-m-d H:i:s",time())." : Publishing as excerpt, $my_image is " . $my_image ." \n";
+            fwrite($fp, $debug_string);
+          }
           $fb_response = $facebook->api('/'. $target_admin .'/feed', 'POST', $attachment);     
         }
       } catch (FacebookApiException $e) {
@@ -175,13 +220,17 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               'name' => $my_title,
                               'link' => $my_permalink,
                               'description' => $wpbook_description,  
-                              'comments_xid' => $post_ID, 
                               ); 
         }
         $action_links = array( array('text' => 'Read More',
                                      'href' => $my_permalink
                                      )
                               );
+        if(DEBUG) {
+          $fp = fopen($debug_file, 'a');
+          $debug_string=date("Y-m-d H:i:s",time())." : Publishing to page, image is " . $my_image ." \n";
+          fwrite($fp, $debug_string);
+        }
         $fb_response = $facebook->api('/'. $target_page .'/feed/','POST', $attachment); 
       } catch (FacebookApiException $e) {
         if($wpbook_show_errors) {
