@@ -43,6 +43,12 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   }
   if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && (($stream_publish == "true") || $stream_publish_pages == "true")) {
     // here we should also post to the author's stream
+    if(DEBUG) {
+      $fp = fopen($debug_file, 'a');
+      $debug_string=date("Y-m-d H:i:s",time())." : publish_to_facebook running, target_admin is " . $target_admin "\n";
+      fwrite($fp, $debug_string);
+    }
+    
     $my_post = get_post($post_ID);
     if(!empty($my_post->post_password)) { // post is password protected, don't post
       return;
@@ -50,6 +56,12 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     if(get_post_type($my_post->ID) != 'post') { // only do this for posts
       return;
     }
+    if(DEBUG) {
+      $fp = fopen($debug_file, 'a');
+      $debug_string=date("Y-m-d H:i:s",time())." : Post ID is ". $my_post->ID ."\n";
+      fwrite($fp, $debug_string);
+    }
+    
     $publish_meta = get_post_meta($my_post->ID,'wpbook_fb_publish',true); 
     if(($publish_meta == 'no')) { // user chose not to post this one
       return;
@@ -63,6 +75,12 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     }
     $message = wpbook_attribution_line($wpbook_attribution_line,$my_author);
   
+    if(DEBUG) {
+      $fp = fopen($debug_file, 'a');
+      $debug_string=date("Y-m-d H:i:s",time())." : My permalink is ". $my_permalink ."\n";
+      fwrite($fp, $debug_string);
+    }
+    
     if(($my_post->post_excerpt) && ($my_post->post_excerpt != '')) {
       $wpbook_description = stripslashes(wp_filter_nohtml_kses(apply_filters('the_content',$my_post->post_excerpt)));
     }
@@ -76,7 +94,6 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       $wpbook_description = $short_desc;
     }
 
-    
     if (function_exists('get_the_post_thumbnail') && has_post_thumbnail($my_post->ID)) {
       if(DEBUG) {
         $fp = fopen($debug_file, 'a');
@@ -114,7 +131,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     if($stream_publish == "true") {
       if(DEBUG) {
         $fp = fopen($debug_file, 'a');
-        $debug_string=date("Y-m-d H:i:s",time())." : Publish to Facebook Running\n";
+        $debug_string=date("Y-m-d H:i:s",time())." : Publishing to personal wall\n";
         fwrite($fp, $debug_string);
       }
       
@@ -154,6 +171,11 @@ function wpbook_safe_publish_to_facebook($post_ID) {
             fwrite($fp, $debug_string);
           }
           $fb_response = $facebook->api('/'. $target_admin .'/notes', 'POST', $attachment);
+          if(DEBUG) {
+            $fp = fopen($debug_file, 'a');
+            $debug_string=date("Y-m-d H:i:s",time())." : Just published to api, fb_response is ". print_r($fb_response,true) ."\n";
+            fwrite($fp, $debug_string);
+          }
         } else {
           // post as an excerpt
           if(!empty($my_image)) {
@@ -184,6 +206,11 @@ function wpbook_safe_publish_to_facebook($post_ID) {
             fwrite($fp, $debug_string);
           }
           $fb_response = $facebook->api('/'. $target_admin .'/feed', 'POST', $attachment);     
+          if(DEBUG) {
+            $fp = fopen($debug_file, 'a');
+            $debug_string=date("Y-m-d H:i:s",time())." : Just published to api, fb_response is ". print_r($fb_response,true) ."\n";
+            fwrite($fp, $debug_string);
+          }
         }
       } catch (FacebookApiException $e) {
         if($wpbook_show_errors) {
@@ -196,11 +223,25 @@ function wpbook_safe_publish_to_facebook($post_ID) {
         add_post_meta($my_post->ID,'_wpbook_user_stream_time',0); // no comments imported yet
       }  // end of if $response
     } // end of if stream_publish 
+    
+    if(DEBUG) {
+      $fp = fopen($debug_file, 'a');
+      $debug_string=date("Y-m-d H:i:s",time())." : Past stream_publish, fb_response is ". print_r($fb_response,true) ."\n";
+      fwrite($fp, $debug_string);
+    }
   
     if(($stream_publish_pages == "true") && (!empty($target_page))) {      
       // publish to page with new api
       $fb_response = '';
       $access_token = get_option('wpbook_page_access_token');
+      
+      if(DEBUG) {
+        $fp = fopen($debug_file, 'a');
+        $debug_string=date("Y-m-d H:i:s",time())." : No page access token\n";
+        fwrite($fp, $debug_string);
+      }
+      
+      
       try{
         // post as an excerpt
         if(!empty($my_image)) {
@@ -230,6 +271,11 @@ function wpbook_safe_publish_to_facebook($post_ID) {
           fwrite($fp, $debug_string);
         }
         $fb_response = $facebook->api('/'. $target_page .'/feed/','POST', $attachment); 
+        if(DEBUG) {
+          $fp = fopen($debug_file, 'a');
+          $debug_string=date("Y-m-d H:i:s",time())." : Just published as page to api, fb_response is ". print_r($fb_response,true) ."\n";
+          fwrite($fp, $debug_string);
+        }
       } catch (FacebookApiException $e) {
         if($wpbook_show_errors) {
           $wpbook_message = 'Caught exception in publish to page ' . $e->getMessage() . ' Error code: ' . $e->getCode();

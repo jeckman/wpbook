@@ -177,7 +177,7 @@ function wpbook_import_comments() {
             }
             if(DEBUG) {
               $fp = fopen($debug_file, 'a');
-              $debug_string=date("Y-m-d H:i:s",time())." : FBcommentslist is ". print_r($fbcommentslist) . "\n";
+              $debug_string=date("Y-m-d H:i:s",time())." : FBcommentslist is ". print_r($fbcommentslist,'true') . "\n";
               fwrite($fp, $debug_string);
             }
           } //end of comment method
