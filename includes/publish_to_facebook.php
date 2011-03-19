@@ -131,7 +131,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     if($stream_publish == "true") {
       if(DEBUG) {
         $fp = fopen($debug_file, 'a');
-        $debug_string=date("Y-m-d H:i:s",time())." : Publishing to personal wall\n";
+        $debug_string=date("Y-m-d H:i:s",time())." : Publishing to personal wall, admin is " .$target_admin ."\n";
         fwrite($fp, $debug_string);
       }
       
@@ -237,10 +237,15 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       
       if(DEBUG) {
         $fp = fopen($debug_file, 'a');
-        $debug_string=date("Y-m-d H:i:s",time())." : No page access token\n";
+        $debug_string=date("Y-m-d H:i:s",time())." : Page access token is ". $access_token ."\n";
         fwrite($fp, $debug_string);
       }
       
+      if(DEBUG) {
+        $fp = fopen($debug_file, 'a');
+        $debug_string=date("Y-m-d H:i:s",time())." : Publishing to page " . $target_page  ."\n";
+        fwrite($fp, $debug_string);
+      }
       
       try{
         // post as an excerpt
