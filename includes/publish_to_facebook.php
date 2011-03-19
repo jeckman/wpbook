@@ -3,10 +3,9 @@
  * This function updates profile boxes and publishes to Facebook
  * In an include to avoid PHP4 based errors
  */
-function wpbook_safe_publish_to_facebook($post_ID) {  
-  global $current_user;
-  get_currentuserinfo();
-  
+function wpbook_safe_publish_to_facebook($post_ID) {    
+  $debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_pub_debug.txt';
+
   if(!class_exists('FacebookRestClient')) {
     include_once(WP_PLUGIN_DIR.'/wpbook/includes/client/facebook.php');
   }           
@@ -76,7 +75,6 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       $short_desc .= '...';
       $wpbook_description = $short_desc;
     }
-    $debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_pub_debug.txt';
 
     
     if (function_exists('get_the_post_thumbnail') && has_post_thumbnail($my_post->ID)) {
