@@ -55,6 +55,8 @@ function wpbook_import_comments() {
   $api_key = $wpbookAdminOptions['fb_api_key'];
   $secret  = $wpbookAdminOptions['fb_secret'];
   $fb_user = $wpbookAdminOptions['fb_admin_target'];
+  $access_token = get_option('wpbook_access_token');
+  $page_access_token = get_option('wpbook_page_access_token');
   
   Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
   Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
@@ -65,10 +67,10 @@ function wpbook_import_comments() {
                                  'cookie' => true,
                                  )
                            );
-    
+  
   if(DEBUG) {
     $fp = fopen($debug_file, 'a');
-    $debug_string=date("Y-m-d H:i:s",time())." : Facebook object: ". print_r($facebook,true) ." \n";
+    $debug_string=date("Y-m-d H:i:s",time())." : Access token is ". $access_token ." \n";
     fwrite($fp, $debug_string);
   }
   
@@ -166,6 +168,7 @@ function wpbook_import_comments() {
             $params = array(
                             'method' => 'fql.query',
                             'query' => $fbsql,
+                            'access_token' => $access_token,
                             );
             try {
               $fbcommentslist=$facebook->api($params);
