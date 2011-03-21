@@ -55,7 +55,7 @@ function wpbook_import_comments() {
   $api_key = $wpbookAdminOptions['fb_api_key'];
   $secret  = $wpbookAdminOptions['fb_secret'];
   $fb_user = $wpbookAdminOptions['fb_admin_target'];
-  $access_token = get_option('wpbook_access_token');
+  $access_token = get_option('wpbook_user_access_token');
   $page_access_token = get_option('wpbook_page_access_token');
   
   Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
@@ -64,7 +64,7 @@ function wpbook_import_comments() {
   $facebook = new Facebook(array(
                                  'appId'  => $api_key,
                                  'secret' => $secret,
-                                 'cookie' => true,
+                                 'cookie' => false,
                                  )
                            );
   
@@ -167,8 +167,8 @@ function wpbook_import_comments() {
             }
             $params = array(
                             'method' => 'fql.query',
-                            'query' => $fbsql,
                             'access_token' => $access_token,
+                            'query' => $fbsql,
                             );
             try {
               $fbcommentslist=$facebook->api($params);
@@ -180,7 +180,7 @@ function wpbook_import_comments() {
             }
             if(DEBUG) {
               $fp = fopen($debug_file, 'a');
-              $debug_string=date("Y-m-d H:i:s",time())." : FBcommentslist is ". print_r($fbcommentslist,'true') . "\n";
+              $debug_string=date("Y-m-d H:i:s",time())." : FBcommentslist is ". print_r($fbcommentslist) . "\n";
               fwrite($fp, $debug_string);
             }
           } //end of comment method
@@ -208,6 +208,7 @@ function wpbook_import_comments() {
               }
               $params = array(
                               'method' => 'fql.query',
+                              'access_token' => $access_token,
                               'query' => $fbsql,
                               );
               try {
