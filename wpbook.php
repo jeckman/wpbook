@@ -6,8 +6,8 @@ Date: 2010, September 11th
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 2.1.3
-Stable tag: 2.1.3
+Version: 2.1.4
+Stable tag: 2.1.4
 
 */
   
@@ -1191,8 +1191,20 @@ function wpbook_get_facebook_avatar($avatar, $comment, $size="50") {
         $parse_author_url = (parse_url($author_url));
         $parse_author_url_q = $parse_author_url['query'];
             if(preg_match('/id[=]([0-9]*)/', $parse_author_url_q, $match)){
-                $fb_id = "/".$match[1];}
-            else{ $fb_id = $parse_author_url['path'];
+                $fb_id = "/".$match[1];
+            } else {
+              /* have to account here for multiple options
+               * http://facebook.com/profile.php?id=12234
+               * http://www.facebook.com/pages/PageName/1234
+               * Application pages, groups?
+               */
+              if(strrpos($parse_author_url['path'],'pages')) {
+                $fb_id_array = explode('/',$parse_author_url['path']);
+                $size = count($fb_id_array);
+                $fb_id = "/" . $fb_id_array[$size-1]; 
+              } else {
+                $fb_id = $parse_author_url['path'];
+              }
             }
         $grav_url= "http://graph.facebook.com".$fb_id."/picture?type=square";
         }
@@ -1218,14 +1230,25 @@ function wpbook_get_global_facebook_avatar($avatar, $comment, $size="50") {
     $default = $wpbookAdminOptions['gravatar_default'];
     $rating=$wpbookAdminOptions['gravatar_rating'];
     $size="50";
+    $parse_author_url = (parse_url($author_url));
     if(preg_match("@^(?:http://)?(?:www\.)?facebook@i",trim($author_url))){
-      $parse_author_url = (parse_url($author_url));
       $parse_author_url_q = $parse_author_url['query'];
       if(preg_match('/id[=]([0-9]*)/', $parse_author_url_q, $match)){
         $fb_id = "/".$match[1];
       }
       else { 
-        $fb_id = $parse_author_url['path'];
+        /* have to account here for multiple options
+         * http://facebook.com/profile.php?id=12234
+         * http://www.facebook.com/pages/PageName/1234
+         * Application pages, groups?
+         */
+        if(strrpos($parse_author_url['path'],'pages')) {
+          $fb_id_array = explode('/',$parse_author_url['path']);
+          $size = count($fb_id_array);
+          $fb_id = "/" . $fb_id_array[$size-1]; 
+        } else {
+          $fb_id = $parse_author_url['path'];
+        }
       }
       $grav_url= "http://graph.facebook.com".$fb_id."/picture?type=square";
     }

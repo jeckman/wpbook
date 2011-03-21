@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 Tested up to: 3.1
 Requires at least: 2.9.0
 
@@ -91,6 +91,11 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.1.4 = 
+ * Bugfix: Access token for importing comments from streams that aren't
+   public
+ * Bugfix: Get right Facebook avatar for comments made as pages
 
 = 2.1.3 = 
  * Bugfix: Error for fopen filename can't be empty - wasn't declaring
