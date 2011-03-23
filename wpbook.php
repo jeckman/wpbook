@@ -1244,8 +1244,8 @@ function wpbook_get_global_facebook_avatar($avatar, $comment, $size="50") {
          */
         if(strrpos($parse_author_url['path'],'pages')) {
           $fb_id_array = explode('/',$parse_author_url['path']);
-          $size = count($fb_id_array);
-          $fb_id = "/" . $fb_id_array[$size-1]; 
+          $size = count($fb_id_array) -1;
+          $fb_id = "/" . $fb_id_array[$size]; 
         } else {
           $fb_id = $parse_author_url['path'];
         }

@@ -6,7 +6,7 @@
 function wpbook_safe_publish_to_facebook($post_ID) {    
   $debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_pub_debug.txt';
 
-  if(!class_exists('FacebookRestClient')) {
+  if(!class_exists('Facebook')) {
     include_once(WP_PLUGIN_DIR.'/wpbook/includes/client/facebook.php');
   }           
 	$wpbookOptions = get_option('wpbookAdminOptions');
