@@ -901,11 +901,16 @@ function wpbook_template_directory($value) {
 //die("template dir ".wpbook_template_directory($value)." <br/> theme root ". wpbook_theme_root($dir). " <br/> theme root uri ".wpbook_theme_root_uri($theme_root));
 //check to see if the user has a custom theme in their theme folder
 function wpbook_check_custom_theme($theme) {
-	$installed_themes= array();
-	$installed_themes= get_themes();
-	$wpbook_theme_check = (!empty($installed_themes[$theme])) ? TRUE : FALSE;
-	return $wpbook_theme_check;
-	}
+	global $wp_version;
+  if (version_compare($wp_version, '3.1', '>=')) {
+    $installed_themes= array();
+    $installed_themes= get_themes();
+    $wpbook_theme_check = (!empty($installed_themes[$theme])) ? TRUE : FALSE;
+    return $wpbook_theme_check;
+  } else {
+    return FALSE; // custom theme check fails in wordpress < 3.1
+  }
+}
   
 // this is the function which adds to the template and stylesheet hooks
 // the call to wpbook_template
