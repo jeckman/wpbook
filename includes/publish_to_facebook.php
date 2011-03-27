@@ -185,6 +185,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
             fwrite($fp, $debug_string);
           }
         } else {
+          $actions = json_encode(array(array('text'=>'Read More', 'href'=>'<a href="' $my_permalink . '" rel="nofollow">' . $my_permalink .'</a>')));
+
           // post as an excerpt
           if(!empty($my_image)) {
             /* message, picture, link, name, caption, description, source */      
@@ -193,7 +195,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                 'name' => $my_title,
                                 'link' => $my_permalink,
                                 'description' => $wpbook_description,  
-                                'picture' => $my_image, 
+                                'picture' => $my_image,
+                                'actions' => $actions
                                 ); 
           } else {
             $attachment = array( 
@@ -202,12 +205,9 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                 'link' => $my_permalink,
                                 'description' => $wpbook_description,  
                                 'comments_xid' => $post_ID, 
+                                'actions' => $actions
                                 ); 
           }
-          $action_links = array( array('text' => 'Read More',
-                                       'href' => $my_permalink
-                                       )
-                                ); 
           if(DEBUG) {
             $fp = fopen($debug_file, 'a');
             $debug_string=date("Y-m-d H:i:s",time())." : Publishing as excerpt, $my_image is " . $my_image ." \n";
