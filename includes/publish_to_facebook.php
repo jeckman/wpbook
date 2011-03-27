@@ -45,8 +45,12 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   if($access_token == '') {
     if(WPBOOKDEBUG) {
       $fp = @fopen($debug_file, 'a');
-      if(!($fp))
-        define (WPBOOKDEBUG,false); // don't keep trying
+      if(($fp) && (filesize($debug_file) > 500 * 1024)) {  // 500k max to file
+        fclose($fp);
+        $fp = @fopen($debug_file,'w+'); // start over with a new file
+      }
+      if(!$fp) 
+        define('WPBOOKDEBUG',false); // stop trying
       $debug_string=date("Y-m-d H:i:s",time())." : No access token\n";
       if(is_writeable($debug_file)) {
         fwrite($fp, $debug_string);

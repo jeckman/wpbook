@@ -47,7 +47,11 @@ function wpbook_import_comments() {
 
   $debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_debug.txt';
   if(WPBOOKDEBUG) {
-    $fp = @@fopen($debug_file, 'a');
+    $fp = @fopen($debug_file, 'a');
+    if(($fp) && (filesize($debug_file) > 500 * 1024)) {  // 500k max to file
+      fclose($fp);
+      $fp = @fopen($debug_file,'w+'); // start over with a new file
+    }
     if(!$fp) 
       define('WPBOOKDEBUG',false); // stop trying
     $debug_string=date("Y-m-d H:i:s",time())." : Cron Running\n";
