@@ -110,7 +110,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                          $imported_comments_email,$infinite_session_key,
                          $attribution_line,$wpbook_enable_debug,
                          $wpbook_use_global_gravatar,$wpbook_as_note,
-                         $wpbook_target_group) {
+                         $wpbook_target_group, $wpbook_disable_sslverify) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -156,6 +156,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'wpbook_use_global_gravatar' => $wpbook_use_global_gravatar,
                               'wpbook_as_note' => $wpbook_as_note,
                               'wpbook_target_group' => $wpbook_target_group,
+                              'wpbook_disable_sslverify' => $wpbook_disable_sslverify, 
                               );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
@@ -254,6 +255,7 @@ function wpbook_subpanel() {
       $wpbook_enable_debug = $_POST['wpbook_enable_debug'];
       $wpbook_as_note = $_POST['wpbook_as_note'];
       $wpbook_target_group = $_POST['wpbook_target_group'];
+      $wpbook_disable_sslverify = $_POST['wpbook_disable_sslverify'];
       $wpbook_use_global_gravatar = $_POST['wpbook_use_global_gravatar'];
       // Handle custom gravatar_deault code modified from wp-admin/options.php
       if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
@@ -288,7 +290,8 @@ function wpbook_subpanel() {
                     $import_comments,$approve_imported_comments,$num_days_import,
                     $imported_comments_email,$infinite_session_key,
                     $attribution_line,$wpbook_enable_debug,
-                    $wpbook_use_global_gravatar,$wpbook_as_note,$wpbook_target_group);
+                    $wpbook_use_global_gravatar,$wpbook_as_note,
+                    $wpbook_target_group,$wpbook_disable_sslverify);
       $flash = "Your settings have been saved. ";
     } elseif (($wpbookAdminOptions['fb_api_key'] != "") && ($wpbookAdminOptions['fb_secret'] != "") && ($wpbookAdminOptions['fb_app_url'] != "") && ($wpbookAdminOptions['fb_admin_target'] != "")
             && (!empty($_POST['fb_api_key']))  && (!empty($_POST['fb_secret'])) && (!empty($_POST['fb_app_url'])) && (!empty($_POST['fb_admin_target']))){
@@ -306,7 +309,7 @@ function wpbook_subpanel() {
         $gravatar_default = WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif';
         setAdminOptions(1, null,null,null,null,null,true,true,true,true,true,top,null,null,"F j, Y","g:i a",
                         true,null,null,null,disabled,null,"g",$gravatar_default,null,null,null,null,true,true,10,
-                        false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null,false,false,null);
+                        false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null,false,false,null,false);
       }
       if ($flash != '') echo '<div id="message"class="updated fade">'
         . '<p>' . $flash . '</p></div>'; 
@@ -438,6 +441,13 @@ echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">Page ID: <input t
         echo("checked");
       }
       echo ' id="show_errors" > Show errors posting to Facebook Stream </p>';
+        
+        echo '<p><input type="checkbox" name="wpbook_disable_sslverify" value="true" ';
+        if( htmlentities($wpbookAdminOptions['wpbook_disable_sslverify']) == "true") {
+          echo("checked");
+        }
+        echo ' id="wpbook_disable_sslverify" > Disable Facebook SSL verification</p>';
+  
 
       echo '<p><strong>Stream Comment Options</strong><br/>
       <input type="checkbox" name="import_comments" value="1" ';
