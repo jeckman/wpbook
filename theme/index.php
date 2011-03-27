@@ -92,9 +92,15 @@ if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this 
   <body>
   <p>This page is where you can check and grant extended permissions, which enable WPBook to 
    publish to your personal wall and/or to the walls of fan pages.</p>
-  <p>Your userid is <?php echo $data["user_id"]; ?> </p>
-  <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
-  <p>This user_id has granted these permissions:
+<p>The Facebook profile ID you are currently logged in to Facebook as is <?php echo $data["user_id"]; ?>. You have defined <?php echo $target_admin; ?> as your Facebook user id in WPBook Settings.</p>
+<?php
+  if($data["user_id"] != $target_admin) {
+    echo '<p><strong>Your Facebook Profile ID must match the ID with which you are logged in to Facebook, or else an access token will
+    not be stored and publishing to Facebook will fail. Please update the "YOUR Facebook Profile ID" setting in WPBook settings to match
+    the userid shown above.</p>';
+  }
+?>  
+<p>FB profile <?php echo $data["user_id"]; ?> has granted these permissions:
   <?php // need to set some permissions checks here
   $fql = 'SELECT offline_access,read_stream,publish_stream,manage_pages FROM permissions WHERE uid='. $data["user_id"]; 
     $params = array(
@@ -137,46 +143,51 @@ if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this 
   ?></strong></li>
 </ul>
 </p>
-<p>This user <strong>
 <?php 
   $access_token = get_option('wpbook_user_access_token','');
-  if($access_token != '')
-  echo 'has';
-  else
-  echo 'has NOT';
-  ?></strong> set an access_token for the application to use.</p>
-
-<?php
-  echo "<p>You've indicated you wish to publish to this page: ". $wpbookAdminOptions['fb_page_target'] ."</p>";
-  
-  if(!empty($wpbookAdminOptions['fb_page_target'])) {
-    ?>
-<p>WPBook <strong>
-<?php
-  /* 
-   * here we need to retrieve the accounts connection of the user object
-   * and find the correct access token for the page to which the user wants 
-   * to publish.
-   * Then store it. 
-   */
-  $fb_response = $facebook->api('/me/accounts/');  
-  foreach($fb_response['data'] as $page) {
-    if ($page['id'] == $wpbookAdminOptions['fb_page_target']) {
-      $my_wp_page_name = $page['name'];
-      if($page['access_token']) {
-        update_option('wpbook_page_access_token',$page['access_token']);
-        echo 'has';
-      } else {
-        echo 'has NOT';
-      }
-    }
+  if($access_token != '') {
+    echo '<p>An access token for this user has been stored.</p>';
+  } else {
+    echo '<p><strong>Error: No access token has been stored for this user -';
+    echo 'probably due to a misconfiguration. Check to see that the ProfileID ';
+    echo 'with which you are logged in to Facebook matches the one set in ';
+    echo 'WPBook settings, as listed above</strong></p>';
   }
-  ?>
-</strong> stored an access_token for use as <?php echo $my_wp_page_name ?> as well.</p>
-<?php     
+  
+  if((!empty($wpbookAdminOptions['fb_page_target'])) && ($wpbookAdminOptions['stream_publish_pages'] == "true")) {
+    echo "<p>You've indicated you wish to publish to this page: ". $wpbookAdminOptions['fb_page_target'] ."</p>";
+    $fb_response = $facebook->api('/me/accounts/');  
+    foreach($fb_response['data'] as $page) {
+      if ($page['id'] == $wpbookAdminOptions['fb_page_target']) {
+        $my_wp_page_name = $page['name'];
+        if($page['access_token']) {
+          update_option('wpbook_page_access_token',$page['access_token']);
+          echo '<p>An access token corresponding to this page has been stored.</p>';
+        } else {
+          echo '<p><strong>ERROR: No access token corresponding to this page was ';
+          echo 'found or stored.</strong> This likely means that either: ';
+          echo '<ul><li>The PageID is entered incorrectly in WPBook settings, or</li>';
+          echo '<li>The Facebook profile currently logged in has not granted the ';
+          echo '"manage_pages" permission appropriately, or</li>';
+          echo '<li>The Facebook profile logged in (and for which an access token ';
+          echo 'has been stored) is not eligible to grant manage_pages for the page ';
+          echo 'in question (not an admin).</li></ul></p>';
+        }
+      }
+    }     
   } // end if fb_page_target is set
-  ?>
 
+  if((!empty($wpbookAdminOptions['wpbook_target_group'])) && ($wpbookAdminOptions['stream_publish_pages'] == "true")) {
+    echo "<p>You've indicated you wish to publish to this group: ". $wpbookAdminOptions['wpbook_target_group'] ."</p>";
+    if(($my_permissions[0][publish_stream] == 1) && ($my_permissions[0][offline_access] == 1)) {  
+      echo '<p>The user access token includes publish stream and offline access permissions.</p>';
+    } else {
+      echo '<p><strong>ERROR: The user access token does not include publish stream ';
+      echo 'and offline access permissions.</strong></p>';
+    }
+  } // end if wp_target_group is set
+  
+?>
 <p>To correct any of these, <a href="
 <?php
 $my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
