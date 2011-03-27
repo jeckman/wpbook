@@ -171,8 +171,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                 'link' => $my_permalink,
                                 'message' => wp_kses(stripslashes(apply_filters('the_content',$my_post->post_content)),$allowedtags),  
                                 'picture' => $my_image, 
-                                '' => $,
-                                'properties' => $properties,
+                                'actions' => $actions,
                                 ); 
           } else {
             $attachment = array( 
@@ -180,8 +179,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                 'subject' => $my_title,
                                 'link' => $my_permalink,
                                 'message' => wp_kses(stripslashes(apply_filters('the_content',$my_post->post_content)),$allowedtags), 
-                                '' => $,
-                                'properties' => $properties,
+                                'actions' => $actions,
                                 ); 
           }
           if(WPBOOKDEBUG) {
@@ -203,8 +201,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                 'link' => $my_permalink,
                                 'description' => $wpbook_description,  
                                 'picture' => $my_image,
-                                '' => $,
-                                'properties' => $properties,
+                                'actions' => $actions,
                                 ); 
           } else {
             $attachment = array( 
@@ -213,8 +210,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                 'link' => $my_permalink,
                                 'description' => $wpbook_description,  
                                 'comments_xid' => $post_ID, 
-                                '' => $,
-                                'properties' => $properties,
+                                'actions' => $actions,
                                 ); 
           }
           if(WPBOOKDEBUG) {
@@ -271,8 +267,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               'link' => $my_permalink,
                               'description' => $wpbook_description,  
                               'picture' => $my_image, 
-                              '' => $,
-                              'properties' => $properties,
+                              'actions' => $actions,
                               ); 
         } else {
           $attachment = array( 
@@ -280,8 +275,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               'name' => $my_title,
                               'link' => $my_permalink,
                               'description' => $wpbook_description, 
-                              '' => $,
-                              'properties' => $properties,
+                              'actions' => $actions,
                               ); 
         }
         if(WPBOOKDEBUG) {
@@ -336,9 +330,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               'link' => $my_permalink,
                               'description' => $wpbook_description,  
                               'picture' => $my_image, 
-                              '' => $,
-                              'properties' => $properties,
-                        
+                              'actions' => $actions,                        
                               ); 
         } else {
           $attachment = array( 
@@ -346,8 +338,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               'name' => $my_title,
                               'link' => $my_permalink,
                               'description' => $wpbook_description,  
-                              '' => $,
-                              'properties' => $properties,
+                              'actions' => $actions,
                               ); 
         }
         if(WPBOOKDEBUG) {
