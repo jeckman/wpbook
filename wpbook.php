@@ -335,9 +335,9 @@ function wpbook_subpanel() {
 	<!-- START Required Options --> 
 	<h3 class="div_wpbook_toggle" id="wpbook_required">Required Settings <span class="div_wpbook_toggle_icon">+</span></h3>
 	<div class="div_wpbook" id="div_wpbook_required">
-	 <p>To use this plugin, you must register for an API key at <a href="http://www.facebook.com/developers/">Facebook</a>.
+	 <p>To use this plugin, you must register a Facebook application at <a href="http://www.facebook.com/developers/">Facebook</a>.
 	 Follow the link and click "set up a new application."  After you've obtained the 
-	 necessary info, fill in both your application's API and Secret keys as well as 
+	 necessary info, fill in both your application's App_ID and Secret keys as well as 
 	 your application's url.</p>
       <p>Note: Your "Canvas Callback URL" setting in Facebook should be: 
       <?php
