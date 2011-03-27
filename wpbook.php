@@ -324,21 +324,30 @@ function wpbook_subpanel() {
 			<a href="http://wpbook.net/"><img src="<?php echo $plugin_url; ?>/admin_includes/images/wpbook_logo.png"></a>
 		</div>
 		<div class="wpbook_top_text">
-			      <p>This plugin allows you to embed your blog into the Facebook canvas,
-  allows Facebook users to comment on or share your blog posts, cross-posts your 
+    <p>This plugin allows you to embed your blog into the Facebook canvas, allows
+  Facebook users to comment on or share your blog posts, cross-posts your 
   blog posts to the wall of your profile, a fan page, an application profile page,
   or a group page, and enables you to add a tab for your fan page. It also imports
   comments made against wall posts which originated in WordPress.</p>
 <p><a href="http://wpbook.net/docs/install/" target="_blank">Detailed instructions</a></p>
+<?php 
+  if(!empty($wpbookAdminOptions['fb_app_url']) && !empty($wpbookAdminOptions['fb_secret']) 
+  && !empty($wpbookAdminOptions['fb_api_key']) && !empty($wpbookAdminOptions['fb_admin_target'])) {  
+    echo '<p>If you are having issues, please begin by <a href="http://apps.facebook.com/'
+    . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true&wp_user='
+    .$current_user->ID .'">Checking '
+    . 'permissions</a> for stream publishing, reading, and offline access.</p>';  }
+  
+  ?>
   </div>
 	</div>
 	<!-- START Required Options --> 
 	<h3 class="div_wpbook_toggle" id="wpbook_required">Required Settings <span class="div_wpbook_toggle_icon">+</span></h3>
 	<div class="div_wpbook" id="div_wpbook_required">
-	 <p>To use this plugin, you must register a Facebook application at <a href="http://www.facebook.com/developers/">Facebook</a>.
-	 Follow the link and click "set up a new application."  After you've obtained the 
-	 necessary info, fill in both your application's App_ID and Secret keys as well as 
-	 your application's url.</p>
+	 <p>To use this plugin, you must <a href="http://www.facebook.com/developers/createapp.php">create
+   a Facebook application</a>. After you've obtained the necessary info, fill in
+   both your application's App_ID and Secret keys as well as your application's
+   url and your Facebook profile ID.</p>
       <p>Note: Your "Canvas Callback URL" setting in Facebook should be: 
       <?php
       echo '<code>' . get_bloginfo('url') . '</code></p>'; 
@@ -349,9 +358,9 @@ function wpbook_subpanel() {
       echo '<input type="text" name="fb_secret" value="';
       echo htmlentities($wpbookAdminOptions['fb_secret']) .'" size="35" /></p>';
       echo '<p>YOUR Facebook Profile ID: <input type="text" name="fb_admin_target" value="';
-      echo preg_replace("#[^0-9]#","",htmlentities($wpbookAdminOptions['fb_admin_target'])) .'" size="15" /><br/> 
-      Note: if you don\'t know your ID you can get it by visiting <a href="http://graph.facebook.com/USERNAME" target="_blank">http://graph.facebook.com/YOUR_USERNAME</a> <br/>Replacing the "YOUR_USERNAME" 
-      with your Facbook login.'; 
+      echo preg_replace("#[^0-9]#","",htmlentities($wpbookAdminOptions['fb_admin_target'])) .'" size="15" /><br/>';
+      echo 'Note: if you don\'t know your ID you can get it by visiting <a href="http://graph.facebook.com/USERNAME" target="_blank">http://graph.facebook.com/YOUR_USERNAME</a> <br/>Replacing the "YOUR_USERNAME" 
+      with your Facbook login. (More info on <a href="http://socialmediaseo.net/2010/02/20/how-to-find-facebook-id/">finding your Page ID</a>).'; 
       echo '</p>';
       echo '<p>Facebook Canvas Page URL, ';
       echo '<strong>NOT</strong> INCLUDING "http://apps.facebook.com/" ';
@@ -364,31 +373,37 @@ function wpbook_subpanel() {
 	<h3 class="div_wpbook_toggle" id="wpbook_stream">Stream/Wall Options <span class="div_wpbook_toggle_icon">+</span> </h3>
 	<div class="div_wpbook" id="div_wpbook_stream">
 	<?php 
-      if(empty($wpbookAdminOptions['fb_app_url']) || empty($wpbookAdminOptions['fb_secret']) || empty($wpbookAdminOptions['fb_api_key'])) {  
+      if(empty($wpbookAdminOptions['fb_app_url']) || empty($wpbookAdminOptions['fb_secret']) || empty($wpbookAdminOptions['fb_api_key']) || empty($wpbookAdminOptions['fb_admin_target'])) {  
         echo '<p><strong>Once your Facebook application is established by filling out the required information, return to edit streaming options.</strong></p>';
       } 
       else {  
         echo '<p>These settings all impact how WPBook publishes to Facebook walls, and depend on appropriate permissions being set in Facebook.</p>';
-        echo '<a href="http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true&wp_user='. $current_user->ID .'">Check '
-          . 'permissions</a> for stream publishing, reading, and offline access.';
-        echo '<p>Publish as Notes: <input type="checkbox" name="wpbook_as_note" ';
-        if($wpbookAdminOptions['wpbook_as_note']) 
-          echo 'checked';
-        echo ' ></p>';
+        echo '<p>If you are having issues, please begin by <a href="http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true&wp_user='. $current_user->ID .'">Checking '
+        . 'permissions</a> for stream publishing, reading, and offline access.</p>';
         echo '<p><strong>Stream Profile/Page Options</strong><br/>
         <p><input type="checkbox" name="stream_publish" value="true" ';
         if( htmlentities($wpbookAdminOptions['stream_publish']) == "true") {
           echo("checked");
         }
-        echo '> Publish new posts to YOUR Facebook Wall</p> ';
+        echo ' id="set_1"> Publish new posts to <a href="http://www.facebook.com/profile.php?id=' . $wpbookAdminOptions['fb_admin_target'] .'" target="_new">YOUR Facebook Wall</a></p> ';
+        echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options"><input type="checkbox" name="wpbook_as_note" ';
+        if($wpbookAdminOptions['wpbook_as_note']) 
+          echo 'checked';
+        echo ' > Publish as Notes (rather than excerpts)</p>';
+        
                echo '<p><input type="checkbox" name="stream_publish_pages" value="true" ';
         if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
           echo("checked");
         }
-echo ' id="set_2" > Publish new posts to the Wall of this Fan Page, Application Profile Page, or Group: ';
+        echo ' id="set_2" > Publish new posts to the wall of ';
+        if(empty($wpbookAdminOptions['fb_page_target'])) {
+           echo 'this Page: ';
+        } else {
+           echo '<a href="http://graph.facebook.com/' . $wpbookAdminOptions['fb_page_target'] . '"> this Page</a>: ';
+        }
 echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">PageID: <input type="text" name="fb_page_target" value="';
       echo preg_replace("#[^0-9]#","",htmlentities($wpbookAdminOptions['fb_page_target'])) .'" size="15" /> ';
-      echo '</p>';
+      echo ' (Information on <a href="http://socialmediaseo.net/2010/02/20/how-to-find-facebook-id/">finding your Page ID</a>)</p>';
       echo '<p><input type="checkbox" name="promote_external" value="true" ';
       if( htmlentities($wpbookAdminOptions['promote_external']) == "true") {
         echo("checked");
