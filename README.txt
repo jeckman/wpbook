@@ -5,15 +5,14 @@ Stable tag: 2.2
 Tested up to: 3.1
 Requires at least: 2.9.0
 
-Plugin to embed Wordpress Blog into Facebook Platform.
+Plugin to embed Wordpress Blog into Facebook Platform. Requires PHP 5. 
 
-As of 1.5, this plugin requires PHP 5. 
-
-NOTE: Major changes between 2.0.x and versions 2.1 and greater. 
-Please see: http://www.openparenthesis.org/2011/03/14/wpbook-2-1-released
-for information on how to upgrade if you used 2.0.x previously. 
 
 == Description ==
+
+NOTE: Major changes between 2.0.x and versions 2.1 or later. 
+Please see: http://wpbook.net/docs/upgrade/ 
+for information on how to upgrade if you used 2.0.x previously. 
 
 WPBook enables users to add your (self-hosted, not wordpress.com) wordpress 
 blog as a Facebook application. Facebook users will see your posts in a 
