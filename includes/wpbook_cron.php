@@ -56,11 +56,12 @@ function wpbook_import_comments() {
   $secret  = $wpbookAdminOptions['fb_secret'];
   $fb_user = $wpbookAdminOptions['fb_admin_target'];
   $access_token = get_option('wpbook_user_access_token');
-  $page_access_token = get_option('wpbook_page_access_token');
-  
-  Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
-  Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
 
+  if($wpbookOptions['wpbook_disable_sslverify'] == "true") {
+    Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
+    Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
+  }
+  
   $facebook = new Facebook(array(
                                  'appId'  => $api_key,
                                  'secret' => $secret,
@@ -134,7 +135,7 @@ function wpbook_import_comments() {
             $debug_string=date("Y-m-d H:i:s",time())." : Examining a meta_post, post ID is $mp->post_id, meta key = $mp->meta_key \n";
             fwrite($fp, $debug_string);
           }
-          if(($mp->meta_key == '_wpbook_user_stream_time') || ($mp->meta_key == '_wpbook_page_stream_time')) {
+          if(($mp->meta_key == '_wpbook_user_stream_time') || ($mp->meta_key == '_wpbook_page_stream_time') || ($mp->meta_key == '_wpbook_group_stream_time')) {
             if(DEBUG) {
               $fp = fopen($debug_file, 'a');
               $debug_string=date("Y-m-d H:i:s",time())." : Skipping meta key $mp->meta_key \n";
@@ -142,10 +143,14 @@ function wpbook_import_comments() {
             }
             continue; // don't need to process these - go on to the next
           }
-          if(($mp->meta_key == '_wpbook_user_stream_id') || ($mp->meta_key == '_wpbook_page_stream_id')) {
+          if(($mp->meta_key == '_wpbook_user_stream_id') || ($mp->meta_key == '_wpbook_page_stream_id') || ($mp->meta_key == '_wpbook_group_stream_id')) {
             if($mp->meta_key == '_wpbook_user_stream_id') {
               $my_timestamp_results = $wpdb->get_row("Select meta_value from $wpdb->postmeta WHERE meta_key LIKE '%_wpbook_user_stream_time%' AND post_id = '$wordpress_post_id'",ARRAY_A);
-            } else {
+            } 
+            if($mp->meta_key == '_wpbook_group_stream_id') {
+              $my_timestamp_results = $wpdb->get_row("Select meta_value from $wpdb->postmeta WHERE meta_key LIKE '%_wpbook_group_stream_time%' AND post_id = '$wordpress_post_id'",ARRAY_A);
+            } 
+            if ($mp->meta_key == '_wpbook_page_stream_id') {
               $my_timestamp_results = $wpdb->get_row("Select meta_value from $wpdb->postmeta WHERE meta_key LIKE '%_wpbook_page_stream_time%' AND post_id = '$wordpress_post_id'",ARRAY_A);
             }
             $my_timestamp = $my_timestamp_results[meta_value];
@@ -155,7 +160,7 @@ function wpbook_import_comments() {
              * which I've found the most reliable
              */
             $pos = strpos($mp->meta_value, '_');
-            if ($pos === false) 
+            if ($pos === false) // this accounts for notes, which are objects not posts
               $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE object_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC";
             else
               $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE post_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC";
