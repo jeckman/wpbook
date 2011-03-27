@@ -40,13 +40,13 @@ function wpbook_import_comments() {
 	}
   
   if($wpbookOptions['wpbook_enable_debug'] == "true")
-    define ('DEBUG',true);
+    define ('WPBOOKDEBUG',true);
   else
-    define ('DEBUG',false);
+    define ('WPBOOKDEBUG',false);
   define ('WPBOOK_COMMENT_METHOD','comment');
 
   $debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_debug.txt';
-  if(DEBUG) {
+  if(WPBOOKDEBUG) {
     $fp = fopen($debug_file, 'a');
     $debug_string=date("Y-m-d H:i:s",time())." : Cron Running\n";
     fwrite($fp, $debug_string);
@@ -55,7 +55,7 @@ function wpbook_import_comments() {
   $api_key = $wpbookAdminOptions['fb_api_key'];
   $secret  = $wpbookAdminOptions['fb_secret'];
   $fb_user = $wpbookAdminOptions['fb_admin_target'];
-  $access_token = get_option('wpbook_user_access_token');
+  $access_token = get_option('wpbook_user_access_token','');
 
   if($wpbookOptions['wpbook_disable_sslverify'] == "true") {
     Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
@@ -69,14 +69,14 @@ function wpbook_import_comments() {
                                  )
                            );
   
-  if(DEBUG) {
+  if(WPBOOKDEBUG) {
     $fp = fopen($debug_file, 'a');
     $debug_string=date("Y-m-d H:i:s",time())." : Access token is ". $access_token ." \n";
     fwrite($fp, $debug_string);
   }
   
   if (!($wpbookAdminOptions['import_comments'])) {
-    if(DEBUG) {
+    if(WPBOOKDEBUG) {
       $fp = fopen($debug_file, 'a');
       $debug_string=date("Y-m-d H:i:s",time())." : import_comments was false - nothing to do\n";
       fwrite($fp, $debug_string);
@@ -105,7 +105,7 @@ function wpbook_import_comments() {
   $today = date("Y-m-d H:i:s");
   $daysago = date("Y-m-d H:i:s",strtotime(date('Y-m-j H:i:s')) - ($num_days * 24 * 60 * 60)); 	
   $sql="Select ID FROM $wpdb->posts WHERE post_date BETWEEN '". $daysago . "' AND '". $today ."'";
-  if(DEBUG) {
+  if(WPBOOKDEBUG) {
     $fp = fopen($debug_file, 'a');
     $debug_string=date("Y-m-d H:i:s",time())." : Getting posts, SQL was $sql \n";
     fwrite($fp, $debug_string);
@@ -113,7 +113,7 @@ function wpbook_import_comments() {
   $wpdb->flush();
   $wordpress_post_ids = $wpdb->get_col($sql); // only need the post ids so we can use get_column
   if ($wordpress_post_ids) {
-    if(DEBUG) {
+    if(WPBOOKDEBUG) {
       $fp = fopen($debug_file, 'a');
       $debug_string=date("Y-m-d H:i:s",time())." : How many posts to consider? $wpdb->num_rows \n";
       fwrite($fp, $debug_string);
@@ -124,19 +124,19 @@ function wpbook_import_comments() {
       $wpdb->flush();
       $my_meta_posts = $wpdb->get_results($my_sql);
       if($wpdb->num_rows>0) {
-        if(DEBUG) {
+        if(WPBOOKDEBUG) {
           $fp = fopen($debug_file, 'a');
           $debug_string=date("Y-m-d H:i:s",time())." : How many meta_posts found? $wpdb->num_rows \n";
           fwrite($fp, $debug_string);
         }
         foreach($my_meta_posts as $mp) {
-          if(DEBUG) {
+          if(WPBOOKDEBUG) {
             $fp = fopen($debug_file, 'a');
             $debug_string=date("Y-m-d H:i:s",time())." : Examining a meta_post, post ID is $mp->post_id, meta key = $mp->meta_key \n";
             fwrite($fp, $debug_string);
           }
           if(($mp->meta_key == '_wpbook_user_stream_time') || ($mp->meta_key == '_wpbook_page_stream_time') || ($mp->meta_key == '_wpbook_group_stream_time')) {
-            if(DEBUG) {
+            if(WPBOOKDEBUG) {
               $fp = fopen($debug_file, 'a');
               $debug_string=date("Y-m-d H:i:s",time())." : Skipping meta key $mp->meta_key \n";
               fwrite($fp, $debug_string);
@@ -165,7 +165,7 @@ function wpbook_import_comments() {
             else
               $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE post_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC";
             
-            if(DEBUG) {
+            if(WPBOOKDEBUG) {
               $fp = fopen($debug_file, 'a');
               $debug_string=date("Y-m-d H:i:s",time())." : FBcomments, fbsql is $fbsql \n";
               fwrite($fp, $debug_string);
@@ -183,7 +183,7 @@ function wpbook_import_comments() {
               fwrite($fp, $debug_string);
               return;
             }
-            if(DEBUG) {
+            if(WPBOOKDEBUG) {
               $fp = fopen($debug_file, 'a');
               $debug_string=date("Y-m-d H:i:s",time())." : FBcommentslist is ". print_r($fbcommentslist) . "\n";
               fwrite($fp, $debug_string);
@@ -192,7 +192,7 @@ function wpbook_import_comments() {
           
           // now we act on the fetched comments
           if (is_array($fbcommentslist)) {
-            if(DEBUG) {
+            if(WPBOOKDEBUG) {
               $fp = fopen($debug_file, 'a');
               $debug_string=date("Y-m-d H:i:s",time())." : Number of comments for this post- " . count($fbcommentslist) . " \n";
               $degub_string .= print_r($fbcommentslist);
@@ -200,13 +200,13 @@ function wpbook_import_comments() {
             }
             foreach ($fbcommentslist as $comment) {
               //sleep(30); // maybe posting these too quickly?
-              if(DEBUG) {
+              if(WPBOOKDEBUG) {
                 $fp = fopen($debug_file, 'a');
                 $debug_string=date("Y-m-d H:i:s",time())." : Inside comment, comment[time] is $comment[time], comment[fromid] is $comment[fromid] \n";
                 fwrite($fp, $debug_string);
               }
               $fbsql = "SELECT name,url FROM profile WHERE id = '$comment[fromid]'";
-              if(DEBUG) {
+              if(WPBOOKDEBUG) {
                 $fp = fopen($debug_file, 'a');
                 $debug_string=date("Y-m-d H:i:s",time())." : Getting author info, fbsql is $fbsql \n";
                 fwrite($fp, $debug_string);
@@ -225,7 +225,7 @@ function wpbook_import_comments() {
                 return;
               }
               if (is_array($fbuserinfo)) {
-                if(DEBUG) {
+                if(WPBOOKDEBUG) {
                   $fp = fopen($debug_file, 'a');
                   $debug_string=date("Y-m-d H:i:s",time())." : fbuserinfo is an array, count is " . count($fbuserinfo) . "\n";
                   fwrite($fp, $debug_string);
@@ -236,13 +236,13 @@ function wpbook_import_comments() {
                     // do I need to worry about pages here? I think they always pass a url
                     $fb_user[url] = 'http://www.facebook.com/profile.php?id=' . $comment[fromid];
                   }
-                  if(DEBUG) {
+                  if(WPBOOKDEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : In fb_user, name is $fb_user[name], url is $fb_user[url] \n";
                     fwrite($fp, $debug_string);
                   }
                   $local_time = $comment[time] + (get_option('gmt_offset') * 3600);
-                  if(DEBUG) {
+                  if(WPBOOKDEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : comment[time] was $comment[time], gmt offset is ". get_option('gmt_offset') .", local_time is $local_time   \n";
                     fwrite($fp, $debug_string);
@@ -272,29 +272,29 @@ function wpbook_import_comments() {
                   $data['comment_parent'] = isset($data['comment_parent']) ? absint($data['comment_parent']) : 0;
                   $parent_status = ( 0 < $data['comment_parent'] ) ? wp_get_comment_status($data['comment_parent']) : '';
                   $data['comment_parent'] = ( 'approved' == $parent_status || 'unapproved' == $parent_status ) ? $data['comment_parent'] : 0;
-                  if(DEBUG) {
+                  if(WPBOOKDEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : About to call wp_filter_comment on comment $my_id, approval $wpbook_comment_approval \n";
                     fwrite($fp, $debug_string);
                   }
-                  if(DEBUG) {
+                  if(WPBOOKDEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : Unfiltered Data object: ". print_r($data,true) ." \n";
                     fwrite($fp, $debug_string);
                   }
                   $data = wp_filter_comment($data);
-                  if(DEBUG) {
+                  if(WPBOOKDEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : Past wp_filter_comment, about to call wp_insert_comment on comment $my_id, approval $wpbook_comment_approval \n";
                     fwrite($fp, $debug_string);
                   }
-                  if(DEBUG) {
+                  if(WPBOOKDEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : Filtered Data object: ". print_r($data,true) ." \n";
                     fwrite($fp, $debug_string);
                   }
                   $my_id = wp_insert_comment($data);  
-                  if(DEBUG) {
+                  if(WPBOOKDEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : Past wp_insert_comment, now calling do_action on comment $my_id, approval $wpbook_comment_approval \n";
                     fwrite($fp, $debug_string);
@@ -305,7 +305,7 @@ function wpbook_import_comments() {
                    */ 
                   //do_action('comment_post', $my_id, $data['comment_approved']); 
                 
-                  if(DEBUG) {
+                  if(WPBOOKDEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : Posted comment with timestamp $time, id $my_id, approval $wpbook_comment_approval \n";
                     fwrite($fp, $debug_string);
@@ -315,13 +315,13 @@ function wpbook_import_comments() {
                   } else {
                     $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_page_stream_time'";
                   }
-                  if(DEBUG) {
+                  if(WPBOOKDEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : About to update timestamp, SQL is $sql \n";
                     fwrite($fp, $debug_string);
                   }
                   $update_result = $wpdb->query($sql);
-                  if(DEBUG) {
+                  if(WPBOOKDEBUG) {
                     $fp = fopen($debug_file, 'a');
                     $debug_string=date("Y-m-d H:i:s",time())." : Updated timestamp, rows affected $wpdb->num_rows \n";
                     fwrite($fp, $debug_string);
@@ -330,7 +330,7 @@ function wpbook_import_comments() {
               } // end of if fbuserinfo is array
             } // end of new comment process for user stream
           } else {
-            if(DEBUG) {
+            if(WPBOOKDEBUG) {
               $fp = fopen($debug_file, 'a');
               $debug_string=date("Y-m-d H:i:s",time())." : There were no comments for post $mp->meta_value  \n";
               fwrite($fp, $debug_string);
@@ -340,7 +340,7 @@ function wpbook_import_comments() {
       }// end of meta posts > 0
     } // end of for each row of posts to examine
   } else {
-    if(DEBUG) {
+    if(WPBOOKDEBUG) {
       $fp = fopen($debug_file, 'a');
       $debug_string=date("Y-m-d H:i:s",time())." : No posts to examine\n";
       fwrite($fp, $debug_string);
