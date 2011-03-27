@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.2
+Stable tag: 2.2.1
 Tested up to: 3.1
 Requires at least: 2.9.0
 
@@ -90,6 +90,9 @@ There's also a default/style.css which basically mimics Facebook's styles,
 as well as some other files for processing comments and the like.  
 
 == Changelog ==
+
+= 2.2.1 =
+ * Something wrong in checked in copy - cleanup release
 
 = 2.2 = 
  * Added the "Read More" action link. Because of a Facebook bug 

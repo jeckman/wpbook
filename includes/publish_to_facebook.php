@@ -21,8 +21,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   else
     define ('WPBOOKDEBUG',false);
   
-	$api_key = $wpbookAdminOptions['fb_api_key'];
-	$secret  = $wpbookAdminOptions['fb_secret'];
+  $api_key = $wpbookAdminOptions['fb_api_key'];
+  $secret  = $wpbookAdminOptions['fb_secret'];
   $target_admin = $wpbookAdminOptions['fb_admin_target'];
   $target_page = $wpbookAdminOptions['fb_page_target'];
   $stream_publish = $wpbookAdminOptions['stream_publish'];
