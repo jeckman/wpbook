@@ -92,6 +92,13 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
+= 2.1.5 = 
+ * Added the "Read More" action link. Because of a Facebook bug 
+   (http://bugs.developers.facebook.net/show_bug.cgi?id=15377) I can't
+   add more than one action link to a post, so no "share" button. 
+ * 
+
+
 = 2.1.4 = 
  * Bugfix: Access token for importing comments from streams that aren't
    public

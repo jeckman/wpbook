@@ -428,8 +428,12 @@ echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">Page ID: <input t
         echo("checked");
       }
       echo ' id="promote_external" > Use external permalinks on Walls (applies to profiles, pages, and groups)</p>';
-       echo '<p>Attribution line: <input type="text" name="attribution_line" size="40" value="'. $wpbookAdminOptions['attribution_line'] .'" /><br />';
-      echo 'Predefined Strings (you can use these in your attribution line): <code>%author%, %blogname%</code>.</p>';
+      
+      /* using the new Graph API, there's nowhere to put attribution strings
+       * So I'm just hiding this for now
+       */
+      //echo '<p>Attribution line: <input type="text" name="attribution_line" size="40" value="'. $wpbookAdminOptions['attribution_line'] .'" /><br />';
+      //echo 'Predefined Strings (you can use these in your attribution line): <code>%author%, %blogname%</code>.</p>';
 
       echo '<p><strong>Stream Debug Options</strong><br/><input type="checkbox" name="wpbook_enable_debug" value="true" ';
       if( htmlentities($wpbookAdminOptions['wpbook_enable_debug']) == "true") {
