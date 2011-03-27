@@ -138,7 +138,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       $debug_string=date("Y-m-d H:i:s",time())." : Post thumbail is ". $my_image ."\n";
       fwrite($fp, $debug_string);
     }
-    $ = json_encode(array(array('name'=>'Read More','link'=>$my_permalink)));
+    $actions = json_encode(array(array('name'=>'Read More','link'=>$my_permalink)));
     if(WPBOOKDEBUG) {
       $debug_string=date("Y-m-d H:i:s",time())." : Post share link is ". $my_link ."\n";
       fwrite($fp, $debug_string);
