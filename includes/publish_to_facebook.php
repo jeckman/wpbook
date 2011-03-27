@@ -31,7 +31,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   $wpbook_promote_external = $wpbookAdminOptions['promote_external'];
   $wpbook_attribution_line = $wpbookAdminOptions['attribution_line'];
   $wpbook_as_note = $wpbookAdminOptions['wpbook_as_note'];
-
+  $wpbook_target_group = $wpbookAdminOptions['wpbook_target_group'];
+  
 	Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
   Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
   
@@ -234,7 +235,79 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       $debug_string=date("Y-m-d H:i:s",time())." : Past stream_publish, fb_response is ". print_r($fb_response,true) ."\n";
       fwrite($fp, $debug_string);
     }
-  
+ 
+    if(($stream_publish_pages == "true") && (!empty($wpbook_target_group))) {
+      $fb_response = '';
+      /* Publishing to a group's wall requires the user access token, and 
+       * is published as coming from the user, not the group - different process
+       * than Pages 
+       */ 
+      $access_token = get_option('wpbook_user_acess_token');
+      if(DEBUG) {
+        $fp = fopen($debug_file, 'a');
+        $debug_string=date("Y-m-d H:i:s",time())." : Group access token is ". $access_token ."\n";
+        fwrite($fp, $debug_string);
+      }
+      
+      if(DEBUG) {
+        $fp = fopen($debug_file, 'a');
+        $debug_string=date("Y-m-d H:i:s",time())." : Publishing to group " . $wpbook_target_group  ."\n";
+        fwrite($fp, $debug_string);
+      }
+      
+      try{
+        // post as an excerpt
+        if(!empty($my_image)) {
+          /* message, picture, link, name, caption, description, source */      
+          $attachment = array( 
+                              'access_token' => $access_token,
+                              'name' => $my_title,
+                              'link' => $my_permalink,
+                              'description' => $wpbook_description,  
+                              'picture' => $my_image, 
+                              ); 
+        } else {
+          $attachment = array( 
+                              'access_token' => $access_token,
+                              'name' => $my_title,
+                              'link' => $my_permalink,
+                              'description' => $wpbook_description,  
+                              ); 
+        }
+        $action_links = array( array('text' => 'Read More',
+                                     'href' => $my_permalink
+                                     )
+                              );
+        if(DEBUG) {
+          $fp = fopen($debug_file, 'a');
+          $debug_string=date("Y-m-d H:i:s",time())." : Publishing to group, image is " . $my_image ." \n";
+          fwrite($fp, $debug_string);
+        }
+        $fb_response = $facebook->api('/'. $wpbook_target_group .'/feed/','POST', $attachment); 
+        if(DEBUG) {
+          $fp = fopen($debug_file, 'a');
+          $debug_string=date("Y-m-d H:i:s",time())." : Just published to group via api, fb_response is ". print_r($fb_response,true) ."\n";
+          fwrite($fp, $debug_string);
+        }
+      } catch (FacebookApiException $e) {
+        if($wpbook_show_errors) {
+          $wpbook_message = 'Caught exception in publish to group ' . $e->getMessage() . ' Error code: ' . $e->getCode();
+          wp_die($wpbook_message,'WPBook Error');
+        } // end if for show errors
+      } // end try/catch for publish to group
+      if($fb_response != '') {
+        add_post_meta($my_post->ID,'_wpbook_group_stream_id',$fb_response[id]);
+        add_post_meta($my_post->ID,'_wpbook_group_stream_time',0); // no comments imported
+      } else {
+        $wpbook_message = 'No post id returned from Facebook, $fb_response was ' . print_r($fb_response,true) . '/n';
+        $wpbook_message = $wpbook_message . ' and $fb_page_type was ' . $fb_page_type;
+        $wpbook_message .= ' and $wpbook_description was ' . $wpbook_description;
+        $wpbook_message .= ' and $my_title was ' . $my_title;
+        wp_die($wpbook_message,'WPBook Error publishing to group'); 
+      } 
+      
+    } // end of publish to group
+    
     if(($stream_publish_pages == "true") && (!empty($target_page))) {      
       // publish to page with new api
       $fb_response = '';
