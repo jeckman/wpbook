@@ -40,7 +40,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   
   
   $facebook = new Facebook($api_key, $secret);
-  $access_token = get_option('wpbook_user_access_token');
+  $access_token = get_option('wpbook_user_access_token','');
   
   if($access_token == '') {
     if(DEBUG) {
@@ -136,6 +136,10 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       fwrite($fp, $debug_string);
     }
     
+    $actions = json_encode(array(array('name'=>'Read More', 
+                                       'link'=>$my_permalink
+                                       )));
+    
     if($stream_publish == "true") {
       if(DEBUG) {
         $fp = fopen($debug_file, 'a');
@@ -185,8 +189,6 @@ function wpbook_safe_publish_to_facebook($post_ID) {
             fwrite($fp, $debug_string);
           }
         } else {
-          $actions = json_encode(array(array('text'=>'Read More', 'href'=>'<a href="' $my_permalink . '" rel="nofollow">' . $my_permalink .'</a>')));
-
           // post as an excerpt
           if(!empty($my_image)) {
             /* message, picture, link, name, caption, description, source */      
@@ -243,8 +245,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       /* Publishing to a group's wall requires the user access token, and 
        * is published as coming from the user, not the group - different process
        * than Pages 
-       */ 
-      $access_token = get_option('wpbook_user_acess_token');
+       */       
+      $access_token = get_option('wpbook_user_access_token','');
       if(DEBUG) {
         $fp = fopen($debug_file, 'a');
         $debug_string=date("Y-m-d H:i:s",time())." : Group access token is ". $access_token ."\n";
@@ -267,19 +269,17 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               'link' => $my_permalink,
                               'description' => $wpbook_description,  
                               'picture' => $my_image, 
+                              'actions' => $actions,
                               ); 
         } else {
           $attachment = array( 
                               'access_token' => $access_token,
                               'name' => $my_title,
                               'link' => $my_permalink,
-                              'description' => $wpbook_description,  
+                              'description' => $wpbook_description, 
+                              'actions' => $actions,
                               ); 
         }
-        $action_links = array( array('text' => 'Read More',
-                                     'href' => $my_permalink
-                                     )
-                              );
         if(DEBUG) {
           $fp = fopen($debug_file, 'a');
           $debug_string=date("Y-m-d H:i:s",time())." : Publishing to group, image is " . $my_image ." \n";
@@ -336,6 +336,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               'link' => $my_permalink,
                               'description' => $wpbook_description,  
                               'picture' => $my_image, 
+                              'actions' => $actions,
                               ); 
         } else {
           $attachment = array( 
@@ -343,12 +344,9 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               'name' => $my_title,
                               'link' => $my_permalink,
                               'description' => $wpbook_description,  
+                              'actions' => $actions,
                               ); 
         }
-        $action_links = array( array('text' => 'Read More',
-                                     'href' => $my_permalink
-                                     )
-                              );
         if(DEBUG) {
           $fp = fopen($debug_file, 'a');
           $debug_string=date("Y-m-d H:i:s",time())." : Publishing to page, image is " . $my_image ." \n";
