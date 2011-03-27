@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.1.4
+Stable tag: 2.2
 Tested up to: 3.1
 Requires at least: 2.9.0
 
@@ -92,12 +92,24 @@ as well as some other files for processing comments and the like.
 
 == Changelog ==
 
-= 2.1.5 = 
+= 2.2 = 
  * Added the "Read More" action link. Because of a Facebook bug 
    (http://bugs.developers.facebook.net/show_bug.cgi?id=15377) I can't
    add more than one action link to a post, so no "share" button. 
- * 
-
+ * Added posting options for Group walls, and comment import form 
+   Group walls
+ * Limit the size of debug files created to 500k, for users who
+   enable debugging and then forget. 
+ * Clean up DEBUG for cases where permissions fail or file is not writeable
+ * Made "disable ssl verification" an option so that only users who need it
+   will have it and others won't get conflict
+ * Cleanup to the admin screens in general, more clarity around what
+   is required and better language on the admin screens about what
+   is being checked. (Thanks BandonRandon for patches) 
+ * Improved "Check permissions" page
+ * Added wpbook logo which had been missing
+ * Fix for get_themes() issues with WordPress 3.0.1 through 3.0.5
+   (Thanks BandonRandon for patch)
 
 = 2.1.4 = 
  * Bugfix: Access token for importing comments from streams that aren't
