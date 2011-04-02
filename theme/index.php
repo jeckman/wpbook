@@ -324,11 +324,23 @@ if((!isset($_REQUEST['is_invite']))&&(!isset($_REQUEST['is_permissions']))&&(!is
         if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "top")) { 
           echo '<p>';
           if($enable_share == "true"){
-            ?><span class="wpbook_share_button">
-              <a href="http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>" 
-              onclick="javascript:window.open('http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>','sharer','toolbar=0,status=0,width=626,height=436');return false">Share</a>
-              </span>
-            <?php               
+          ?><span class="wpbook_share_button"><?php
+            echo '<a onclick="window.open(\'http://www.facebook.com/sharer.php?s=100&amp;p[title]=';
+            echo urlencode(get_the_title());
+            echo '&amp;p[summary]=';
+            echo urlencode((wp_filter_nohtml_kses(apply_filters('the_content',get_the_excerpt()))));
+            if((function_exists('has_post_thumbnail')) && (has_post_thumbnail())) {
+              $my_thumb_id = get_post_thumbnail_id();
+              $my_thumb_array = wp_get_attachment_image_src($my_thumb_id);
+              $my_image = $my_thumb_array[0]; // this should be the url                
+              echo '&amp;p[images][0]=';
+              echo urlencode($my_image);
+            }
+            echo '&amp;p[url]=';
+            echo urlencode(get_permalink());
+            echo "','sharer','toolbar=0,status=0,width=626,height=436'); return false;\""; 
+            echo ' class="share" title="Send this to friends or post it on your profile.">Share This Post</a>';
+            echo '</span>';
           } // end if for enable_share 
           if($enable_external_link == "true"){ 
             ?><span class="wpbook_external_post"><a href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span><?php 
@@ -347,12 +359,23 @@ if((!isset($_REQUEST['is_invite']))&&(!isset($_REQUEST['is_permissions']))&&(!is
         if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "bottom")) { 
           echo '<p>';
           if($enable_share == "true"){
-            ?>
-            <span class="wpbook_share_button">
-            <a href="http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>" 
-            onclick="javascript:window.open('http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>','sharer','toolbar=0,status=0,width=626,height=436');return false">Share</a>
-            </span>
-            <?php               
+            ?><span class="wpbook_share_button"><?php
+            echo '<a onclick="window.open(\'http://www.facebook.com/sharer.php?s=100&amp;p[title]=';
+            echo urlencode(get_the_title());
+            echo '&amp;p[summary]=';
+            echo urlencode((wp_filter_nohtml_kses(apply_filters('the_content',get_the_excerpt()))));
+              if((function_exists('has_post_thumbnail')) && (has_post_thumbnail())) {
+                $my_thumb_id = get_post_thumbnail_id();
+                $my_thumb_array = wp_get_attachment_image_src($my_thumb_id);
+                $my_image = $my_thumb_array[0]; // this should be the url                
+                echo '&amp;p[images][0]=';
+                echo urlencode($my_image);
+              }
+              echo '&amp;p[url]=';
+            echo urlencode(get_permalink());
+            echo "','sharer','toolbar=0,status=0,width=626,height=436'); return false;\""; 
+            echo ' class="share" title="Send this to friends or post it on your profile.">Share This Post</a>';
+            echo '</span>';
           } // end if for enable_share 
           if($enable_external_link == "true"){
             ?><span class="wpbook_external_post"><a href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span><?php
