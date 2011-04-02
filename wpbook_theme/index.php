@@ -319,10 +319,9 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
           echo '<p>';
           if($enable_share == "true"){
             ?><span class="wpbook_share_button">
-            <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
-            <fb:like href="<?php the_permalink(); ?>" show_faces="true" width="450">
-            </fb:like> 
-            </span>
+            <a href="http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>" 
+              onclick="javascript:window.open('http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>','sharer','toolbar=0,status=0,width=626,height=436');return false">Share</a>
+              </span>
           <?php                
           } // end if for enable_share
           if($enable_external_link == "true"){ 
@@ -343,9 +342,8 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
           echo '<p>';
           if($enable_share == "true"){
             ?><span class="wpbook_share_button">
-            <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
-            <fb:like href="<?php the_permalink(); ?>" show_faces="true" width="450">
-            </fb:like> 
+            <a href="http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>" 
+              onclick="javascript:window.open('http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>','sharer','toolbar=0,status=0,width=626,height=436');return false">Share</a>
             </span>
           <?php                
           } // end if for enable_share 

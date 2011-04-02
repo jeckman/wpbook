@@ -325,12 +325,11 @@ if((!isset($_REQUEST['is_invite']))&&(!isset($_REQUEST['is_permissions']))&&(!is
           echo '<p>';
           if($enable_share == "true"){
             ?><span class="wpbook_share_button">
-            <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
-            <fb:like href="<?php the_permalink(); ?>" show_faces="true" width="450">
-            </fb:like> 
-            </span>
-          <?php                
-          } // end if for enable_share
+              <a href="http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>" 
+              onclick="javascript:window.open('http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>','sharer','toolbar=0,status=0,width=626,height=436');return false">Share</a>
+              </span>
+            <?php               
+          } // end if for enable_share 
           if($enable_external_link == "true"){ 
             ?><span class="wpbook_external_post"><a href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span><?php 
           } // end if for enable external_link
@@ -348,12 +347,12 @@ if((!isset($_REQUEST['is_invite']))&&(!isset($_REQUEST['is_permissions']))&&(!is
         if(($enable_share == "true" || $enable_external_link == "true") && ($links_position == "bottom")) { 
           echo '<p>';
           if($enable_share == "true"){
-            ?><span class="wpbook_share_button">
-            <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
-            <fb:like href="<?php the_permalink(); ?>" show_faces="true" width="450">
-            </fb:like> 
+            ?>
+            <span class="wpbook_share_button">
+            <a href="http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>" 
+            onclick="javascript:window.open('http://www.facebook.com/sharer.php?u=<?php echo urlencode(get_permalink()) ?>','sharer','toolbar=0,status=0,width=626,height=436');return false">Share</a>
             </span>
-          <?php                
+            <?php               
           } // end if for enable_share 
           if($enable_external_link == "true"){
             ?><span class="wpbook_external_post"><a href="<?php echo get_external_post_url(get_permalink()); ?>" title="View this post outside Facebook at <?php bloginfo('name'); ?>">View post on <?php bloginfo('name'); ?></a></span><?php

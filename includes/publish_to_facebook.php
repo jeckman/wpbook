@@ -92,7 +92,6 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     } else {
       $my_permalink = wpbook_always_filter_postlink(get_permalink($post_ID));
     }
-    $message = wpbook_attribution_line($wpbook_attribution_line,$my_author);
   
     if(WPBOOKDEBUG) {
       $fp = @fopen($debug_file, 'a');
@@ -192,6 +191,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                 'actions' => $actions,
                                 ); 
           }
+          /* allow other plugins to impact the attachment before posting */ 
+          $attachment = apply_filters('wpbook_attachment', $attachment, $my_post->ID);
           if(WPBOOKDEBUG) {
             $fp = @fopen($debug_file, 'a');
             $debug_string=date("Y-m-d H:i:s",time())." : Publishing as note, $my_image is " . $my_image ." \n";
@@ -225,6 +226,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                                 'actions' => $actions,
                                 ); 
           }
+          /* allow other plugins to impact the attachment before posting */ 
+          $attachment = apply_filters('wpbook_attachment', $attachment, $my_post->ID);
           if(WPBOOKDEBUG) {
             $fp = @fopen($debug_file, 'a');
             $debug_string=date("Y-m-d H:i:s",time())." : Publishing as excerpt, $my_image is " . $my_image ." \n";
@@ -295,6 +298,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               'actions' => $actions,
                               ); 
         }
+        /* allow other plugins to impact the attachment before posting */ 
+        $attachment = apply_filters('wpbook_attachment', $attachment, $my_post->ID);
         if(WPBOOKDEBUG) {
           $fp = @fopen($debug_file, 'a');
           $debug_string=date("Y-m-d H:i:s",time())." : Publishing to group, image is " . $my_image ." \n";
@@ -363,6 +368,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               'actions' => $actions,
                               ); 
         }
+        /* allow other plugins to impact the attachment before posting */ 
+        $attachment = apply_filters('wpbook_attachment', $attachment, $my_post->ID);
         if(WPBOOKDEBUG) {
           $fp = @fopen($debug_file, 'a');
           $debug_string=date("Y-m-d H:i:s",time())." : Publishing to page, image is " . $my_image ." \n";
