@@ -13,7 +13,7 @@ type="text/css" media="screen" />
 <body>
   <div id="content">
     <?php 
-      if($invite_friends == "true"){
+      if((!empty($data["user_id"])) && ($invite_friends == "true")) {
         $invite_link = '<a class="FB_UIButton FB_UIButton_Gray FB_UIButton_CustomIcon" href="'. $proto .'://apps.facebook.com/' . $app_url 
         .'/index.php?is_invite=true&fb_force_mode=fbml" class="share"><span class="FB_UIButton_Text"><span class="FB_Bookmark_Icon"></span> Invite Friends </span></a>';
         echo '<div style="float:right; margin-left: 3px; margin-bottom: 3px;  ">'. $invite_link .'</div>';	
