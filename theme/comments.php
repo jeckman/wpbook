@@ -5,6 +5,11 @@ if (!empty($wpbookOptions)) {
 	foreach ($wpbookOptions as $key => $option)
 		$wpbookAdminOptions[$key] = $option;
 	}
+if ($_SERVER['HTTPS'] == "on") { 
+	$proto = "https";
+} else {
+	$proto = "http";
+}  
 
 $api_key = $wpbookAdminOptions['fb_api_key'];
 $secret  = $wpbookAdminOptions['fb_secret'];

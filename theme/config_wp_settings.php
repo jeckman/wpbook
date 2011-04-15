@@ -6,6 +6,11 @@ if (!empty($wpbookOptions)) {
   foreach ($wpbookOptions as $key => $option)
   $wpbookAdminOptions[$key] = $option;
 }
+if ($_SERVER['HTTPS'] == "on") { 
+  $proto = "https";
+} else {
+  $proto = "http";
+}  
   
 //get options from wordpress settings
 $api_key = $wpbookAdminOptions['fb_api_key'];

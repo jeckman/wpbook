@@ -30,7 +30,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
   if(isset($_POST["ids"])) { // this means we've already added some stuff
     echo "<center>Thank you for inviting ".sizeof($_POST["ids"])
         ." of your friends to ". $app_name .". <br><br>\n"; 
-    echo "<h2><a href=\"http://apps.facebook.com/".$app_url
+    echo "<h2><a href=\"".$proto."://apps.facebook.com/".$app_url
         ."/\">Click here to return to ".$app_name."</a>.</h2></center>"; 
   } 
   else { 
@@ -60,12 +60,12 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
       // Prepare the invitation text that all invited users will receive. 
     $content = "<fb:name uid=\"".$user
         ."\" firstnameonly=\"true\" shownetwork=\"false\"/> has started using "
-        ."<a href=\"http://apps.facebook.com/".$app_url."/\">"
+        ."<a href=\"".$proto."://apps.facebook.com/".$app_url."/\">"
         . $app_name ."</a> and thought you should try it out!\n"
         ."<fb:req-choice url=\"http://www.facebook.com/add.php?api_key=". $api_key
       ."\" label=\"Add ". $app_name ." to your profile\"/>"; 
     echo '<fb:fbml><fb:title>Invite Friends</fb:title>';
-    echo '<fb:request-form action="http://apps.facebook.com/'. $app_url .'" '; 
+    echo '<fb:request-form action="'.$proto.'://apps.facebook.com/'. $app_url .'" '; 
     echo 'method="post" type="'. $app_name .'" ';
     echo 'content="'. htmlentities($content) .'" image="'. $app_image .'">'; 
     echo '<fb:multi-friend-selector actiontext="Here are your friends who do not ';
@@ -181,7 +181,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
 <p>To correct any of these, <a href="
 <?php
 $my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
-. '&redirect_uri=http://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=offline_access,read_stream,publish_stream,manage_pages';
+. '&redirect_uri='.$proto.'://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=offline_access,read_stream,publish_stream,manage_pages';
 echo $my_permissions_url;
 ?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
 
@@ -234,11 +234,11 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
   
   <?php 
   if($invite_friends == "true"){
-    $invite_link = '<a class="FB_UIButton FB_UIButton_Gray FB_UIButton_CustomIcon" href="http://apps.facebook.com/' . $app_url 
+    $invite_link = '<a class="FB_UIButton FB_UIButton_Gray FB_UIButton_CustomIcon" href="'.$proto.'://apps.facebook.com/' . $app_url 
         .'/index.php?is_invite=true&fb_force_mode=fbml" class="share"><span class="FB_UIButton_Text"><span class="FB_Bookmark_Icon"></span> Invite Friends </span></a>';
     echo '<div style="float:right; margin-left: 3px; margin-bottom: 3px;  ">'. $invite_link .'</div>';	
   } 
-  echo '<h3><a href="http://apps.facebook.com/'. $app_url .'/" target="_top">'. get_bloginfo('name') .'</a></h3>';
+  echo '<h3><a href="'.$proto.'://apps.facebook.com/'. $app_url .'/" target="_top">'. get_bloginfo('name') .'</a></h3>';
   
   if(($show_pages == "true") && ($show_pages_menu == "true")){
     echo '<div id="underlinemenu" class="clearfix"><ul><li>Pages:</li>';

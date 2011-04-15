@@ -3,7 +3,7 @@ if(!class_exists('Facebook')) {
   include_once(WP_PLUGIN_DIR . '/wpbook/includes/client/facebook.php');  
 }
   
-$canvas_page = "http://apps.facebook.com/" . $app_url . "/";
+$canvas_page = $proto . "://apps.facebook.com/" . $app_url . "/";
   
 $auth_url = "http://www.facebook.com/dialog/oauth?client_id=" 
   . $api_key . "&redirect_uri=" . urlencode($canvas_page);
@@ -14,13 +14,14 @@ list($encoded_sig, $payload) = explode('.', $signed_request, 2);
   
 $data = json_decode(base64_decode(strtr($payload, '-_', '+/')), true);
   
-if (empty($data["user_id"])) {
-  echo("<script> top.location.href='" . $auth_url . "'</script>");
-} else {
-  // need to store this somewhere, if user_id = admin
-  // and they've just granted permissions
-  $access_token = $data["oauth_token"];   
-} 
+// if we're on app_tab we should not need user logged in   
+if (!isset($_REQUEST['app_tab'])) {
+  if (empty($data["user_id"])) {
+    echo("<script> top.location.href='" . $auth_url . "'</script>");
+  } else {
+    $access_token = $data["oauth_token"];   
+  }
+}
 
 /* should not store in user_meta - need to store as an option 
  * If a wp_user id was passed in, that lets us know they came from wp

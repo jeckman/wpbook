@@ -63,7 +63,6 @@ $_SERVER['REQUEST_URI'] = ( isset($_SERVER['REQUEST_URI']) ?
   . (( isset($_SERVER['QUERY_STRING']) ? '?' 
   . $_SERVER['QUERY_STRING'] : '')));
 
-
 // activation, install, uninstall need work  
 function wpbook_activate() {
   wpbook_activation_check();
@@ -89,7 +88,12 @@ function wpbook_getAdminOptions() {
 	if (!empty($wpbookOptions)) {
 		foreach ($wpbookOptions as $key => $option)
 			$wpbookAdminOptions[$key] = $option;
-		}
+		if ($_SERVER['HTTPS'] == "on") { 
+		    $wpbookAdminOptions['proto'] = "https"; 
+		} else {
+		    $wpbookAdminOptions['proto'] = "http";
+		}  
+	}
 	return $wpbookAdminOptions;
 }
   
@@ -338,7 +342,7 @@ function wpbook_subpanel() {
 <?php 
   if(!empty($wpbookAdminOptions['fb_app_url']) && !empty($wpbookAdminOptions['fb_secret']) 
   && !empty($wpbookAdminOptions['fb_api_key']) && !empty($wpbookAdminOptions['fb_admin_target'])) {  
-    echo '<p>If you are having issues, please begin by <a href="http://apps.facebook.com/'
+    echo '<p>If you are having issues, please begin by <a href="'. $wpbookAdminOptions['proto'] .'://apps.facebook.com/'
     . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true&wp_user='
     .$current_user->ID .'">Checking '
     . 'permissions</a> for stream publishing, reading, and offline access.</p>';  }
@@ -377,11 +381,11 @@ echo ' <a href="http://www.facebook.com/apps/application.php?id=' . $wpbookAdmin
       with your Facbook login. (More info on <a href="http://socialmediaseo.net/2010/02/20/how-to-find-facebook-id/">finding your Page ID</a>).'; 
       echo '</p>';
       echo '<p>Facebook Canvas Page URL, ';
-      echo '<strong>NOT</strong> INCLUDING "http://apps.facebook.com/" ';
+      echo '<strong>NOT</strong> INCLUDING "'. $wpbookAdminOptions['proto'] .'://apps.facebook.com/" ';
       echo '<input type="text" name="fb_app_url" value="';
       echo htmlentities($wpbookAdminOptions['fb_app_url']) .'" size="20" />';
 if(!empty($wpbookAdminOptions['fb_app_url'])) {
-  echo ' <a href="http://apps.facebook.com/' . $wpbookAdminOptions['fb_app_url'] . '" target="_new">Visit this canvas page</a>';
+  echo ' <a href="'. $wpbookAdminOptions['proto'] .'://apps.facebook.com/' . $wpbookAdminOptions['fb_app_url'] . '" target="_new">Visit this canvas page</a>';
 }
       echo '</p>'; 
   ?></div> <!-- END Required Options --> 
@@ -396,7 +400,7 @@ if(!empty($wpbookAdminOptions['fb_app_url'])) {
       } 
       else {  
         echo '<p>These settings all impact how WPBook publishes to Facebook walls, and depend on appropriate permissions being set in Facebook.</p>';
-        echo '<p>If you are having issues, please begin by <a href="http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true&wp_user='. $current_user->ID .'">Checking '
+        echo '<p>If you are having issues, please begin by <a href="'. $wpbookAdminOptions['proto'] .'://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true&wp_user='. $current_user->ID .'">Checking '
         . 'permissions</a> for stream publishing, reading, and offline access.</p>';
         echo '<p><strong>Stream Profile/Page Options</strong><br/>
         <p><input type="checkbox" name="stream_publish" value="true" ';
@@ -486,7 +490,7 @@ echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">Page ID: <input t
         || empty($wpbookAdminOptions['fb_api_key'])) {  
         echo '<p><strong>Once your Facebook application is established by filling out the required information, return to customize your application view.</strong></p>';
       } else {
-        echo '<p>These settings all impact what the users of your application see inside of Facebook. In your case what they see by visiting <a href="http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'">http://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']).'</a> </p>';
+        echo '<p>These settings all impact what the users of your application see inside of Facebook. In your case what they see by visiting <a href="'. $wpbookAdminOptions['proto'] .'://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'">'. $wpbookAdminOptions['proto'] .'://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']).'</a> </p>';
         /* Now let's handle commenting - only show require_email if comments on */
       echo'<h4> Commenting Options:</strong></h4>';
       echo '<p><input type="checkbox" name="allow_comments" value="true" ';
@@ -847,7 +851,7 @@ function wpbook_profile_recent_posts($count = 5, $before = '<li>', $after = '</l
         $permalink = get_permalink($post->ID);  // permalink is un-filtered
         $my_offset = strlen(get_option('home'));
         $app_url = $my_options['fb_app_url'];
-        $my_link = 'http://apps.facebook.com/' . $app_url 
+        $my_link = $my_options['proto'] . '://apps.facebook.com/' . $app_url 
           . substr($permalink,$my_offset); 
         $permalink = $my_link;
       }
@@ -975,8 +979,11 @@ function fb_filter_postlink($postlink) {
 	if (check_facebook()) {
 		$my_offset = strlen(get_option('home'));
 		$my_options = wpbook_getAdminOptions();
+		if ( $my_options['proto'] == "https" ) {
+			$my_offset++;
+		}
 		$app_url = $my_options['fb_app_url'];
-		$my_link = 'http://apps.facebook.com/' . $app_url 
+		$my_link = $my_options['proto'] . '://apps.facebook.com/' . $app_url 
       . substr($postlink,$my_offset); 
 		return $my_link;
 	} else {
@@ -988,8 +995,11 @@ function fb_filter_postlink_no_qs($postlink) {
 	if (check_facebook()) {
 		$my_offset = strlen(get_option('home'));
 		$my_options = wpbook_getAdminOptions();
+		if ( $my_options['proto'] == "https" ) {
+			$my_offset++;
+		}
 		$app_url = $my_options['fb_app_url'];
-		$my_link = 'http://apps.facebook.com/' . $app_url . substr($postlink,$my_offset); 
+		$my_link = $my_options['proto'] . '://apps.facebook.com/' . $app_url . substr($postlink,$my_offset); 
     $my_new_link_pieces = parse_url($my_link);
 		return parse_url($my_link,PHP_URL_SCHEME) .'://'. parse_url($my_link,PHP_URL_HOST) 
     . parse_url($my_link,PHP_URL_PATH); // ignoring port 
@@ -1002,9 +1012,12 @@ function fb_filter_postlink_no_qs($postlink) {
 // this version to be called when we're outside facebook too  
 function wpbook_always_filter_postlink($postlink) {
   $my_offset = strlen(get_option('home'));
+  if ( $my_options['proto'] == "https" ) {
+    $my_offset++;
+  }
   $my_options = wpbook_getAdminOptions();
   $app_url = $my_options['fb_app_url'];
-  $my_link = 'http://apps.facebook.com/' . $app_url 
+  $my_link = $my_options['proto'] . '://apps.facebook.com/' . $app_url 
   . substr($postlink,$my_offset); 
   return $my_link;
   }
@@ -1333,7 +1346,7 @@ function wpbook_activation_check(){
 add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
 add_filter('page_link','fb_filter_postlink',1,1); 
-add_filter('get_pagenum_link','fb_filter_postlink_no_qs',1,1); 
+add_filter('get_pagenum_link','fb_filter_postlink',1,1); 
 
   
 //add gravatar/facebook avatar support outside facebook
