@@ -1028,7 +1028,7 @@ function wpbook_always_filter_postlink($postlink) {
  */
 function wpbook_publish_to_facebook($post_ID) {
   if (!version_compare(PHP_VERSION, '5.0.0', '<')) {
-    include(WP_PLUGIN_DIR .'/wpbook/includes/publish_to_facebook.php');
+    include_once(WP_PLUGIN_DIR .'/wpbook/includes/publish_to_facebook.php');
   } else {
     wp_die("Sorry, but you can't run this plugin, it requires PHP 5 or higher.");
   }
