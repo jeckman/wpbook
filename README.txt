@@ -1,11 +1,13 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.2.3
-Tested up to: 3.1
+Stable tag: 2.3
+Tested up to: 3.3
 Requires at least: 2.9.0
 
-Plugin to embed Wordpress Blog into Facebook Platform. Requires PHP 5. 
+Plugin to embed WordPress Blog into Facebook Platform. Requires PHP 5. 
+
+Requires ability to access your WordPress blog via HTTPS (SSL). 
 
 
 == Description ==
@@ -42,7 +44,7 @@ As of 1.5, this plugin requires PHP 5.
 
 == Installation ==
 
-(Note: installation instructions: http://wpbook.net/docs/install/ )
+(Note: Best installation instructions: http://wpbook.net/docs/ )
 
 1. Copy the entire wpbook directory into your wordpress plugins folder,
    /wp-content/plugins/
@@ -56,16 +58,7 @@ As of 1.5, this plugin requires PHP 5.
 2. Set up a New Application at http://www.facebook.com/developers/, obtaining
    a secret and API key.  
 
-   Set the callback url to your blog url, including  a trailing slash. 
-       (http://www.yourblogurl.com/)
-   For canvas url, you just need something *all lower case*, unique, with
-   no spaces, and no trailing slash. Remember it. 
-   
-   Set the application type to "website"
-      
-   Set the application to use an iFrame, not fbml, and to "resizable"
-   (Using iFrames lets you use javascript, objects, and other tags 
-    not allowed in FBML inside blog posts)
+   (See http://wpbook.net/docs/ for screensheets of FB settings)
 
 3. Login to Wordpress Admin and activate the plugin
 
@@ -89,7 +82,27 @@ what you want is there.
 There's also a default/style.css which basically mimics Facebook's styles, 
 as well as some other files for processing comments and the like.  
 
+= WPBook picks and image at random for each of my posts! =
+
+Actually, what's happening is that Facebook is choosing an image at 
+random for your posts. 
+
+This happens because either you have not set a "featured image" for the 
+post, or your theme doesn't support "featured images." 
+
+If you haven't set a featured image, do set one - WPBook will pass that
+to Facebook along with the post. 
+
+If your theme doesn't support featured images, you'll need to add
+code to your theme's functions.php file. 
+
+See:
+http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
+
 == Changelog ==
+
+= 2.3 = 
+ * Updated to the latest Facebook PHP SDK, 3.1.1
 
 = 2.2.3 =
  * Bugfix: User should not have to be logged in to view the fanpage
