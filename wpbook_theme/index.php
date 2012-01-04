@@ -22,7 +22,7 @@ if($wpbookOptions['wpbook_disable_sslverify'] == "true") {
 $facebook = new Facebook(array(
                               'appId'  => $api_key,
                               'secret' => $secret,
-                              'cookie' => true,
+                              'fileUpload' => true,
                               )
                          );
 

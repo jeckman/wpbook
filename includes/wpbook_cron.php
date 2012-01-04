@@ -76,10 +76,10 @@ function wpbook_import_comments() {
   $facebook = new Facebook(array(
                                  'appId'  => $api_key,
                                  'secret' => $secret,
-                                 'cookie' => false,
                                  )
                            );
   
+  $facebook->setAccessToken($access_token);
   if(WPBOOKDEBUG) {
     $fp = @fopen($debug_file, 'a');
     $debug_string=date("Y-m-d H:i:s",time())." : Access token is ". $access_token ." \n";
