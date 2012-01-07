@@ -257,7 +257,11 @@ function wpbook_subpanel() {
       $infinite_session_key = $_POST['infinite_session_key']; 
       $attribution_line = $_POST['attribution_line'];
       $wpbook_enable_debug = $_POST['wpbook_enable_debug'];
-      $wpbook_as_note = $_POST['wpbook_as_note'];
+	  $wpbook_as_note = 'post'; // default to post type of POST unless otherwise set
+	  if($_POST['post_as_note'])
+		$wpbook_as_note = 'note';
+	  if($_POST['post_as_link'])
+	    $wpbook_as_note = 'link';
       $wpbook_target_group = $_POST['wpbook_target_group'];
       $wpbook_disable_sslverify = $_POST['wpbook_disable_sslverify'];
       $wpbook_use_global_gravatar = $_POST['wpbook_use_global_gravatar'];
@@ -402,31 +406,45 @@ if(!empty($wpbookAdminOptions['fb_app_url'])) {
         echo '<p>These settings all impact how WPBook publishes to Facebook walls, and depend on appropriate permissions being set in Facebook.</p>';
         echo '<p>If you are having issues, please begin by <a href="'. $wpbookAdminOptions['proto'] .'://apps.facebook.com/' . htmlentities($wpbookAdminOptions['fb_app_url']) .'/?is_permissions=true&wp_user='. $current_user->ID .'">Checking '
         . 'permissions</a> for stream publishing, reading, and offline access.</p>';
-        echo '<p><strong>Stream Profile/Page Options</strong><br/>
-        <p><input type="checkbox" name="stream_publish" value="true" ';
+        echo '<p><strong>Stream Profile/Page Options</strong><br/>';
+	
+		echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">';
+		echo '<input type="radio" name="post_as_post" ';
+        if($wpbookAdminOptions['wpbook_as_note'] == 'post') 
+          echo 'checked';
+        echo " > Publish as Posts. (Default: if you don't know the difference, don't change this.)</p>";
+
+		echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">';
+		echo '<input type="radio" name="post_as_note" ';
+        if($wpbookAdminOptions['wpbook_as_note'] == 'note') 
+          echo 'checked';
+        echo ' > Publish as Notes</p>';
+		
+		echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options">';
+		echo '<input type="radio" name="post_as_link" ';
+        if($wpbookAdminOptions['wpbook_as_note'] == 'link') 
+          echo 'checked';
+        echo ' > Publish as Links</p>';
+		
+        echo '<p><input type="checkbox" name="stream_publish" value="true" ';
         if( htmlentities($wpbookAdminOptions['stream_publish']) == "true") {
           echo("checked");
         }
         echo ' id="set_1"> Publish new posts to <a href="http://www.facebook.com/profile.php?id=' . $wpbookAdminOptions['fb_admin_target'] .'" target="_new">YOUR Facebook Wall</a></p> ';
-        echo '<p class="wpbook_hidden wpbook_option_set_1 sub_options"><input type="checkbox" name="wpbook_as_note" ';
-        if($wpbookAdminOptions['wpbook_as_note']) 
-          echo 'checked';
-        echo ' > Publish as Notes (rather than excerpts - applies only to individual profiles)</p>';
         
         echo '<p><input type="checkbox" name="stream_publish_pages" value="true" ';
         if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
           echo("checked");
         }
         echo ' id="set_2" > Publish new posts to the wall of this page/group: ';
-echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">Page ID: <input type="text" name="fb_page_target" value="';
+		echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">Page ID: <input type="text" name="fb_page_target" value="';
       echo preg_replace("#[^0-9]#","",htmlentities($wpbookAdminOptions['fb_page_target'])) .'" size="15" /> ';
       echo ' (Information on <a href="http://socialmediaseo.net/2010/02/20/how-to-find-facebook-id/">finding your Page ID</a>)</p>';
       
       echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">Group ID: <input type="text" name="wpbook_target_group" value="';
         echo preg_replace("#[^0-9]#","",htmlentities($wpbookAdminOptions['wpbook_target_group'])) .'" size="15" /> ';
         echo ' (Generally your GroupID should be in your url, like: http://www.facebook.com/group.php?gid=149948248362737 - the gid is the group ID). </p>';
-        
-
+       		
       echo '<p><input type="checkbox" name="promote_external" value="true" ';
       if( htmlentities($wpbookAdminOptions['promote_external']) == "true") {
         echo("checked");
