@@ -40,9 +40,10 @@ function wpbook_safe_publish_to_facebook($post_ID) {
   
   
   $facebook = new Facebook($api_key, $secret);
-  $access_token = get_option('wpbook_user_access_token','');
+  $wpbook_user_access_token = get_option('wpbook_user_access_token','');
+  $wpbook_page_access_token = get_option('wpbook_page_access_token','');
   
-  if($access_token == '') {
+  if($wpbook_user_access_token == '') {
     if(WPBOOKDEBUG) {
       $fp = @fopen($debug_file, 'a');
       if(($fp) && (filesize($debug_file) > 500 * 1024)) {  // 500k max to file
@@ -51,7 +52,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       }
       if(!$fp) 
         define('WPBOOKDEBUG',false); // stop trying
-      $debug_string=date("Y-m-d H:i:s",time())." : No access token\n";
+      $debug_string=date("Y-m-d H:i:s",time())." : No user access token\n";
       if(is_writeable($debug_file)) {
         fwrite($fp, $debug_string);
       } else {
@@ -60,9 +61,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
       }
     }
   }
-  $facebook->setAccessToken($access_token);
   if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && (($stream_publish == "true") || $stream_publish_pages == "true")) {
-    // here we should also post to the author's stream
     if(WPBOOKDEBUG) {
       $fp = @fopen($debug_file, 'a');
       $debug_string=date("Y-m-d H:i:s",time())." : publish_to_facebook running, target_admin is " . $target_admin ."\n";
@@ -159,7 +158,15 @@ function wpbook_safe_publish_to_facebook($post_ID) {
         $debug_string=date("Y-m-d H:i:s",time())." : Publishing to personal wall, admin is " .$target_admin ."\n";
         fwrite($fp, $debug_string);
       }
-      
+      try {
+		$facebook->setAccessToken($wpbook_user_access_token);
+	  } catch (FacebookApiException $e) {
+        if($wpbook_show_errors) {
+          $wpbook_message = 'Caught exception setting user access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+          wp_die($wpbook_message,'WPBook Error');
+        } // end if for show errors
+      } // end try-catch
+	  
       $fb_response = '';
       try{
         // need new format for SDK API
@@ -261,7 +268,15 @@ function wpbook_safe_publish_to_facebook($post_ID) {
        * is published as coming from the user, not the group - different process
        * than Pages 
        */       
-      $access_token = get_option('wpbook_user_access_token','');
+      try {
+		$facebook->setAccessToken($wpbook_user_access_token);
+	  } catch (FacebookApiException $e) {
+        if($wpbook_show_errors) {
+          $wpbook_message = 'Caught exception setting user access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+          wp_die($wpbook_message,'WPBook Error');
+        } // end if for show errors
+      } // end try-catch
+
       if(WPBOOKDEBUG) {
         $fp = @fopen($debug_file, 'a');
         $debug_string=date("Y-m-d H:i:s",time())." : Group access token is ". $access_token ."\n";
@@ -329,26 +344,46 @@ function wpbook_safe_publish_to_facebook($post_ID) {
     if(($stream_publish_pages == "true") && (!empty($target_page))) {      
       // publish to page with new api
       $fb_response = '';
-      $access_token = get_option('wpbook_page_access_token','');
-	  $facebook->setAccessToken($access_token);
-      if(WPBOOKDEBUG) {
+	  if($wpbook_page_access_token == '') {
+		if(WPBOOKDEBUG) {
+			$fp = @fopen($debug_file, 'a');
+			$debug_string=date("Y-m-d H:i:s",time())." : No Access Token for Publishing to Page\n";
+			fwrite($fp, $debug_string);
+		}
+		return; // no page access token, no point in trying to publish
+	  }
+      try {
+		$facebook->setAccessToken($wpbook_page_access_token);
+	  } catch (FacebookApiException $e) {
+        if($wpbook_show_errors) {
+          $wpbook_message = 'Caught exception setting user access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+          wp_die($wpbook_message,'WPBook Error');
+        } // end if for show errors
+      } // end try-catch
+    	  
+	  if(WPBOOKDEBUG) {
         $fp = @fopen($debug_file, 'a');
         $debug_string=date("Y-m-d H:i:s",time())." : Page access token is ". $access_token ."\n";
         fwrite($fp, $debug_string);
       }
-      
       if(WPBOOKDEBUG) {
         $fp = @fopen($debug_file, 'a');
         $debug_string=date("Y-m-d H:i:s",time())." : Publishing to page " . $target_page  ."\n";
         fwrite($fp, $debug_string);
       }
-      
+	  try {
+		$facebook->setAccessToken($access_token);
+	  } catch (FacebookApiException $e) {
+        if($wpbook_show_errors) {
+          $wpbook_message = 'Caught exception setting page access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+          wp_die($wpbook_message,'WPBook Error');
+        } // end if for show errors
+      } // end try-catch
       try{
         // post as an excerpt
         if(!empty($my_image)) {
           /* message, picture, link, name, caption, description, source */      
           $attachment = array( 
-                              'access_token' => $access_token,
                               'name' => $my_title,
                               'link' => $my_permalink,
                               'description' => $wpbook_description,  
@@ -357,7 +392,6 @@ function wpbook_safe_publish_to_facebook($post_ID) {
                               ); 
         } else {
           $attachment = array( 
-                              'access_token' => $access_token,
                               'name' => $my_title,
                               'link' => $my_permalink,
                               'description' => $wpbook_description,  
