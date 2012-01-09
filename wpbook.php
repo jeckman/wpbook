@@ -114,7 +114,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                          $imported_comments_email,$infinite_session_key,
                          $attribution_line,$wpbook_enable_debug,
                          $wpbook_use_global_gravatar,$wpbook_as_note,
-                         $wpbook_target_group, $wpbook_disable_sslverify) {
+                         $wpbook_target_group, $wpbook_disable_sslverify,$wpbook_as_link) {
   $wpbookAdminOptions = array('wpbook_installation' => $wpbook_installation,
                               'fb_api_key' => $fb_api_key,
                               'fb_secret'  => $fb_secret,
@@ -161,6 +161,7 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'wpbook_as_note' => $wpbook_as_note,
                               'wpbook_target_group' => $wpbook_target_group,
                               'wpbook_disable_sslverify' => $wpbook_disable_sslverify, 
+							  'wpbook_as_link' => $wpbook_as_link,
                               );
   update_option('wpbookAdminOptions', $wpbookAdminOptions);
 }
@@ -264,6 +265,9 @@ function wpbook_subpanel() {
 				$wpbook_as_note = 'note';
 			if($_POST['post_as']=='link')
 				$wpbook_as_note = 'link';
+			$wpbook_as_link = 'post'; // default to post unless set
+			if ($_POST['page_post_as']=='link')
+				$wpbook_as_link = 'link';
 			$wpbook_target_group = $_POST['wpbook_target_group'];
 			$wpbook_disable_sslverify = $_POST['wpbook_disable_sslverify'];
 			$wpbook_use_global_gravatar = $_POST['wpbook_use_global_gravatar'];
@@ -300,7 +304,7 @@ function wpbook_subpanel() {
 							$imported_comments_email,$infinite_session_key,
 							$attribution_line,$wpbook_enable_debug,
 							$wpbook_use_global_gravatar,$wpbook_as_note,
-							$wpbook_target_group,$wpbook_disable_sslverify
+							$wpbook_target_group,$wpbook_disable_sslverify,$wpbook_as_link
 							);
 			$flash = "Your settings have been saved. ";
 		} elseif (($wpbookAdminOptions['fb_api_key'] != "") && ($wpbookAdminOptions['fb_secret'] != "") && ($wpbookAdminOptions['fb_app_url'] != "")  && ($wpbookAdminOptions['fb_admin_target'] != "")){
@@ -319,7 +323,7 @@ function wpbook_subpanel() {
 				$gravatar_default = WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif';
 				setAdminOptions(1, null,null,null,null,null,true,true,true,true,true,top,null,null,"F j, Y","g:i a",
 								true,null,null,null,disabled,null,"g",$gravatar_default,null,null,null,null,true,true,10,
-								false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null,false,false,null,false);
+								false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null,false,false,null,false,null);
 			}
 			if ($flash != '')
 				echo '<div id="message"class="updated fade"><p>' . $flash . '</p></div>'; 
@@ -412,26 +416,7 @@ function wpbook_subpanel() {
 				}
 				echo ' id="set_1"> Publish new posts to <a href="http://www.facebook.com/profile.php?id=' . $wpbookAdminOptions['fb_admin_target'] .'" target="_new">YOUR Facebook Wall</a></p> ';
         
-				echo '<p><input type="checkbox" name="stream_publish_pages" value="true" ';
-				if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
-					echo("checked");
-				}
-				echo ' id="set_2" > Publish new posts to the wall of this page/group: ';
-				echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">Page ID: <input type="text" name="fb_page_target" value="';
-				echo preg_replace("#[^0-9]#","",htmlentities($wpbookAdminOptions['fb_page_target'])) .'" size="15" /> ';
-				echo ' (Information on <a href="http://socialmediaseo.net/2010/02/20/how-to-find-facebook-id/">finding your Page ID</a>)</p>';
-      
-				echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">Group ID: <input type="text" name="wpbook_target_group" value="';
-				echo preg_replace("#[^0-9]#","",htmlentities($wpbookAdminOptions['wpbook_target_group'])) .'" size="15" /> ';
-				echo ' (Generally your GroupID should be in your url, like: http://www.facebook.com/group.php?gid=149948248362737 - the gid is the group ID). </p>';
-       		
-				echo '<p><input type="checkbox" name="promote_external" value="true" ';
-				if( htmlentities($wpbookAdminOptions['promote_external']) == "true") {
-					echo("checked");
-				}
-				echo ' id="promote_external" > Use external permalinks on Walls (applies to profiles, pages, and groups)</p>';
-				
-				echo '<p><strong>Post Type Options</strong><br/>';
+				echo '<p><strong>Profile Wall Post Type Options</strong><br/>';
 				echo '<div style="padding-left: 10px">';
 				echo '<input type="radio" value="post" name="post_as" ';
 				if(($wpbookAdminOptions['wpbook_as_note'] == 'post') || ($wpbookAdminOptions['wpbook_as_note'] == '')) 
@@ -450,6 +435,41 @@ function wpbook_subpanel() {
 					echo 'checked';
 				echo ' > Publish as Links. (Note: This assumes appropriate Facebook open graph metadata is provided by your blog.)</p>';
 				echo '</p></div>'; // end post type options
+		
+				echo '<p><input type="checkbox" name="stream_publish_pages" value="true" ';
+				if( htmlentities($wpbookAdminOptions['stream_publish_pages']) == "true") {
+					echo("checked");
+				}
+				echo ' id="set_2" > Publish new posts to the wall of this page/group: ';
+				echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">Page ID: <input type="text" name="fb_page_target" value="';
+				echo preg_replace("#[^0-9]#","",htmlentities($wpbookAdminOptions['fb_page_target'])) .'" size="15" /> ';
+				echo ' (Information on <a href="http://socialmediaseo.net/2010/02/20/how-to-find-facebook-id/">finding your Page ID</a>)</p>';
+      
+				echo '<p class="wpbook_hidden wpbook_option_set_2 sub_options">Group ID: <input type="text" name="wpbook_target_group" value="';
+				echo preg_replace("#[^0-9]#","",htmlentities($wpbookAdminOptions['wpbook_target_group'])) .'" size="15" /> ';
+				echo ' (Generally your GroupID should be in your url, like: http://www.facebook.com/group.php?gid=149948248362737 - the gid is the group ID). </p>';
+       		
+				echo '<p><strong>Page / Group Post Type Options</strong><br/>';
+				echo '<div style="padding-left: 10px">';
+				echo '<input type="radio" value="post" name="page_post_as" ';
+				if(($wpbookAdminOptions['wpbook_as_link'] == 'post') || ($wpbookAdminOptions['wpbook_as_note'] == '')) 
+					echo 'checked';	
+				echo " > Publish as Posts. (Default: if you don't know the difference, don't change this.)</p>";		
+				echo '<p>';
+				echo '<input type="radio" value="link" name="page_post_as" ';
+				if($wpbookAdminOptions['wpbook_as_link'] == 'link') 
+					echo 'checked';
+				echo ' > Publish as Links. (Note: This assumes appropriate Facebook open graph metadata is provided by your blog.)</p>';
+				echo '</p></div>'; // end post type options
+				
+			
+				echo '<p><input type="checkbox" name="promote_external" value="true" ';
+				if( htmlentities($wpbookAdminOptions['promote_external']) == "true") {
+					echo("checked");
+				}
+				echo ' id="promote_external" > Use external permalinks on Walls (applies to profiles, pages, and groups)</p>';
+				
+				
 				echo '<p><strong>Stream Debug Options</strong><br/><input type="checkbox" name="wpbook_enable_debug" value="true" ';
 				if( htmlentities($wpbookAdminOptions['wpbook_enable_debug']) == "true") {
 					echo("checked");
