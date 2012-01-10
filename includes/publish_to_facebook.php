@@ -300,7 +300,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
 
 			if(WPBOOKDEBUG) {
 				$fp = @fopen($debug_file, 'a');
-				$debug_string=date("Y-m-d H:i:s",time())." : Group access token is ". $access_token ."\n";
+				$debug_string=date("Y-m-d H:i:s",time())." : Group access token is ". $wpbook_user_access_token ."\n";
 				$debug_string=date("Y-m-d H:i:s",time())." : Publishing to group " . $wpbook_target_group  ."\n";
 				fwrite($fp, $debug_string);
 			}
