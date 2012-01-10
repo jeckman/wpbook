@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 Tested up to: 3.3
 Requires at least: 2.9.0
 
@@ -101,6 +101,9 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
 
 == Changelog ==
 
+= 2.3.2 = 
+ * Bug fix posting to page - left wrong $access_token in place in pushing 2.3.1
+ 
 = 2.3.1 = 
  * Introduced user-requested option to post as "link" rather than "post" type.
    Links pull metadata from FB open graph and use that to fetch image

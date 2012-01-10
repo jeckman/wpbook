@@ -2,12 +2,12 @@
 /*
 Plugin Name: WPBook
 Plugin URI: http://wpbook.net/
-Date: 2012, January 9th
+Date: 2012, January 10th
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 2.3.1
-Stable tag: 2.3.1
+Version: 2.3.2
+Stable tag: 2.3.2
 
 */
   
