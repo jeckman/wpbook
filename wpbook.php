@@ -6,8 +6,8 @@ Date: 2012, January 10th
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform. 
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 2.3.2
-Stable tag: 2.3.2
+Version: 2.3.3
+Stable tag: 2.3.3
 
 */
   
@@ -1366,6 +1366,25 @@ function wpbook_activation_check(){
     wp_die("This plugin requires WordPress 2.6 or greater.");
   }
 }
+  
+// thanks http://wpengineer.com/35/wordpress-plugin-deinstall-data-automatically/ 
+ /**
+ * Check for uninstall hook
+ */
+if ( function_exists('register_uninstall_hook') )
+	register_uninstall_hook(__FILE__, 'wpbook_deinstall');
+
+/**
+ * Delete options in database
+ */
+function wpbook_deinstall() {
+	delete_option('wpbookAdminOptions');
+	delete_option('wpbook_user_access_token');
+	delete_option('wpbook_page_access_token');
+}  
+  
+  
+  
   
 add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
