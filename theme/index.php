@@ -9,6 +9,7 @@ if((isset($_REQUEST['app_tab'])) && (isset($_REQUEST['fb_force_mode']))) {
 if((isset($_REQUEST['app_tab'])) && (!isset($_REQUEST['fb_force_mode']))) { // this is an app tab
   // output tab in iFrame mode
   include_once(WP_PLUGIN_DIR . '/wpbook/theme/tab.php');
+  die(); // nothing more to do once this has occured
 } 
 
 /* this include sets up the FB client, needed for the other parts but not the tab */  
