@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.3.3
+Stable tag: 2.3.4
 Tested up to: 3.3
 Requires at least: 2.9.0
 
@@ -100,6 +100,11 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+
+= 2.3.4 = 
+ * Bugfix for iFrame style page tabs, introduced via the newer Facebook sdk. 
+   Was throwing "headers already sent" warnings for those pages. 
+ * Bugfix for overly broad filter for global avatars outside comments. 
 
 = 2.3.3 = 
  * Delete options from db on uninstall
