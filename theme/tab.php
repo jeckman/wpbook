@@ -4,11 +4,10 @@ echo '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
 echo '<html xmlns="http://www.w3.org/1999/xhtml" ';
 echo 'xmlns:fb="http://www.facebook.com/2008/fbml">';
 echo '<head>';
-echo '<title>'. bloginfo('name').' :: Facebook Blog Application</title>';
+echo '<title>'. get_bloginfo('name').' :: Facebook Blog Application</title>';
 if ( is_singular() ) wp_enqueue_script( 'comment-reply' );
 wp_head();
-echo '<link rel="stylesheet" href="'. WP_PLUGIN_URL .'/wpbook/theme/default/style.css"'; 
-echo ' type="text/css" media="screen" />';
+echo '<link rel="stylesheet" href="'. WP_PLUGIN_URL .'/wpbook/theme/default/style.css" type="text/css" media="screen" />';
 echo '<BASE TARGET="_top">';	
 echo '</head>';
 echo '<body>';
@@ -32,13 +31,13 @@ if (have_posts()) {
 			next_post_link('Next Post: %link &raquo;<br />',
 								'%title',FALSE,'');
 		} //end if single  
-		echo '<div class="box_head clearfix" id="post-'. the_ID() .'">';
+		echo '<div class="box_head clearfix" id="post-'. get_the_ID() .'">';
 		echo '<h3 class="wpbook_box_header">';
 		if($show_date_title == "true"){
 			the_time($timestamp_date_format); 
 			echo(" - ");
 		}
-		echo '<a href="'. the_permalink() .'" target="_top">';
+		echo '<a href="'. get_permalink() .'" target="_top">';
 		echo the_title() .'</a></h3>'; 
 		if(($show_custom_header_footer == "header") || ($show_custom_header_footer == "both")){
 			echo( '<div id="custom_header">'.custom_header_footer($custom_header,$timestamp_date_format,$timestamp_time_format) .'</div>');
@@ -66,7 +65,7 @@ if (have_posts()) {
 				echo '</span>';
 			} // end if for enable_share 
 			if($enable_external_link == "true"){ 
-				echo '<span class="wpbook_external_post"><a href="' get_external_post_url(get_permalink()) .'" title="View this post outside Facebook at '. bloginfo('name') .'">View post on '. bloginfo('name') .'</a></span>';
+				echo '<span class="wpbook_external_post"><a href="'. get_external_post_url(get_permalink()) .'" title="View this post outside Facebook at '. get_bloginfo('name') .'">View post on '. get_bloginfo('name') .'</a></span>';
 			} // end if for enable external_link
 			echo '</p>';
 		} // end links_position _top
@@ -100,7 +99,7 @@ if (have_posts()) {
 			} // end if for enable_share              
 			if($enable_external_link == "true"){
 				echo '<span class="wpbook_external_post"><a href="'. get_external_post_url(get_permalink()) .'"';
-				echo ' title="View this post outside Facebook at '. bloginfo('name') .'">View post on '. bloginfo('name') .'</a></span>';
+				echo ' title="View this post outside Facebook at '. get_bloginfo('name') .'">View post on '. get_bloginfo('name') .'</a></span>';
 			}
 			echo '</p>';
 		} // end if for enable share, external, bottom
@@ -128,14 +127,14 @@ echo '</div>';
 	echo '<div class="box_head clearfix" style="padding: 5px 0 0 0;">';
 	echo '<p><small>This Facebook Application powered by '
 		.'<a href="http://www.wordpress.org/extend/plugins/wpbook/">'
-		.'the WPBook plugin</a> for <a href="http://www.wordpress.org/">';
+		.'the WPBook plugin</a> for <a href="http://www.wordpress.org/">'
 		.'WordPress</a>.</small></p></div>'; 
 }
 
 echo '<div id="fb-root"></div>';
 echo '<script>';
 echo 'window.fbAsyncInit = function() {';
-echo 'FB.init({appId: '. echo $api_key .', status: true, cookie: true,';
+echo 'FB.init({appId: '. $api_key .', status: true, cookie: true,';
 echo '     xfbml: true});';
 echo 'FB.Canvas.setAutoResize();';
 echo '};';
