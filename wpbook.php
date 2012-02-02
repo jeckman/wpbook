@@ -1317,8 +1317,7 @@ function wpbook_get_global_facebook_avatar($avatar, $comment, $size="50") {
   }
   if(($wpbookAdminOptions['use_gravatar'] =="true") 
 		&& ($wpbookAdminOptions['wpbook_use_global_gravatar'] =="true") 
-		&& (is_object($comment)) && (isset($comment->comment_author_email)) 
-		&& ($comment->comment_author_email == $wpbookLiteAdminOptions['imported_comments_email'])
+		&& (is_object($comment)) 
 	){
     $author_url = get_comment_author_url();
     $email = get_comment_author_email();
