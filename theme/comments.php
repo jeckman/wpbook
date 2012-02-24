@@ -25,6 +25,11 @@ $gravatar_default = $wpbookAdminOptions['gravatar_default'];
  * for the theme itself 
  */
 
+/* some users report getting a class not exists error here */  
+if(!class_exists('Facebook')) {  
+  include_once(WP_PLUGIN_DIR . '/wpbook/includes/client/facebook.php');  
+}
+
 Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
 Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
 
