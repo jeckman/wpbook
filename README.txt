@@ -101,6 +101,8 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
 
 == Changelog ==
 
+ * Added user_groups permission for publishing to non-public groups
+
 = 2.3.5 = 
  * Added auto-draft to publish action, better support for Windows Live Writer 
    and other XML-RPC clients. 

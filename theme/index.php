@@ -103,7 +103,7 @@ if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this 
 ?>  
 <p>FB profile <?php echo $data["user_id"]; ?> has granted these permissions:
   <?php // need to set some permissions checks here
-  $fql = 'SELECT offline_access,read_stream,publish_stream,manage_pages FROM permissions WHERE uid='. $data["user_id"]; 
+  $fql = 'SELECT offline_access,read_stream,publish_stream,manage_pages,user_groups FROM permissions WHERE uid='. $data["user_id"]; 
     $params = array(
                     'method' => 'fql.query',
                     'query' => $fql,
@@ -141,6 +141,12 @@ if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this 
   echo 'yes';
   else
   echo 'no';
+  ?></strong></li>
+ <li>user_groups - <strong><?php
+  if($my_permissions[0][user_groups] == 1)
+    echo 'yes';
+  else
+    echo 'no';
   ?></strong></li>
 </ul>
 </p>
@@ -192,7 +198,7 @@ if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this 
 <p>To correct any of these, <a href="
 <?php
 $my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
-. '&redirect_uri='. $proto .'://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=offline_access,read_stream,publish_stream,manage_pages';
+. '&redirect_uri='. $proto .'://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=offline_access,read_stream,publish_stream,manage_pages,user_groups';
 echo $my_permissions_url;
 ?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
 
