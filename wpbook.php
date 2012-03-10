@@ -1388,6 +1388,13 @@ function wpbook_deinstall() {
 	delete_option('wpbookAdminOptions');
 	delete_option('wpbook_user_access_token');
 	delete_option('wpbook_page_access_token');
+	
+	/* per http://codex.wordpress.org/Function_Reference/delete_post_meta */
+	$wpbook_allposts = get_posts('numberposts=-1&post_type=post&post_status=any');
+	foreach( $wpbook_allposts as $wpbook_postinfo) {
+		delete_post_meta($wpbook_postinfo->ID, 'wpbook_fb_publish');
+		delete_post_meta($wpbook_postinfo->ID, 'wpbook_message');
+	}
 }  
   
   

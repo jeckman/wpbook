@@ -101,6 +101,9 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
 
 == Changelog ==
 
+ * Added hook to remove all the post_meta that wpbook created
+   while installed
+
 = 2.4 = 
  * Added wpbook message field to meta box. This will be used over the excerpt
    if it is present. 
