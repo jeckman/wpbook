@@ -101,6 +101,10 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
 
 == Changelog ==
 
+ * Added wpbook message field to meta box
+ * Bugfix for duplicate post_meta (custom fields) - never interfered with 
+   functionality but did create unnecessary date. Now only one wpbook_publish per
+   post. 
  * Added user_groups permission for publishing to non-public groups
 
 = 2.3.5 = 
