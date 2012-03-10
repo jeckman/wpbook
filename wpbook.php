@@ -1109,66 +1109,71 @@ function wpbook_attribution_line($attribution_line,$author){
  * posts to twitter
  */
 function wpbook_meta_box() {
-  global $post;
-  $wpbook_publish = get_post_meta($post->ID, 'wpbook_fb_publish', true);
-  if ($wpbook_publish == '') {
-    $wpbook_publish = 'yes';
-  }
-  echo '<p>'.__('Publish this post to Facebook Wall?', 'wpbook').'<br/>';
-  echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_yes" value="yes" ';
-  checked('yes', $wpbook_publish, true);
-  echo ' /> <label for="wpbook_fb_publish_yes">'.__('yes', 'wpbook').'</label> &nbsp;&nbsp;';
-  echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_no" value="no" ';
-  checked('no', $wpbook_publish, true);
-  echo ' /> <label for="wpbook_fb_publish_no">'.__('no', 'wpbook').'</label>';
-  echo '</p>';
-  do_action('wpbook_store_post_options');
+	global $post;
+	$wpbook_publish = get_post_meta($post->ID, 'wpbook_fb_publish', true);
+	$wpbook_message = get_post_meta($post->ID, 'wpbook_message', true); 
+	if ($wpbook_publish == '') {
+		$wpbook_publish = 'yes';
+	}
+	echo '<p>'.__('Publish this post to Facebook Wall?', 'wpbook').'<br/>';
+	echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_yes" value="yes" ';
+	checked('yes', $wpbook_publish, true);
+	echo ' /> <label for="wpbook_fb_publish_yes">'.__('Yes', 'wpbook').'</label> &nbsp;&nbsp;';
+	echo '<input type="radio" name="wpbook_fb_publish" id="wpbook_fb_publish_no" value="no" ';
+	checked('no', $wpbook_publish, true);
+	echo ' /> <label for="wpbook_fb_publish_no">'.__('No', 'wpbook').'</label>';
+	echo '</p>';
+	echo '<p>'.__('Message for Facebook post: (plain text)','wpbook').'<br/>';
+	echo '<p><textarea cols="60" rows="4" style="width:95%" name="wpbook_message" id="wpbook_message">';
+	echo $wpbook_message;
+	echo '</textarea></p>';
+	do_action('wpbook_store_post_options');
 }
   
 function wpbook_add_meta_box() {
-  global $wp_version;
-  if (version_compare($wp_version, '2.7', '>=')) {
-    add_meta_box('wpbook_post_form','WPBook', 'wpbook_meta_box', 'post', 'side');
-  } else {
-    add_meta_box('wpbook_post_form','WPBook', 'wpbook_meta_box', 'post', 'normal');
-  }
+	global $wp_version;
+	if (version_compare($wp_version, '2.7', '>=')) {
+		add_meta_box('wpbook_post_form','WPBook', 'wpbook_meta_box', 'post', 'side');
+	} else {
+		add_meta_box('wpbook_post_form','WPBook', 'wpbook_meta_box', 'post', 'normal');
+	}
 }
   
 function wpbook_store_post_options($post_id, $post = false) {
-  if (!$post || $post->post_type == 'revision') { // store the metadata with the post, not the revision
+	if (!$post || $post->post_type == 'revision') { // store the metadata with the post, not the revision
 		return;
 	}  
-  $wpbookAdminOptions = wpbook_getAdminOptions();
-  $post = get_post($post_id);
-  $stored_meta = get_post_meta($post_id, 'wpbook_fb_publish', true);
-  $posted_meta = $_POST['wpbook_fb_publish'];
+	$wpbookAdminOptions = wpbook_getAdminOptions();
+	$post = get_post($post_id);
+	$stored_meta = get_post_meta($post_id, 'wpbook_fb_publish', true);
+	$posted_meta = $_POST['wpbook_fb_publish'];
+	$wpbook_message = $_POST['wpbook_message'];
+	$save = false;
+	/* if there is $posted_meta, that takes priority over stored */
+	if (!empty($posted_meta)) { 
+		$posted_meta == 'yes' ? $meta = 'yes' : $meta = 'no';
+		$save = true;
+	}
+	/* if no posted meta, check stored meta */ 
+	else if (empty($stored_meta)) {
+		/* if no stored meta, but streaming publishing is on, default to yes */
+		if (($wpbookAdminOptions['stream_publish']) || ($wpbookAdminOptions['stream_publish_pages'])) {
+			$meta = 'yes';
+		} else {
+		$meta = 'no';
+		}
+		$save = true;
+	/* if there is stored meta, and user didn't touch it, don't save */ 
+	} else {
+		$save = false;
+	}
     
-  $save = false;
-  /* if there is $posted_meta, that takes priority over stored */
-  if (!empty($posted_meta)) { 
-    $posted_meta == 'yes' ? $meta = 'yes' : $meta = 'no';
-    $save = true;
-  }
-  /* if no posted meta, check stored meta */ 
-  else if (empty($stored_meta)) {
-    /* if no stored meta, but streaming publishing is on, default to yes */
-    if (($wpbookAdminOptions['stream_publish']) || ($wpbookAdminOptions['stream_publish_pages'])) {
-      $meta = 'yes';
-    } else {
-      $meta = 'no';
-    }
-    $save = true;
-  /* if there is stored meta, and user didn't touch it, don't save */ 
-  } else {
-    $save = false;
-  }
-    
-  if ($save) {
-    if (!update_post_meta($post_id, 'wpbook_fb_publish', $meta)) {
-      add_post_meta($post_id, 'wpbook_fb_publish', $meta);
-    }
-  }
+	if ($save) {
+      update_post_meta($post_id, 'wpbook_fb_publish', $meta);
+	}
+	update_post_meta($post_id, 'wpbook_message', $wpbook_message); 
 }
+
 add_action('draft_post', 'wpbook_store_post_options', 1, 2);
 add_action('publish_post', 'wpbook_store_post_options', 1, 2);
 add_action('save_post', 'wpbook_store_post_options', 1, 2);
