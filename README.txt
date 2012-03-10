@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.3.5
+Stable tag: 2.4
 Tested up to: 3.3.1
 Requires at least: 2.9.0
 
@@ -101,7 +101,9 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
 
 == Changelog ==
 
- * Added wpbook message field to meta box
+= 2.4 = 
+ * Added wpbook message field to meta box. This will be used over the excerpt
+   if it is present. 
  * Bugfix for duplicate post_meta (custom fields) - never interfered with 
    functionality but did create unnecessary date. Now only one wpbook_publish per
    post. 
