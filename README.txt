@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.5
+Stable tag: 2.5.1
 Tested up to: 3.3.1
 Requires at least: 2.9.0
 
@@ -100,6 +100,11 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+
+= 2.5.1 = 
+ * Had missed some entries in the theme which referred to offline_access
+   Shouldn't cause problems for anyone but should be removed as it will be 
+   deprecated. 
 
 = 2.5 = 
  * Added hook to remove all the post_meta that wpbook created
