@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.5.1
+Stable tag: 2.5.2
 Tested up to: 3.3.1
 Requires at least: 2.9.0
 
@@ -100,6 +100,10 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+
+= 2.5.2 =
+ * doh! Bad typo in the facebook publish code, rending access tokens invalid. 
+   Quick fix, everyone should be on 2.5.2. 
 
 = 2.5.1 = 
  * Had missed some entries in the theme which referred to offline_access
