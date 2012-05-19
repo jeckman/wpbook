@@ -98,7 +98,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
   <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
   <p>This user_id has granted these permissions:
   <?php // need to set some permissions checks here
-  $fql = 'SELECT offline_access,read_stream,publish_stream,manage_pages FROM permissions WHERE uid='. $data["user_id"]; 
+  $fql = 'SELECT read_stream,publish_stream,manage_pages FROM permissions WHERE uid='. $data["user_id"]; 
     $params = array(
                     'method' => 'fql.query',
                     'query' => $fql,
@@ -113,12 +113,6 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
     }
     ?>
 <ul>
-<li>offline_access - <strong><?php
-  if($my_permissions[0][offline_access] == 1) 
-  echo 'yes';
-  else 
-  echo 'no';
-  ?></strong></li>
 <li>read_stream - <strong><?php
   if($my_permissions[0][read_stream] == 1) 
   echo 'yes';
@@ -142,7 +136,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
 <p>This user <strong>
 <?php 
   $access_token = get_option('wpbook_user_access_token','');
-  if($access_token != '')
+  if($access_token != '') && ($access_token != 'invalid')
   echo 'has';
   else
   echo 'has NOT';
@@ -182,7 +176,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
 <p>To correct any of these, <a href="
 <?php
 $my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
-. '&redirect_uri='.$proto.'://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=offline_access,read_stream,publish_stream,manage_pages';
+. '&redirect_uri='.$proto.'://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=read_stream,publish_stream,manage_pages';
 echo $my_permissions_url;
 ?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
 

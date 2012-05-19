@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.4
+Stable tag: 2.5
 Tested up to: 3.3.1
 Requires at least: 2.9.0
 
@@ -101,8 +101,13 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
 
 == Changelog ==
 
+= 2.5 = 
  * Added hook to remove all the post_meta that wpbook created
    while installed
+ * Accomodate Facebook having deprecated offline_access permission. For most
+   users you won't notice a difference. However, sometime after June 2012 you
+   will notice that your tokens expire every 60 days and require new tokens 
+   to be generated. Sorry, but that's Facebook's new policy.    
 
 = 2.4 = 
  * Added wpbook message field to meta box. This will be used over the excerpt
