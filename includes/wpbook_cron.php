@@ -79,7 +79,6 @@ function wpbook_import_comments() {
                                  )
                            );
   
-  $facebook->setAccessToken($access_token);
   if(WPBOOKDEBUG) {
     $fp = @fopen($debug_file, 'a');
     $debug_string=date("Y-m-d H:i:s",time())." : Access token is ". $access_token ." \n";
@@ -94,6 +93,31 @@ function wpbook_import_comments() {
     }
     return;
   }
+  // validate token
+  try {
+	$facebook->setAccessToken($access_token);
+  } catch (FacebookApiException $e) {
+	if(WPBOOKDEBUG) {
+		$wpbook_message = 'Caught exception setting access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+		$fp = @fopen($debug_file, 'a');
+		$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+      fwrite($fp, $debug_string);
+	} // end if debug
+  }  // end try-catch
+
+  try {
+	$facebook->api('/me','GET');
+  } catch (FacebookApiException $e) {
+	if(WPBOOKDEBUG) {
+		$wpbook_message = 'Caught exception with access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+		$fp = @fopen($debug_file, 'a');
+		$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+      fwrite($fp, $debug_string);
+	} // end if debug
+	update_option('wpbook_user_access_token','invalid');
+	die(); 
+  }
+
   
   if ($wpbookAdminOptions['approve_imported_comments'] == 1) {
     $wpbook_comment_approval = 1;

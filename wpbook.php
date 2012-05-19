@@ -1396,9 +1396,24 @@ function wpbook_deinstall() {
 		delete_post_meta($wpbook_postinfo->ID, 'wpbook_message');
 	}
 }  
+// display admin notice if token is invalid
+function wpbook_token_notice() {
+?>
+  <div class='error fade'>
+    <p>Your Facebook Access Token for WPBook has expired. Please
+	   <a href="/wp-admin/options-general.php?page=wpbook.php">visit the settings page for WPBook</a> and grant a new
+	   access token. Until you do so, cross-posting to Facebook and import of 
+	   comments will fail.</p>
+  </div>
+<?php
+}
   
   
-  
+//admin notice for expired token
+$my_access_token = get_option('wpbook_user_access_token','');
+if ($my_access_token == 'invalid') {
+	add_action('admin_notices', 'wpbook_token_notice');
+}  
   
 add_filter('query_vars', 'wpbook_query_vars');	
 add_filter('post_link','fb_filter_postlink',1,1);
