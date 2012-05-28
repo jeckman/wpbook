@@ -5,7 +5,7 @@ if(!class_exists('Facebook')) {
   
 $canvas_page = $proto . "://apps.facebook.com/" . $app_url . "/";
   
-$auth_url = "http://www.facebook.com/dialog/oauth?client_id=" 
+$auth_url = $proto ."://www.facebook.com/dialog/oauth?client_id=" 
   . $api_key . "&redirect_uri=" . urlencode($canvas_page);
   
 $signed_request = $_REQUEST["signed_request"];

@@ -101,6 +101,9 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
 
 == Changelog ==
 
+ * Changed to use different auth_url in Invite mode for invite friends when in 
+   forced https mode on Facebook
+
 = 2.5.2 =
  * doh! Bad typo in the facebook publish code, rending access tokens invalid. 
    Quick fix, everyone should be on 2.5.2. 
