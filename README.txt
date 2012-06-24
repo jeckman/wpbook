@@ -1,8 +1,8 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.5.2
-Tested up to: 3.3.1
+Stable tag: 2.5.3
+Tested up to: 3.4
 Requires at least: 2.9.0
 
 Plugin to embed WordPress Blog into Facebook Platform. Requires PHP 5. 
@@ -101,6 +101,9 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
 
 == Changelog ==
 
+= 2.5.3 = 
+ * Cleaned up typo in wpbook_cron which may have caused issues with comment import
+ * Removed deprecated warning in add_options_page
  * Changed to use different auth_url in Invite mode for invite friends when in 
    forced https mode on Facebook
 
