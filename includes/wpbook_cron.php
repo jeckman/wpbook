@@ -188,7 +188,7 @@ function wpbook_import_comments() {
             if ($mp->meta_key == '_wpbook_page_stream_id') {
               $my_timestamp_results = $wpdb->get_row("Select meta_value from $wpdb->postmeta WHERE meta_key LIKE '%_wpbook_page_stream_time%' AND post_id = '$wordpress_post_id'",ARRAY_A);
             }
-            $my_timestamp = $my_timestamp_results[meta_value];
+            $my_timestamp = $my_timestamp_results['meta_value'];
             
             /* 
              * now we fetch comments since that timestamp, using FQL
