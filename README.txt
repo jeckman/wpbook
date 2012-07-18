@@ -100,6 +100,8 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+ * Fixed bad define statement in publish_to_facebook.php. Resulted in warnings
+   for users whose permissions did not allow writing to the debug file. 
 
 = 2.5.3 = 
  * Cleaned up typo in wpbook_cron which may have caused issues with comment import
