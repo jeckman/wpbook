@@ -232,7 +232,7 @@ function wpbook_import_comments() {
             if(WPBOOKDEBUG) {
               $fp = @fopen($debug_file, 'a');
               $debug_string=date("Y-m-d H:i:s",time())." : Number of comments for this post- " . count($fbcommentslist) . " \n";
-              $degub_string .= print_r($fbcommentslist);
+              $debug_string .= print_r($fbcommentslist);
               fwrite($fp, $debug_string);
             }
             foreach ($fbcommentslist as $comment) {
