@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.5.3
+Stable tag: 2.5.4
 Tested up to: 3.4
 Requires at least: 2.9.0
 
@@ -100,6 +100,11 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+
+= 2.5.4 = 
+ * Fixed typo in wpbook_cron.php that would throw warnings in debug.log 
+ * Tightened handling of $wpbook_message post_meta - should now not save if
+   empty or undefined 
  * Fixed bad define statement in publish_to_facebook.php. Resulted in warnings
    for users whose permissions did not allow writing to the debug file. 
 
