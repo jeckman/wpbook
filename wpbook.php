@@ -1407,7 +1407,7 @@ function wpbook_token_notice() {
 ?>
   <div class='error fade'>
     <p>Your Facebook Access Token for WPBook has expired. Please
-	   <a href="/wp-admin/options-general.php?page=wpbook.php">visit the settings page for WPBook</a> and grant a new
+	   <a href="<?php echo admin_url('options-general.php?page=wpbook.php'); ?>">visit the settings page for WPBook</a> and grant a new
 	   access token. Until you do so, cross-posting to Facebook and import of 
 	   comments will fail.</p>
   </div>
