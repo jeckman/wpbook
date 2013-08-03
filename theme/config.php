@@ -88,6 +88,7 @@ if (($token_debug['data']['expires_at'] - $my_now) < 86400) {
  * And they are the $target_admin of the FB app, so we should store their ID
  */   
 if ((isset($_REQUEST["wp_user"])) && ($data["user_id"] == $target_admin)) {
+  $access_token = $facebook->getAccessToken();
   update_option('wpbook_user_access_token',$access_token);
 }
 ?>
