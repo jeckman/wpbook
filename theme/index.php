@@ -15,18 +15,6 @@ if((isset($_REQUEST['app_tab'])) && (!isset($_REQUEST['fb_force_mode']))) { // t
 /* this include sets up the FB client, needed for the other parts but not the tab */  
 include_once(WP_PLUGIN_DIR . '/wpbook/theme/config.php');
   
-if($wpbookOptions['wpbook_disable_sslverify'] == "true") {
-  Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
-  Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
-}
-  
-$facebook = new Facebook(array(
-                              'appId'  => $api_key,
-                              'secret' => $secret,
-                              'fileUpload' => true,
-                              )
-                         );
-
 if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this is the invite page
   if(isset($_POST["ids"])) { // this means we've already added some stuff
     echo "<center>Thank you for inviting ".sizeof($_POST["ids"])
@@ -148,6 +136,8 @@ if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this 
   $access_token = get_option('wpbook_user_access_token','');
   if($access_token != '') {
     echo '<p>An access token for this user has been stored.</p>';
+	echo '<p>Stored access token is '. $access_token . '</p>';
+	echo '<p>Active access token is '. $facebook->getAccessToken() . '</p>';
   } else {
     echo '<p><strong>Error: No access token has been stored for this user -';
     echo 'probably due to a misconfiguration. Check to see that the ProfileID ';
@@ -164,6 +154,7 @@ if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this 
         if($page['access_token']) {
           update_option('wpbook_page_access_token',$page['access_token']);
           echo '<p>An access token corresponding to this page has been stored.</p>';
+		  echo '<p>' . $page['access_token'] . '</p>';
         } else {
           echo '<p><strong>ERROR: No access token corresponding to this page was ';
           echo 'found or stored.</strong> This likely means that either: ';
@@ -232,6 +223,15 @@ if((!isset($_REQUEST['is_invite']))&&(!isset($_REQUEST['is_permissions']))&&(!is
   </head>
   <body>
   <?php
+  if(isset($_REQUEST['debug'])) {
+	  $my_now = time(); 
+	  echo "<div><h3>debug</h3>";
+	  echo "<p>Access token is ". $access_token ."</p>";
+	  echo "<p>Time currently is  " . $my_now ."</p>";
+	  echo "<p>Expiration time is ". $token_debug['data']['expires_at'] ."</p>"; 
+	  $my_difference = $token_debug['data']['expires_at'] - $my_now;
+	  echo "<p>Difference is ". $my_difference ."</p>" ;
+  }
   if(isset($_REQUEST['fb_page_id'])) { 
     echo " <div><h3>Thank You!</h3> <p>This application has been added to your page's profile.</p>";
     echo "<p>You can return to your page to see the updated information.</p>";

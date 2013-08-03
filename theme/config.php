@@ -2,27 +2,91 @@
 if(!class_exists('Facebook')) {  
   include_once(WP_PLUGIN_DIR . '/wpbook/includes/client/facebook.php');  
 }
-  
-$canvas_page = $proto . "://apps.facebook.com/" . $app_url . "/";
-  
-$auth_url = $proto ."://www.facebook.com/dialog/oauth?client_id=" 
-  . $api_key . "&redirect_uri=" . urlencode($canvas_page);
-  
-$signed_request = $_REQUEST["signed_request"];
- 
- 
-list($encoded_sig, $payload) = explode('.', $signed_request, 2); 
-  
-$data = json_decode(base64_decode(strtr($payload, '-_', '+/')), true);
-  
-// if we're on app_tab we should not need user logged in   
-if (!isset($_REQUEST['app_tab'])) {
-  if (empty($data["user_id"])) {
-    echo("<script> top.location.href='" . $auth_url . "'</script>");
-  } else {
-    $access_token = $data["oauth_token"];   
-  }
+if($wpbookOptions['wpbook_enable_debug'] == "true") {
+  define ('WPBOOKDEBUG',true);
+} else {
+  define ('WPBOOKDEBUG',false);
 }
+$debug_file= WP_PLUGIN_DIR .'/wpbook/wpbook_debug.txt';
+$canvas_page = $proto . "://apps.facebook.com/" . $app_url . "/";
+
+if($wpbookOptions['wpbook_disable_sslverify'] == "true") {
+  Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
+  Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
+}
+$facebook = new Facebook(array(
+                              'appId'  => $api_key,
+                              'secret' => $secret,
+                              'fileUpload' => true,
+                              )
+                         );
+/* First, do we have a stored access_token we can use */ 
+$access_token = get_option('wpbook_user_access_token','');
+if (($access_token != '') && ($access_token != 'invalid')) {
+	try {
+		$facebook->setAccessToken($access_token); 
+	} catch (FacebookApiException $e) {
+		if(WPBOOKDEBUG) {
+			$wpbook_message = 'Caught exception setting access token to stored: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+			$fp = @fopen($debug_file, 'a');
+			$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+  			fwrite($fp, $debug_string);
+		} // end if debug
+	} // end try catch
+} // end if stored_access_token valid
+
+/* now, was that token successfully set? */ 
+try {
+	$result = $facebook->api('/me');
+} catch (FacebookApiException $e) {
+	if(WPBOOKDEBUG) {
+		$wpbook_message = 'Caught exception testing access_token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+		$fp = @fopen($debug_file, 'a');
+		$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+		fwrite($fp, $debug_string);
+	} // end if debug
+}
+
+/* if we did not get a response, we need to do something else - get a new access token */
+if ($result["id"] == '') {
+	$user = $facebook->getUser();
+	$access_token = $facebook->getAccessToken(); // this gets anew short access token
+}
+
+// now let's go find out when that our access token expires
+try {
+	$token_debug = $facebook->api('/debug_token?input_token='. $access_token .'&access_token='. $access_token,'GET');
+} catch (FacebookApiException $e) {
+	if(WPBOOKDEBUG) {
+		$wpbook_message = 'Caught exception with access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+		$fp = @fopen($debug_file, 'a');
+		$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+		fwrite($fp, $debug_string);
+	} // end if debug
+}
+	
+// see if token expiration is within a day 
+$my_now = time();  
+if (($token_debug['data']['expires_at'] - $my_now) < 86400) {
+	try {
+		//$new_access_token = $facebook->api('/oauth/access_token?grant_type=fb_exchange_token&client_id='.
+		// 	   $api_key .'&client_secret='. $secret .'&fb_exchange_token='. $access_token);
+		$graph_url = "https://graph.facebook.com/oauth/access_token?client_id=" .$api_key."&client_secret="
+			.$secret."&grant_type=fb_exchange_token&fb_exchange_token=".$access_token;
+		$response = @file_get_contents($graph_url);
+		parse_str($response,$output);
+		$new_access_token = $output['access_token'];	   
+		update_option('wpbook_user_access_token',$new_access_token);
+		$facebook->setAccessToken($new_access_token);
+	} catch (FacebookApiException $e) {
+		if(WPBOOKDEBUG) {
+			$wpbook_message = 'Caught exception extending access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+			$fp = @fopen($debug_file, 'a');
+			$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+			fwrite($fp, $debug_string);
+		} // end if debug
+	} // end try catch
+}	
 
 /* should not store in user_meta - need to store as an option 
  * If a wp_user id was passed in, that lets us know they came from wp
