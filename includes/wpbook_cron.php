@@ -78,6 +78,70 @@ function wpbook_import_comments() {
                                  'secret' => $secret,
                                  )
                            );
+  $access_token = get_option('wpbook_user_access_token','');
+  if (($access_token != '') && ($access_token != 'invalid')) {
+	try {
+		 $facebook->setAccessToken($access_token); 
+	} catch (FacebookApiException $e) {
+		if(WPBOOKDEBUG) {
+			$wpbook_message = 'Caught exception setting access token to stored: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+			$fp = @fopen($debug_file, 'a');
+			$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+			fwrite($fp, $debug_string);
+		} // end if debug
+	} // end try catch
+  } // end if stored_access_token valid
+
+/* now, was that token successfully set? */ 
+  try {
+	  $result = $facebook->api('/me');
+  } catch (FacebookApiException $e) {
+	  if(WPBOOKDEBUG) {
+		  $wpbook_message = 'Caught exception testing access_token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+		  $fp = @fopen($debug_file, 'a');
+		  $debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+		  fwrite($fp, $debug_string);
+	  } // end if debug
+  } // end try-catch
+
+/* if we did not get a response, we need to do something else - get a new access token */
+  if ($result["id"] == '') {
+	  $user = $facebook->getUser();
+	  $access_token = $facebook->getAccessToken(); // this gets anew short access token
+  }
+
+// now let's go find out when that our access token expires
+  try {
+	  $token_debug = $facebook->api('/debug_token?input_token='. $access_token .'&access_token='. $access_token,'GET');
+  } catch (FacebookApiException $e) {
+	  if(WPBOOKDEBUG) {
+		  $wpbook_message = 'Caught exception with access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+		  $fp = @fopen($debug_file, 'a');
+		  $debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+		  fwrite($fp, $debug_string);
+	  } // end if debug
+  } // end try-catch
+	
+  // see if token expiration is within a day 
+  $my_now = time();  
+  if (($token_debug['data']['expires_at'] - $my_now) < 86400) {
+	try {
+		$graph_url = "https://graph.facebook.com/oauth/access_token?client_id=" .$api_key."&client_secret="
+	  	  .$secret."&grant_type=fb_exchange_token&fb_exchange_token=".$access_token;
+		$response = @file_get_contents($graph_url);
+		parse_str($response,$output);
+		$new_access_token = $output['access_token'];	   
+		update_option('wpbook_user_access_token',$new_access_token);
+		$facebook->setAccessToken($new_access_token);
+	} catch (FacebookApiException $e) {
+		  if(WPBOOKDEBUG) {
+			$wpbook_message = 'Caught exception extending access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+			$fp = @fopen($debug_file, 'a');
+			$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+			fwrite($fp, $debug_string);
+		} // end if debug
+  	} // end try catch
+  }	// end if token debug is < day
   
   if(WPBOOKDEBUG) {
     $fp = @fopen($debug_file, 'a');
