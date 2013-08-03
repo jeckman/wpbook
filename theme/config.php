@@ -69,8 +69,6 @@ try {
 $my_now = time();  
 if (($token_debug['data']['expires_at'] - $my_now) < 86400) {
 	try {
-		//$new_access_token = $facebook->api('/oauth/access_token?grant_type=fb_exchange_token&client_id='.
-		// 	   $api_key .'&client_secret='. $secret .'&fb_exchange_token='. $access_token);
 		$graph_url = "https://graph.facebook.com/oauth/access_token?client_id=" .$api_key."&client_secret="
 			.$secret."&grant_type=fb_exchange_token&fb_exchange_token=".$access_token;
 		$response = @file_get_contents($graph_url);
