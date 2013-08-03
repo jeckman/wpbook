@@ -38,12 +38,11 @@ function wpbook_safe_publish_to_facebook($post_ID) {
 		Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
 	}
   
-  
 	$facebook = new Facebook($api_key, $secret);
 	$wpbook_user_access_token = get_option('wpbook_user_access_token','');
 	$wpbook_page_access_token = get_option('wpbook_page_access_token','');
   
-	if($wpbook_user_access_token == '') {
+	if(($wpbook_user_access_token == '') || ($wp_user_access_token == 'invalid')) {
 		if(WPBOOKDEBUG) {
 			$fp = @fopen($debug_file, 'a');
 			if(($fp) && (filesize($debug_file) > 500 * 1024)) {  // 500k max to file
@@ -63,29 +62,27 @@ function wpbook_safe_publish_to_facebook($post_ID) {
 	}
 	
 	try {
-		$facebook->setAccessToken($wpbook_user_access_token);
+		 $facebook->setAccessToken($wp_user_access_token); 
 	} catch (FacebookApiException $e) {
 		if(WPBOOKDEBUG) {
-			$wpbook_message = 'Caught exception setting access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+			$wpbook_message = 'Caught exception setting access token to stored: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
 			$fp = @fopen($debug_file, 'a');
 			$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
 			fwrite($fp, $debug_string);
 		} // end if debug
-	}  // end try-catch
-
-	// this is just to validate the access token	
-	try {
-		$facebook->api('/me','GET');
-	} catch (FacebookApiException $e) {
-		if(WPBOOKDEBUG) {
-			$wpbook_message = 'Caught exception with access token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
-			$fp = @fopen($debug_file, 'a');
-			$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
-			fwrite($fp, $debug_string);
-		} // end if debug
-		update_option('wpbook_user_access_token','invalid');
-		die(); 
-	}
+	} // end try catch
+    
+  /* now, was that token successfully set? */ 
+    try {
+  	  $result = $facebook->api('/me');
+    } catch (FacebookApiException $e) {
+  	  if(WPBOOKDEBUG) {
+  		  $wpbook_message = 'Caught exception testing access_token: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+  		  $fp = @fopen($debug_file, 'a');
+  		  $debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+  		  fwrite($fp, $debug_string);
+  	  } // end if debug
+    } // end try-catch
 	
 	if((!empty($api_key)) && (!empty($secret)) && (!empty($target_admin)) && (($stream_publish == "true") || $stream_publish_pages == "true")) {
 		if(($wpbook_user_access_token == '')&&($wpbook_page_access_token == '')) {

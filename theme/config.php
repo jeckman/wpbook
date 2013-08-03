@@ -45,6 +45,7 @@ try {
 		$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
 		fwrite($fp, $debug_string);
 	} // end if debug
+	$result["id"] == '';
 }
 
 /* if we did not get a response, we need to do something else - get a new access token */
