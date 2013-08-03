@@ -7,7 +7,7 @@ Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Faceb
 Author: John Eckman
 Author URI: http://johneckman.com
 Version: 2.6
-Stable tag: 2.5.4
+Stable tag: 2.6
 */
   
 /*
