@@ -101,6 +101,14 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
 
 == Changelog ==
 
+= 2.6 =
+ * New logic which tries to use the stored access_token first. If a stored access
+   token is found and has an expiration of less than 2 hrs, exchange it for a long-term
+   token. If no stored token is found, get a new one and then try to exchange that one
+   for a long term token. This feature relies on @file_get_contents because the PHP SDK
+   from Facebook does not seem to allow this oauth token exchange call. 
+ * Make the admin url no longer hard coded. 
+
 = 2.5.4 = 
  * Fixed typo in wpbook_cron.php that would throw warnings in debug.log 
  * Tightened handling of $wpbook_message post_meta - should now not save if
