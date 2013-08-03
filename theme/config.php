@@ -45,14 +45,9 @@ try {
 		$debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
 		fwrite($fp, $debug_string);
 	} // end if debug
-	$result["id"] == '';
 }
 
-/* if we did not get a response, we need to do something else - get a new access token */
-if ($result["id"] == '') {
-	$user = $facebook->getUser();
-	$access_token = $facebook->getAccessToken(); // this gets anew short access token
-}
+$access_token = $facebook->getAccessToken(); // did we get a new access token?
 
 // now let's go find out when that our access token expires
 try {
@@ -86,6 +81,7 @@ if (($token_debug['data']['expires_at'] - $my_now) < 86400) {
 		} // end if debug
 	} // end try catch
 }	
+
 
 /* should not store in user_meta - need to store as an option 
  * If a wp_user id was passed in, that lets us know they came from wp
