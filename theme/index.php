@@ -74,7 +74,8 @@ if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this 
         xmlns:fb="http://www.facebook.com/2008/fbml">
   <head>
   <title><?php bloginfo('name'); ?> :: Facebook Blog Application</title>
-  <link rel="stylesheet" href="<?php echo WP_PLUGIN_URL ?>/wpbook/theme/default/style.css" 
+  <?php echo '<!-- this is called via plugins_url -->'; ?>
+  <link rel="stylesheet" href="<?php echo plugins_url( 'default/style.css', __FILE__ ); ?>" 
       type="text/css" media="screen" />
   <BASE TARGET="_top">	
   </head>
@@ -217,7 +218,9 @@ if((!isset($_REQUEST['is_invite']))&&(!isset($_REQUEST['is_permissions']))&&(!is
   <title><?php bloginfo('name'); ?> :: Facebook Blog Application</title>
   <?php if ( is_singular() ) wp_enqueue_script( 'comment-reply' ); ?>
   <?php wp_head(); ?>
-  <link rel="stylesheet" href="<?php echo WP_PLUGIN_URL ?>/wpbook/theme/default/style.css" 
+  <?php echo '<!-- this is called via plugins_url -->'; ?>
+  
+  <link rel="stylesheet" href="<?php echo plugins_url( 'default/style.css', __FILE__ ); ?>" 
       type="text/css" media="screen" />
   <BASE TARGET="_top">	
   </head>
