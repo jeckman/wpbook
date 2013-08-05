@@ -87,7 +87,7 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
   <head>
   <title><?php bloginfo('name'); ?> :: Facebook Blog Application</title>
   <!-- why this is broken i have no clue -->
-  <link rel="stylesheet" href="<?php echo WP_CONTENT_DIR ?>/themes/wpbook_theme/style.css'" 
+  <link rel="stylesheet" href="<?php echo plugins_url( 'default/style.css', __FILE__ ); ?>" 
       type="text/css" media="screen" />
   <BASE TARGET="_top">	
   </head>
@@ -210,8 +210,7 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
   <title><?php bloginfo('name'); ?> :: Facebook Blog Application</title>
   <?php if ( is_singular() ) wp_enqueue_script( 'comment-reply' ); ?>
   <?php wp_head(); ?>
-  <link rel="stylesheet" type="text/css" media="all" <?php echo 'href="'. get_stylesheet_uri() .'"/>'; ?>
-
+  <link rel="stylesheet" type="text/css" media="all" href="<?php echo plugins_url( 'default/style.css', __FILE__ ); ?>"/>
   <BASE TARGET="_top">	
   </head>
   <body>
