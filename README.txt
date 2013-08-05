@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.6
+Stable tag: 2.6.1
 Tested up to: 3.4
 Requires at least: 2.9.0
 
@@ -100,6 +100,10 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+
+= 2.6.1 =
+ * Cleanup calls to the default stylesheet, which were failing for me on 3.6
+   when called via https
 
 = 2.6 =
  * New logic which tries to use the stored access_token first. If a stored access
