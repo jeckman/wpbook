@@ -6,9 +6,11 @@ echo 'xmlns:fb="http://www.facebook.com/2008/fbml">';
 echo '<head>';
 echo '<title>'. get_bloginfo('name').' :: Facebook Blog Application</title>';
 wp_head();
-echo '<link rel="stylesheet" href="'. WP_PLUGIN_URL .'/wpbook/theme/default/style.css" 
-type="text/css" media="screen" />';
 ?>
+<link rel="stylesheet" href="<?php echo plugins_url( 'default/style.css', __FILE__ ); ?>" 
+    type="text/css" media="screen" />
+<link rel="stylesheet" href="'. WP_PLUGIN_URL .'/wpbook/theme/default/style.css" 
+type="text/css" media="screen" />
 <style type="text/css">
 .box_head{ padding: 5px 0 0 0;}
 .wpbook_box_header{
