@@ -5,7 +5,6 @@ if (!empty($wpbookOptions)) {
 	foreach ($wpbookOptions as $key => $option)
 		$wpbookAdminOptions[$key] = $option;
 	}
-
 if ($_SERVER['HTTPS'] == "on") { 
 	$proto = "https";
 } else {
@@ -25,11 +24,12 @@ $gravatar_default = $wpbookAdminOptions['gravatar_default'];
  * Need another facebook object here as we're out of variable scope  
  * for the theme itself 
  */
- 
+
+/* some users report getting a class not exists error here */  
 if(!class_exists('Facebook')) {  
   include_once(WP_PLUGIN_DIR . '/wpbook/includes/client/facebook.php');  
 }
-  
+
 Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
 Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
 
@@ -38,9 +38,11 @@ $facebook = new Facebook(array(
                                 'secret' => $secret,
                                 'cookie' => true,
                                 ));  
-  
-$me = $facebook->api('/me'); // get user info
-
+try {  
+	$me = $facebook->api('/me'); // get user info
+} catch (FacebookApiException $e) {
+	$me = NULL; 
+}
   ?>
 <div class="comments-post">
 <?php if ($comments) : ?>
@@ -88,16 +90,29 @@ $me = $facebook->api('/me'); // get user info
 	<?php endif; ?>
 <?php endif; ?>
 
-<!-- <?php echo $allow_comments . ' ' . $rs[0]['name']; ?> -->
-<?php if (('open' == $post-> comment_status) && ($allow_comments == "true")) : ?>
-<strong>  <?php echo $me["name"]; ?>, comment from your Facebook Profile, 
-
-</strong>
+<?php if (('open' == $post-> comment_status) && ($allow_comments == "true"w)) : ?>
+<strong>  <?php 
+	if ($me) {
+		echo $me["name"] .', comment from your Facebook Profile,';
+	} else {
+		echo 'Comments Welcome';
+	} 
+	?></strong>
 	<div id="commentform-container">
   <form action="<?php echo get_bloginfo('url'); ?>/index.php?fb_sig_in_iframe&wpbook=comment-handler" 
       method="post" id="commentform">
-  <p>
-  <input type="text" name="email" id="email" value="" size="22" tabindex="1" />
+	  <?php 
+	  if($me) {
+		  echo '<input type="hidden" name="author" id="author" value="'. $me["name"] .'">';
+	  } else {
+	  	  echo '<p><input type="text" name="author" id="author" value=""><label for="name">Name</label></p>';
+	  }
+  	if($me) {
+  		echo '<input type="hidden" name="url" id="url" value="'. $me["link"] .'" />' ;
+  	} else {
+  		echo '<p><input type="text" name="url" id="url" value="" /><label for="url">URL</label></p>' ;
+  	} ?>
+	<p>  <input type="text" name="email" id="email" value="" size="22" tabindex="1" />
 		<label for="email"><small> Email Address (
     <?php if($require_email == "true"){ 
       echo("Required. ");
@@ -106,11 +121,8 @@ $me = $facebook->api('/me'); // get user info
 		<p><textarea name="comment" id="comment" cols="50" rows="5" tabindex="2"></textarea></p>
 		<p><input name="submit" type="submit" id="submit" tabindex="3" 
       value="Submit Comment" class="inputsubmit" />
-		<input type="hidden" name="author" id="author" value="
-      <?php echo $me["name"]; ?>" />
 		<input type="hidden" name="comment_post_ID" value="<?php echo $id; ?>" />
-		<input type="hidden" name="url" id="url" value="
-      <?php echo $me["link"]; ?>" />
+	
 		<?php do_action('comment_form', $post->ID); ?>
 		</form>
 	</div>
