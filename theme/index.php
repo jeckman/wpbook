@@ -447,7 +447,7 @@ if((!isset($_REQUEST['is_invite']))&&(!isset($_REQUEST['is_permissions']))&&(!is
   <script>
     window.fbAsyncInit = function() {
       FB.init({appId: <?php echo $api_key; ?>, status: true, cookie: true, xfbml: true});
-      FB.Canvas.setAutoResize();
+      FB.Canvas.setAutoGrow();
     };
     (function() {
       var e = document.createElement('script'); e.async = true;
