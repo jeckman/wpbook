@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.6.2
+Stable tag: 2.6.3
 Tested up to: 3.4
 Requires at least: 2.9.0
 
@@ -100,6 +100,14 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+
+= 2.6.3 =
+ * Discovered by parsing error logs that users requesting a canvas page inside Facebook
+   while not logged in to Facebook could throw an uncaught exception as I was trying to
+   retrieve their name for the comment form. Updated comment form now shows a blank
+   (unfilled out) content form for not logged in users. 
+ * Also discovered while troubleshooting I was using a deprecated javascript call for 
+   resizing the iframe inside Facebook - updated to use new code. 
 
 = 2.6.2 = 
  * Cleanup call to stylesheet for application tabs, when called via https - when the 
