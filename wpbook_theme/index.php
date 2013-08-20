@@ -55,7 +55,7 @@ $facebook = new Facebook(array(
   <p>The Facebook profile ID you are currently logged in to Facebook as is <?php echo $user_profile['id']; ?>. You have defined <?php echo $target_admin; ?> as your Facebook user id in WPBook Settings.</p>
   <p>This user_id has granted these permissions:
   <?php // need to set some permissions checks here
-  $fql = 'SELECT read_stream,publish_stream,manage_pages FROM permissions WHERE uid='. $user_profile['id']; 
+  $fql = 'SELECT read_stream,publish_actions,publish_stream,manage_pages FROM permissions WHERE uid='. $user_profile['id']; 
     $params = array(
                     'method' => 'fql.query',
                     'query' => $fql,
