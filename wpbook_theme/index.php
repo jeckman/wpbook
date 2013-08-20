@@ -94,11 +94,22 @@ if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the i
   <body>
   <p>This page is where you can check and grant extended permissions, which enable WPBook to 
    publish to your personal wall and/or to the walls of fan pages.</p>
-  <p>Your userid is <?php echo $data["user_id"]; ?> </p>
-  <p><strong>You will need to enter that number into the WPBook settings page on your WordPress install.</strong></p>
+   <?php  // try catch wrapped call to FB API /me to get logged in users ID 
+   $user = $facebook->getUser();
+   if ($user) {
+     try {
+       // Proceed knowing you have a logged in user who's authenticated.
+       $user_profile = $facebook->api('/me');
+     } catch (FacebookApiException $e) {
+       echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
+       $user = null;
+     }
+   }
+   ?>
+  <p>The Facebook profile ID you are currently logged in to Facebook as is <?php echo $user_profile['id']; ?>. You have defined <?php echo $target_admin; ?> as your Facebook user id in WPBook Settings.</p>
   <p>This user_id has granted these permissions:
   <?php // need to set some permissions checks here
-  $fql = 'SELECT read_stream,publish_stream,manage_pages FROM permissions WHERE uid='. $data["user_id"]; 
+  $fql = 'SELECT read_stream,publish_stream,manage_pages FROM permissions WHERE uid='. $user_profile['id']; 
     $params = array(
                     'method' => 'fql.query',
                     'query' => $fql,
@@ -185,7 +196,7 @@ echo $my_permissions_url;
   <script>
     window.fbAsyncInit = function() {
       FB.init({appId: <?php echo $api_key; ?>, status: true, cookie: true, xfbml: true});
-      FB.Canvas.setAutoResize();
+      FB.Canvas.setAutoGrow();
     };
   (function() {
    var e = document.createElement('script'); e.async = true;
