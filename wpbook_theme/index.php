@@ -27,57 +27,8 @@ $facebook = new Facebook(array(
                               )
                          );
 
-if((!isset($_GET['app_tab'])) && (isset($_GET['is_invite']))) { // this is the invite page
-  if(isset($_POST["ids"])) { // this means we've already added some stuff
-    echo "<center>Thank you for inviting ".sizeof($_POST["ids"])
-        ." of your friends to ". $app_name .". <br><br>\n"; 
-    echo "<h2><a href=\"".$proto."://apps.facebook.com/".$app_url
-        ."/\">Click here to return to ".$app_name."</a>.</h2></center>"; 
-  } 
-  else { 
-    // Retrieve array of friends who've already added the app. 
-    $fql = 'SELECT uid FROM user WHERE uid IN (SELECT uid2 FROM friend '
-        . 'WHERE uid1='. $data["user_id"] .') AND is_app_user = 1'; 
-    $params = array(
-                    'method' => 'fql.query',
-                    'query' => $fql,
-                    );
-    try {
-      $_friends = $facebook->api($params); 
-    } catch (FacebookApiException $e) {
-      if($wpbook_show_errors) {
-        $wpbook_message = 'Caught exception in getting friends for user: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
-        wp_die($wpbook_message,'WPBook Error');
-      } // end if for show errors
-    }
-    // Extract the user ID's returned in the FQL request into a new array. 
-    $friends = array(); 
-    if (is_array($_friends) && count($_friends)) {
-      foreach ($_friends as $friend) { 
-        $friends[] = $friend['uid']; 
-      } 
-    } // Convert the array of friends into a comma-delimeted string. 
-    $friends = implode(',', $friends); 
-      // Prepare the invitation text that all invited users will receive. 
-    $content = "<fb:name uid=\"".$user
-        ."\" firstnameonly=\"true\" shownetwork=\"false\"/> has started using "
-        ."<a href=\"".$proto."://apps.facebook.com/".$app_url."/\">"
-        . $app_name ."</a> and thought you should try it out!\n"
-        ."<fb:req-choice url=\"http://www.facebook.com/add.php?api_key=". $api_key
-      ."\" label=\"Add ". $app_name ." to your profile\"/>"; 
-    echo '<fb:fbml><fb:title>Invite Friends</fb:title>';
-    echo '<fb:request-form action="'.$proto.'://apps.facebook.com/'. $app_url .'" '; 
-    echo 'method="post" type="'. $app_name .'" ';
-    echo 'content="'. htmlentities($content) .'" image="'. $app_image .'">'; 
-    echo '<fb:multi-friend-selector actiontext="Here are your friends who do not ';
-    echo 'have '. $app_name .' yet. Invite all you want!"'; 
-    echo ' exclude_ids="'. $friends .'" bypass="cancel" />';
-    echo '</fb:request-form></fb:fbml>';
-  }  // end of the else for $_POST["ids"]
-} // end of the if for $_GET['is_invite']
-
-// Done with potential invite page, now do permissions
-  if((!isset($_GET['app_tab'])) && (!isset($_GET['is_invite'])) && (isset($_GET['is_permissions']))) { // we're looking for extended permissions
+// Check for permissions
+  if((!isset($_GET['app_tab'])) && (isset($_GET['is_permissions']))) { // we're looking for extended permissions
   $receiver_url = WP_PLUGIN_URL . '/wpbook/theme/default/xd_receiver.html';
   ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
@@ -210,7 +161,7 @@ echo $my_permissions_url;
   <?php 
 } // end of the permissions page, now regular themed page
 
-if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GET['app_tab']))) {  // this is the regular blog page
+if((!isset($_GET['is_permissions'])) && (!isset($_GET['app_tab']))) {  // this is the regular blog page
   $receiver_url = WP_CONTENT_DIR .'/themes/wpbook_theme/xd_receiver.html';
   ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
@@ -238,11 +189,6 @@ if((!isset($_GET['is_invite']))&&(!isset($_GET['is_permissions']))&&(!isset($_GE
   <div class="wpbook_header">
   
   <?php 
-  if($invite_friends == "true"){
-    $invite_link = '<a class="FB_UIButton FB_UIButton_Gray FB_UIButton_CustomIcon" href="'.$proto.'://apps.facebook.com/' . $app_url 
-        .'/index.php?is_invite=true&fb_force_mode=fbml" class="share"><span class="FB_UIButton_Text"><span class="FB_Bookmark_Icon"></span> Invite Friends </span></a>';
-    echo '<div style="float:right; margin-left: 3px; margin-bottom: 3px;  ">'. $invite_link .'</div>';	
-  } 
   echo '<h3><a href="'.$proto.'://apps.facebook.com/'. $app_url .'/" target="_top">'. get_bloginfo('name') .'</a></h3>';
   
   if(($show_pages == "true") && ($show_pages_menu == "true")){

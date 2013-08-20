@@ -57,12 +57,6 @@ echo '<BASE TARGET="_top">';
 echo '</head>';
 echo '<body>';
 echo '<div id="content">';
-
-if((!empty($data["user_id"])) && ($invite_friends == "true")) {
-        $invite_link = '<a class="FB_UIButton FB_UIButton_Gray FB_UIButton_CustomIcon" href="'. $proto .'://apps.facebook.com/' . $app_url 
-        .'/index.php?is_invite=true&fb_force_mode=fbml" class="share"><span class="FB_UIButton_Text"><span class="FB_Bookmark_Icon"></span> Invite Friends </span></a>';
-	echo '<div style="float:right; margin-left: 3px; margin-bottom: 3px;  ">'. $invite_link .'</div>';	
-} 
     
 echo '<h3><a href="'. $proto .'://apps.facebook.com/'. $app_url .'/" target="_top">'. get_bloginfo('name') .'</a></h3>';
 
