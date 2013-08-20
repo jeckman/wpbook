@@ -365,7 +365,7 @@ function wpbook_safe_publish_to_facebook($post_ID) {
 										);
 					$fb_response = $facebook->api('/'. $wpbook_target_group .'/links','POST',$attachment);
 				} else {
-					$fb_response = $facebook->api('/'. $wpbook_target_group .'/feed/','POST', $attachment); 
+					$fb_response = $facebook->api('/'. $wpbook_target_group .'/feed','POST', $attachment); 
 				}
 				if(WPBOOKDEBUG) {
 					$fp = @fopen($debug_file, 'a');

@@ -51,7 +51,7 @@ if(isset($_REQUEST['is_permissions'])) { // we're looking for extended permissio
 <p>FB profile <?php echo $user_profile['id']; ?> has granted these permissions:
   <?php // todo - run these with current user id
   // need to set some permissions checks here
-  $fql = 'SELECT read_stream,publish_stream,manage_pages,user_groups FROM permissions WHERE uid='. $user_profile['id']; 
+  $fql = 'SELECT read_stream,publish_stream,publish_actions,manage_pages,user_groups FROM permissions WHERE uid='. $user_profile['id']; 
     $params = array(
                     'method' => 'fql.query',
                     'query' => $fql,
