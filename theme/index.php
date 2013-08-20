@@ -82,17 +82,30 @@ if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_invite']))) { // this 
   <body>
   <p>This page is where you can check and grant extended permissions, which enable WPBook to 
    publish to your personal wall and/or to the walls of fan pages.</p>
-<p>The Facebook profile ID you are currently logged in to Facebook as is <?php echo $data["user_id"]; ?>. You have defined <?php echo $target_admin; ?> as your Facebook user id in WPBook Settings.</p>
+   <?php  // try catch wrapped call to FB API /me to get logged in users ID 
+   $user = $facebook->getUser();
+   if ($user) {
+     try {
+       // Proceed knowing you have a logged in user who's authenticated.
+       $user_profile = $facebook->api('/me');
+     } catch (FacebookApiException $e) {
+       echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
+       $user = null;
+     }
+   }
+   ?>
+<p>The Facebook profile ID you are currently logged in to Facebook as is <?php echo $user_profile['id']; ?>. You have defined <?php echo $target_admin; ?> as your Facebook user id in WPBook Settings.</p>
 <?php
-  if($data["user_id"] != $target_admin) {
+  if($user_profile['id'] != $target_admin) {
     echo '<p><strong>Your Facebook Profile ID must match the ID with which you are logged in to Facebook, or else an access token will
     not be stored and publishing to Facebook will fail. Please update the "YOUR Facebook Profile ID" setting in WPBook settings to match
     the userid shown above.</p>';
   }
 ?>  
-<p>FB profile <?php echo $data["user_id"]; ?> has granted these permissions:
-  <?php // need to set some permissions checks here
-  $fql = 'SELECT read_stream,publish_stream,manage_pages,user_groups FROM permissions WHERE uid='. $data["user_id"]; 
+<p>FB profile <?php echo $user_profile['id']; ?> has granted these permissions:
+  <?php // todo - run these with current user id
+  // need to set some permissions checks here
+  $fql = 'SELECT read_stream,publish_stream,manage_pages,user_groups FROM permissions WHERE uid='. $user_profile['id']; 
     $params = array(
                     'method' => 'fql.query',
                     'query' => $fql,
@@ -193,7 +206,7 @@ echo $my_permissions_url;
   <script>
     window.fbAsyncInit = function() {
       FB.init({appId: <?php echo $api_key; ?>, status: true, cookie: true, xfbml: true});
-      FB.Canvas.setAutoResize();
+      FB.Canvas.setAutoGrow();
     };
   (function() {
    var e = document.createElement('script'); e.async = true;
