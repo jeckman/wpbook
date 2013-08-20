@@ -1,12 +1,7 @@
 <?php
 /* first include just sets up WP settings */  
 include_once(WP_PLUGIN_DIR . '/wpbook/theme/config_wp_settings.php');
-if((isset($_GET['app_tab'])) && (isset($_GET['fb_force_mode']))) {
-  // output tab in FBML mode to edit this change the wpbook/theme/fbml_tabs.php
-  include_once(WP_CONTENT_DIR . '/themes/wpbook_theme/fbml_tabs.php');
-}
-
-if((isset($_GET['app_tab'])) && (!isset($_GET['fb_force_mode']))) { // this is an app tab
+if(isset($_GET['app_tab'])) { // this is an app tab
   // output tab in iFrame mode to edit this change the wpbook/theme/tabs.php
   include_once(WP_CONTENT_DIR . '/themes/wpbook_theme/tab.php');
   die(); // nothing more to do after loading tab

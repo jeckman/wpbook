@@ -1,12 +1,8 @@
 <?php
 /* first include just sets up WP settings */  
 include_once(WP_PLUGIN_DIR . '/wpbook/theme/config_wp_settings.php');
-if((isset($_REQUEST['app_tab'])) && (isset($_REQUEST['fb_force_mode']))) {
-  // output tab in FBML mode
-  include_once(WP_PLUGIN_DIR . '/wpbook/theme/fbml_tabs.php');
-}
 
-if((isset($_REQUEST['app_tab'])) && (!isset($_REQUEST['fb_force_mode']))) { // this is an app tab
+if(isset($_REQUEST['app_tab'])) { // this is an app tab
   // output tab in iFrame mode
   include_once(WP_PLUGIN_DIR . '/wpbook/theme/tab.php');
   die(); // nothing more to do once this has occured
@@ -16,7 +12,7 @@ if((isset($_REQUEST['app_tab'])) && (!isset($_REQUEST['fb_force_mode']))) { // t
 include_once(WP_PLUGIN_DIR . '/wpbook/theme/config.php');
 
 // Check for permissions
-if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_permissions']))) { // we're looking for extended permissions
+if(isset($_REQUEST['is_permissions'])) { // we're looking for extended permissions
 	$receiver_url = WP_PLUGIN_URL . '/wpbook/theme/default/xd_receiver.html';
 	?>
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
