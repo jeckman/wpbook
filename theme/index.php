@@ -16,43 +16,42 @@ if((isset($_REQUEST['app_tab'])) && (!isset($_REQUEST['fb_force_mode']))) { // t
 include_once(WP_PLUGIN_DIR . '/wpbook/theme/config.php');
 
 // Check for permissions
-  if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_permissions']))) { // we're looking for extended permissions
-  $receiver_url = WP_PLUGIN_URL . '/wpbook/theme/default/xd_receiver.html';
-  ?>
-  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
-  <html xmlns="http://www.w3.org/1999/xhtml" 
+if((!isset($_REQUEST['app_tab'])) && (isset($_REQUEST['is_permissions']))) { // we're looking for extended permissions
+	$receiver_url = WP_PLUGIN_URL . '/wpbook/theme/default/xd_receiver.html';
+	?>
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+	<html xmlns="http://www.w3.org/1999/xhtml" 
         xmlns:fb="http://www.facebook.com/2008/fbml">
-  <head>
-  <title><?php bloginfo('name'); ?> :: Facebook Blog Application</title>
-  <?php echo '<!-- this is called via plugins_url -->'; ?>
-  <link rel="stylesheet" href="<?php echo plugins_url( 'default/style.css', __FILE__ ); ?>" 
+	<head>
+	<title><?php bloginfo('name'); ?> :: Facebook Blog Application</title>
+	<?php echo '<!-- this is called via plugins_url -->'; ?>
+	<link rel="stylesheet" href="<?php echo plugins_url( 'default/style.css', __FILE__ ); ?>" 
       type="text/css" media="screen" />
-  <BASE TARGET="_top">	
-  </head>
-  <body>
-  <p>This page is where you can check and grant extended permissions, which enable WPBook to 
-   publish to your personal wall and/or to the walls of fan pages.</p>
-   <?php  // try catch wrapped call to FB API /me to get logged in users ID 
-   $user = $facebook->getUser();
-   if ($user) {
-     try {
-       // Proceed knowing you have a logged in user who's authenticated.
-       $user_profile = $facebook->api('/me');
-     } catch (FacebookApiException $e) {
-       echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
-       $user = null;
-     }
-   }
-   ?>
+	<BASE TARGET="_top">
+	</head>
+	<body>
+	<p>This page is where you can check and grant extended permissions, which enable WPBook to publish to your personal wall and/or to the walls of fan pages.</p>
+	<?php  // try catch wrapped call to FB API /me to get logged in users ID 
+	$user = $facebook->getUser();
+	if ($user) {
+    	try {
+		// Proceed knowing you have a logged in user who's authenticated.
+		$user_profile = $facebook->api('/me');
+		} catch (FacebookApiException $e) {
+		 echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
+		 $user = null;
+		}
+	}
+	?>
 <p>The Facebook profile ID you are currently logged in to Facebook as is <?php echo $user_profile['id']; ?>. You have defined <?php echo $target_admin; ?> as your Facebook user id in WPBook Settings.</p>
-<?php
-  if($user_profile['id'] != $target_admin) {
-    echo '<p><strong>Your Facebook Profile ID must match the ID with which you are logged in to Facebook, or else an access token will
+	<?php
+  	if($user_profile['id'] != $target_admin) {
+    	echo '<p><strong>Your Facebook Profile ID must match the ID with which you are logged in to Facebook, or else an access token will
     not be stored and publishing to Facebook will fail. Please update the "YOUR Facebook Profile ID" setting in WPBook settings to match
     the userid shown above.</p>';
-  }
-?>  
+	}
+	?>  
 <p>FB profile <?php echo $user_profile['id']; ?> has granted these permissions:
   <?php // todo - run these with current user id
   // need to set some permissions checks here
@@ -171,7 +170,7 @@ echo $my_permissions_url;
   <?php 
 } // end of the permissions page, now regular themed page
 
-if(!isset($_REQUEST['app_tab'])) {  // this is the regular blog page
+if((!isset($_REQUEST['app_tab'])) && (!isset($_REQUEST['is_permissions']))) {  // this is the regular blog page
   $receiver_url = WP_PLUGIN_URL . '/wpbook/theme/default/xd_receiver.html';
   ?>
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
