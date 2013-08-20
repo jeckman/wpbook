@@ -97,7 +97,7 @@ function wpbook_getAdminOptions() {
 }
   
 function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret, 
-                         $fb_app_url,$fb_admin_target,$fb_page_target,$invite_friends,$require_email,
+                         $fb_app_url,$fb_admin_target,$fb_page_target,$require_email,
                          $give_credit,$enable_share, $allow_comments,
                          $links_position,$enable_external_link,
                          $enable_profile_link,$timestamp_date_format,
@@ -120,7 +120,6 @@ function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
                               'fb_app_url' => $fb_app_url,
                               'fb_admin_target' => $fb_admin_target,
                               'fb_page_target' => $fb_page_target,
-                              'invite_friends' => $invite_friends,
                               'require_email' => $require_email,
                               'give_credit' => $give_credit,
                               'enable_share' => $enable_share,
@@ -217,7 +216,6 @@ function wpbook_subpanel() {
 			$fb_app_url = $_POST['fb_app_url'];
 			$fb_admin_target = preg_replace("#[^0-9]#", "",$_POST['fb_admin_target']);
 			$fb_page_target = preg_replace("#[^0-9]#", "",$_POST['fb_page_target']);
-			$invite_friends = $_POST['invite_friends'];
 			$require_email = $_POST['require_email'];
 			$give_credit = $_POST['give_credit'];
 			$enable_share = $_POST['enable_share'];
@@ -289,7 +287,7 @@ function wpbook_subpanel() {
 				}
 			}
 			setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url,$fb_admin_target,$fb_page_target,
-							$invite_friends,$require_email,$give_credit,$enable_share,
+							$require_email,$give_credit,$enable_share,
 							$allow_comments,$links_position,$enable_external_link,
 							$enable_profile_link,$timestamp_date_format,
 							$timestamp_time_format,$show_date_title,
@@ -320,7 +318,7 @@ function wpbook_subpanel() {
 		//set the "smart" defaults on install this only works once the page has been refeshed
 			if ($wpbookAdminOptions['wpbook_installation'] != 1) {  
 				$gravatar_default = WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif';
-				setAdminOptions(1, null,null,null,null,null,true,true,true,true,true,top,null,null,"F j, Y","g:i a",
+				setAdminOptions(1, null,null,null,null,null,true,true,true,true,top,null,null,"F j, Y","g:i a",
 								true,null,null,null,disabled,null,"g",$gravatar_default,null,null,null,null,true,true,10,
 								false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null,false,false,null,false,null);
 			}
@@ -584,14 +582,7 @@ function wpbook_subpanel() {
 			echo '> Use WPBook Gravatar Globally (this will overwrite WordPress Gravatar settings and also show Facebook avatars outside of Facebook)';
 			echo' </p></div>';
 			echo '<h4>Socialize Options: </h4>';
-      
-			// Here starts the "invite friends" section
-			echo '<p> <input type="checkbox" name="invite_friends" value = "true"';
-			if( htmlentities($wpbookAdminOptions['invite_friends']) == "true"){ 
-				echo("checked");
-			}
-			echo '> Show Invite Friends Link</p><p> ';
-   
+
 			// show share option 
 			echo '<div id="enable_share_options"><p><input type="checkbox" name="enable_share" value="true"';
 			if( htmlentities($wpbookAdminOptions['enable_share']) == "true"){
