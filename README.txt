@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.6.3
+Stable tag: 2.6.4
 Tested up to: 3.4
 Requires at least: 2.9.0
 
@@ -100,6 +100,13 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+
+= 2.6.4 = 
+ * Removed "Invite Friends" link option from settings and display. Since FB hasn't
+   supported FBML for a while this simply wasn't working. 
+ * Removed FBML based tabs - application tabs should now all be HTML in iframes
+ * Fixed "check permissions" page which was incorrectly reporting unset permissions - 
+   bug introduced in 2.6. 
 
 = 2.6.3 =
  * Discovered by parsing error logs that users requesting a canvas page inside Facebook
