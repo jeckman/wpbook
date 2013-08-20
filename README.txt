@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.6.4
+Stable tag: 2.6.5
 Tested up to: 3.4
 Requires at least: 2.9.0
 
@@ -100,6 +100,11 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+
+= 2.6.5 = 
+ * Change to the posting method for posting to groups
+ * Change to asking for publish_actions in addition to publish_stream - may be needed in 
+   the new Facebook API
 
 = 2.6.4 = 
  * Removed "Invite Friends" link option from settings and display. Since FB hasn't
