@@ -16,7 +16,6 @@ if ($_SERVER['HTTPS'] == "on") {
 $api_key = $wpbookAdminOptions['fb_api_key'];
 $secret  = $wpbookAdminOptions['fb_secret'];
 $app_url = $wpbookAdminOptions['fb_app_url'];
-$invite_friends = $wpbookAdminOptions['invite_friends']; 
 $require_email = $wpbookAdminOptions['require_email']; 
 $allow_comments = $wpbookAdminOptions['allow_comments'];
 $give_credit = $wpbookAdminOptions['give_credit'];
