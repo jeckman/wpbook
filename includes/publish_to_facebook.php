@@ -37,8 +37,12 @@ function wpbook_safe_publish_to_facebook($post_ID) {
 		Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = false;
 		Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 2;
 	}
-  
-	$facebook = new Facebook($api_key, $secret);
+	
+    $facebook = new Facebook(array(
+                                   'appId'  => $api_key,
+                                   'secret' => $secret,
+                                   )
+                             );
 	$wpbook_user_access_token = get_option('wpbook_user_access_token','');
 	$wpbook_page_access_token = get_option('wpbook_page_access_token','');
   
@@ -328,8 +332,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
 
 			if(WPBOOKDEBUG) {
 				$fp = @fopen($debug_file, 'a');
-				$debug_string=date("Y-m-d H:i:s",time())." : Group access token is ". $wpbook_user_access_token ."\n";
-				$debug_string=date("Y-m-d H:i:s",time())." : Publishing to group " . $wpbook_target_group  ."\n";
+				$debug_string = date("Y-m-d H:i:s",time())." : Group access token is ". $wpbook_user_access_token ."\n";
+				$debug_string .= date("Y-m-d H:i:s",time())." : Publishing to group " . $wpbook_target_group  ."\n";
 				fwrite($fp, $debug_string);
 			}
 			try{
@@ -405,8 +409,8 @@ function wpbook_safe_publish_to_facebook($post_ID) {
 			}    	  
 			if(WPBOOKDEBUG) {
 				$fp = @fopen($debug_file, 'a');
-				$debug_string=date("Y-m-d H:i:s",time())." : Page access token is ". $wpbook_page_access_token ."\n";
-				$debug_string=date("Y-m-d H:i:s",time())." : Publishing to page " . $target_page  ."\n";
+				$debug_string = date("Y-m-d H:i:s",time())." : Page access token is ". $wpbook_page_access_token ."\n";
+				$debug_string .= date("Y-m-d H:i:s",time())." : Publishing to page " . $target_page  ."\n";
 				fwrite($fp, $debug_string);
 			}
 			try {
@@ -448,9 +452,9 @@ function wpbook_safe_publish_to_facebook($post_ID) {
 										'link' => $my_permalink,
 										'message' => $wpbook_description,
 										);
-					$fb_response = $facebook->api('/'. $target_page .'/links/','POST',$attachment); 
+					$fb_response = $facebook->api('/'. $target_page .'/links','POST',$attachment); 
 				} else {
-					$fb_response = $facebook->api('/'. $target_page .'/feed/','POST', $attachment); 
+					$fb_response = $facebook->api('/'. $target_page .'/feed','POST', $attachment); 
 				}
 				if(WPBOOKDEBUG) {
 					$fp = @fopen($debug_file, 'a');
