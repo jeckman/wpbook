@@ -899,9 +899,9 @@ abstract class BaseFacebook
       $params['access_token'] = $this->getAccessToken();
     }
 
-    if (isset($params['access_token'])) {
-      $params['appsecret_proof'] = $this->getAppSecretProof($params['access_token']);
-    }
+    //if (isset($params['access_token'])) {
+    //  $params['appsecret_proof'] = $this->getAppSecretProof($params['access_token']);
+    //}
 
     // json_encode all params values that are not strings
     foreach ($params as $key => $value) {
