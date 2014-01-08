@@ -28,6 +28,12 @@ if(isset($_REQUEST['is_permissions'])) { // we're looking for extended permissio
 	</head>
 	<body>
 	<p>This page is where you can check and grant extended permissions, which enable WPBook to publish to your personal wall and/or to the walls of fan pages.</p>
+	<p>To correct any of these, <a href="
+	<?php
+	$my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
+	. '&redirect_uri='. $proto .'://apps.facebook.com/' . $app_url .'/?scope=read_stream,publish_stream,manage_pages,user_groups';
+	echo $my_permissions_url;
+	?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
 	<?php  // try catch wrapped call to FB API /me to get logged in users ID 
 	$user = $facebook->getUser();
 	if ($user) {
@@ -140,13 +146,6 @@ if(isset($_REQUEST['is_permissions'])) { // we're looking for extended permissio
   } // end if wp_target_group is set
   
 ?>
-<p>To correct any of these, <a href="
-<?php
-$my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
-. '&redirect_uri='. $proto .'://apps.facebook.com/' . $app_url .'/?wp_user='. $_GET["wp_user"] .'&scope=read_stream,publish_stream,manage_pages,user_groups';
-echo $my_permissions_url;
-?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
-
 </blockquote></p>
 <div id="fb-root"></div>
   <script>
