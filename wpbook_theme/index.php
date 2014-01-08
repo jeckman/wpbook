@@ -56,8 +56,8 @@ $facebook = new Facebook(array(
   		}
   	}
   	if($user_profile) {
-   ?>
-  <p>The Facebook profile ID you are currently logged in to Facebook as is <?php echo $user_profile['id']; ?>. You have defined <?php echo $target_admin; ?> as your Facebook user id in WPBook Settings.</p>
+	?>
+	<p>The Facebook profile ID you are currently logged in to Facebook as is <?php echo $user_profile['id']; ?>. You have defined <?php echo $target_admin; ?> as your Facebook user id in WPBook Settings.</p>
   <p>This user_id has granted these permissions:
   <?php // need to set some permissions checks here
   $fql = 'SELECT read_stream,publish_actions,publish_stream,manage_pages FROM permissions WHERE uid='. $user_profile['id']; 
@@ -98,10 +98,10 @@ $facebook = new Facebook(array(
 <p>This user <strong>
 <?php 
   $access_token = get_option('wpbook_user_access_token','');
-  if($access_token != '') && ($access_token != 'invalid')
-  echo 'has';
+  if(($access_token != '') && ($access_token != 'invalid'))
+  	echo 'has';
   else
-  echo 'has NOT';
+  	echo 'has NOT';
   ?></strong> set an access_token for the application to use.</p>
 
 <?php
