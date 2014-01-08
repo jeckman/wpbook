@@ -1,8 +1,8 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.6.6
-Tested up to: 3.6
+Stable tag: 2.6.7
+Tested up to: 3.8
 Requires at least: 2.9.0
 
 Plugin to embed WordPress Blog into Facebook Platform. Requires PHP 5. 
@@ -100,6 +100,10 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+
+= 2.6.7 = 
+ * Wasn't checking first to see if permissions had been granted before trying to check
+   the users permissions. 
 
 = 2.6.6 = 
  * Comment out appsecret_proof in Facebook SDK. This is causing calls to FB API
