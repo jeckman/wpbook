@@ -38,25 +38,24 @@ $facebook = new Facebook(array(
   <BASE TARGET="_top">	
   </head>
   <body>
-  <p>This page is where you can check and grant extended permissions, which enable WPBook to 
-   publish to your personal wall and/or to the walls of fan pages.</p>
-   <p>To correct any errors below, <a href="
-   <?php
-   $my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
-   . '&redirect_uri='.$proto.'://apps.facebook.com/' . $app_url .'/?scope=read_stream,publish_stream,manage_pages';
-   echo $my_permissions_url;
-   ?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
-   <?php  // try catch wrapped call to FB API /me to get logged in users ID 
-   $user = $facebook->getUser();
-   if ($user) {
-     try {
-       // Proceed knowing you have a logged in user who's authenticated.
-       $user_profile = $facebook->api('/me');
-     } catch (FacebookApiException $e) {
-       echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
-       $user = null;
-     }
-   }
+  	<p>This page is where you can check and grant extended permissions, which enable WPBook to publish to your personal wall and/or to the walls of fan pages.</p>
+  	<p>To correct any of these (or if you see no further info below), <a href="
+  	<?php
+  	$my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
+  	. '&redirect_uri='. $proto .'://apps.facebook.com/' . $app_url .'/?scope=read_stream,publish_stream,manage_pages,user_groups';
+  	echo $my_permissions_url;
+  	?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
+  	<?php  // try catch wrapped call to FB API /me to get logged in users ID 
+  	$user = $facebook->getUser();
+  	if ($user) {
+      	try {
+  		$user_profile = $facebook->api('/'.$user);
+  		} catch (FacebookApiException $e) {
+  		 echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
+  		 $user = null;
+  		}
+  	}
+  	if($user_profile) {
    ?>
   <p>The Facebook profile ID you are currently logged in to Facebook as is <?php echo $user_profile['id']; ?>. You have defined <?php echo $target_admin; ?> as your Facebook user id in WPBook Settings.</p>
   <p>This user_id has granted these permissions:
@@ -134,6 +133,7 @@ $facebook = new Facebook(array(
     </strong> stored an access_token for use as <?php echo $my_wp_page_name ?> as well.</p>
 <?php     
 } // end if fb_page_target is set
+} // end of if no user logged in
   ?>
   </blockquote></p>
   <div id="fb-root"></div>
