@@ -1316,7 +1316,8 @@ function wpbook_get_global_facebook_avatar($avatar, $comment, $size="50") {
     foreach ($wpbookOptions as $key => $option)
       $wpbookAdminOptions[$key] = $option;
   }
-  if(($wpbookAdminOptions['use_gravatar'] =="true")
+  if((!empty($wpbookAdminOptions))
+    && ($wpbookAdminOptions['use_gravatar'] =="true")
 		&& ($wpbookAdminOptions['wpbook_use_global_gravatar'] =="true")
 		&& (is_object($comment))
 	){
