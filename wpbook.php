@@ -215,15 +215,47 @@ function wpbook_subpanel() {
 			$fb_secret = $_POST['fb_secret'];
 			$fb_app_url = $_POST['fb_app_url'];
 			$fb_admin_target = preg_replace("#[^0-9]#", "",$_POST['fb_admin_target']);
-			$fb_page_target = preg_replace("#[^0-9]#", "",$_POST['fb_page_target']);
-			$require_email = $_POST['require_email'];
-			$give_credit = $_POST['give_credit'];
-			$enable_share = $_POST['enable_share'];
-			$allow_comments = $_POST['allow_comments'];
-			$links_position = $_POST['links_position'];
-			$enable_external_link = $_POST['enable_external_link'];
-			$enable_profile_link = $_POST['enable_profile_link'];
-
+			if(isset($_POST['fb_page_target'])) { 
+				$fb_page_target = preg_replace("#[^0-9]#", "",$_POST['fb_page_target']); 
+			} else {
+				$fb_page_target = '';
+			}
+			if(isset($_POST['require_email'])) { 
+			     $require_email = $_POST['require_email'];
+			} else {
+				$require_email = '';
+			}
+			if(isset($_POST['give_credit'])) {
+				$give_credit = $_POST['give_credit'];
+			} else {
+				$give_credit = ''; 
+			}
+			if(isset($_POST['enable_share'])) {
+				$enable_share = $_POST['enable_share'];
+			} else {
+				$enable_share = '';
+			} 
+			if(isset($_POST['allow_comments'])) {
+				$allow_comments = $_POST['allow_comments'];
+			} else {
+				$allow_comments = '';
+			}
+			if(isset($_POST['links_position'])) {
+				$links_position = $_POST['links_position'];
+			} else {
+				$links_position = '';
+			}
+			if(isset($_POST['enable_external_link'])) {
+				$enable_external_link = $_POST['enable_external_link'];
+			} else {
+				$enable_external_link = ''; 
+			}
+			if(isset($_POST['enable_profile_link'])) {
+				$enable_profile_link = $_POST['enable_profile_link'];
+			} else {
+				$enable_profile_link = '';
+			}
+			
 			// Handle custom date/time formats code modified from wp-admin/options.php
 			if ( !empty($_POST['timestamp_date_format']) && isset($_POST['timestamp_date_format_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['timestamp_date_format'] ) )
 				$_POST['timestamp_date_format'] = $_POST['timestamp_date_format_custom'];
@@ -231,60 +263,185 @@ function wpbook_subpanel() {
 				$_POST['timestamp_time_format'] = $_POST['timestamp_time_format_custom'];
 			//end custom date/time code
 
-			$timestamp_date_format = $_POST['timestamp_date_format'];
-			$timestamp_time_format = $_POST['timestamp_time_format'];
-			$show_date_title = $_POST['show_date_title'];
-			$show_advanced_options = $_POST['show_advanced_options'];
-			$custom_header = $_POST['custom_header'];
-			$custom_footer = $_POST['custom_footer'];
-			$show_custom_header_footer = $_POST['show_custom_header_footer'];
-			$use_gravatar = $_POST['use_gravatar'];
-			$gravatar_rating = $_POST['gravatar_rating'];
-			$show_pages = $_POST['show_pages'];
-			$exclude_true = $_POST['exclude_true'];
-			$show_pages_menu = $_POST['show_pages_menu'];
-			$show_pages_list = $_POST['show_pages_list'];
-			$show_recent_post_list = $_POST['show_recent_post_list'];
-			$recent_post_amount = preg_replace("#[^0-9]#", "",$_POST['recent_post_amount_input']);
-			$stream_publish = $_POST['stream_publish'];
-			$stream_publish_pages = $_POST['stream_publish_pages'];
-			$show_errors = $_POST['show_errors'];
-			$promote_external = $_POST['promote_external'];
-			$import_comments = $_POST['import_comments'];
-			$approve_imported_comments = $_POST['approve_imported_comments'];
-			$num_days_import = preg_replace("#[^0-9]#", "",$_POST['num_days_import']);
-			$imported_comments_email = $_POST['imported_comments_email'];
-			$infinite_session_key = $_POST['infinite_session_key'];
-			$attribution_line = $_POST['attribution_line'];
-			$wpbook_enable_debug = $_POST['wpbook_enable_debug'];
+			if(isset($_POST['timestamp_date_format'])) {
+				$timestamp_date_format = $_POST['timestamp_date_format'];
+			} else {
+				$timestamp_date_format = ''; 
+			}
+			if(isset($_POST['timestamp_time_format'])) {
+				$timestamp_time_format = $_POST['timestamp_time_format'];
+			} else {
+				$timestamp_time_format = '';
+			}
+			if(isset($_POST['show_date_title'])) {
+				$show_date_title = $_POST['show_date_title'];
+			} else {
+				$show_date_title = '';
+			} 
+			if(isset($_POST['show_advanced_options'])) {
+				$show_advanced_options = $_POST['show_advanced_options'];
+			} else {
+				$show_advanced_options = ''; 
+			} 
+			if(isset($_POST['custom_header'])) {
+				$custom_header = $_POST['custom_header'];
+			} else {
+				$custom_header = '';
+			} 
+			if(isset($_POST['custom_footer'])) {
+				$custom_footer = $_POST['custom_footer'];
+			} else {
+				$custom_footer = '';
+			} 
+			if(isset($_POST['show_custom_header_footer'])) {
+				$show_custom_header_footer = $_POST['show_custom_header_footer'];
+			} else {
+				$show_custom_header_footer = '';
+			}
+			if(isset($_POST['use_gravatar'])) {
+				$use_gravatar = $_POST['use_gravatar'];
+			} else {
+				$use_gravatar = '';
+			} 
+			if(isset($_POST['gravatar_rating'])) {
+				$gravatar_rating = $_POST['gravatar_rating'];
+			} else {
+				$gravatar_rating = ''; 
+			}
+			if(isset($_POST['show_pages'])) {
+				$show_pages = $_POST['show_pages'];
+			} else {
+				$show_pages = '';
+			} 
+			if(isset($_POST['exclude_true'])) {
+				$exclude_true = $_POST['exclude_true'];
+			} else {
+				$exclude_true = '';
+			}
+			if(isset($_POST['show_pages_menu'])) {
+				$show_pages_menu = $_POST['show_pages_menu'];
+			} else {
+				$show_pages_menu = '';
+			} 
+			if(isset($_POST['show_pages_list'])) {
+				$show_pages_list = $_POST['show_pages_list'];
+			} else {
+				$show_pages_list = '';
+			}
+			if(isset($_POST['show_recent_post_list'])) {
+				$show_recent_post_list = $_POST['show_recent_post_list'];
+			} else {
+				$show_recent_post_list = '';
+			}
+			if(isset($_POST['revent_post_amount'])) {
+				$recent_post_amount = preg_replace("#[^0-9]#", "",$_POST['recent_post_amount_input']);
+			} else {
+				$recent_post_amount = '';
+			}
+			if(isset($_POST['stream_publish'])) {
+				$stream_publish = $_POST['stream_publish'];
+			} else {
+				$stream_publish = ''; 
+			}
+			if(isset($_POST['stream_publish_pages'])) {
+				$stream_publish_pages = $_POST['stream_publish_pages'];
+			} else {
+				$stream_publish_pages = ''; 
+			}
+			if(isset($_POST['show_errors'])) {
+				$show_errors = $_POST['show_errors'];
+			} else {
+				$show_errors = ''; 
+			}
+			if(isset($_POST['promote_external'])) {
+				$promote_external = $_POST['promote_external'];
+			} else {
+				$promote_external = ''; 
+			}
+			if(isset($_POST['import_comments'])) {
+				$import_comments = $_POST['import_comments'];
+			} else {
+				$import_comments = ''; 
+			}
+			if(isset($_POST['approve_imported_comments'])) {
+				$approve_imported_comments = $_POST['approve_imported_comments'];
+			} else {
+				$approve_imported_comments = ''; 
+			}
+			if(isset($_POST['num_days_import'])) {
+				$num_days_import = preg_replace("#[^0-9]#", "",$_POST['num_days_import']);
+			} else {
+				$num_days_import = '';
+			}
+			if(isset($_POST['imported_comments_email'])) {
+				$imported_comments_email = $_POST['imported_comments_email'];
+			} else {
+				$imported_comments_email = ''; 
+			}
+			if(isset($_POST['infinite_session_key'])) {
+				$infinite_session_key = $_POST['infinite_session_key'];
+			} else {
+				$infinite_session_key = ''; 
+			}
+			if(isset($_POST['attribution_line'])) {
+				$attribution_line = $_POST['attribution_line'];
+			} else {
+				$attribution_line = ''; 
+			}
+			if(isset($_POST['wpbook_enable_debug'])) {
+				$wpbook_enable_debug = $_POST['wpbook_enable_debug'];
+			} else {
+				$wpbook_enable_debug = ''; 
+			}
 			$wpbook_as_note = 'post'; // default to post type of POST unless otherwise set
-			if($_POST['post_as']=='note')
+			if(isset($_POST['post_as']) && $_POST['post_as'] =='note')
 				$wpbook_as_note = 'note';
-			if($_POST['post_as']=='link')
+			if(isset($_POST['post_as']) && $_POST['post_as'] =='link')
 				$wpbook_as_note = 'link';
 			$wpbook_as_link = 'post'; // default to post unless set
-			if ($_POST['page_post_as']=='link')
+			if (isset($_POST['page_post_as']) && $_POST['page_post_as']=='link')
 				$wpbook_as_link = 'link';
-			$wpbook_target_group = $_POST['wpbook_target_group'];
-			$wpbook_disable_sslverify = $_POST['wpbook_disable_sslverify'];
-			$wpbook_use_global_gravatar = $_POST['wpbook_use_global_gravatar'];
+			if(isset($_POST['wpbook_target_group'])) {
+				$wpbook_target_group = $_POST['wpbook_target_group'];
+			} else {
+				$wpbook_target_group = ''; 
+			}
+			if(isset($_POST['wpbook_disable_sslverify'])) {
+				$wpbook_disable_sslverify = $_POST['wpbook_disable_sslverify'];
+			} else {
+				$wpbook_disable_sslverify = ''; 
+			}
+			if(isset($_POST['wpbook_use_global_gravatar'])) {
+				$wpbook_use_global_gravatar = $_POST['wpbook_use_global_gravatar'];
+			} else {
+				$wpbook_use_global_gravatar = ''; 
+			}
 			// Handle custom gravatar_deault code modified from wp-admin/options.php
 			if ( !empty($_POST['gravatar_default']) && isset($_POST['gravatar_rating_custom']) && '\c\u\s\t\o\m' == stripslashes( $_POST['gravatar_default'] ) )
 				$_POST['gravatar_default'] = $_POST['gravatar_rating_custom'];
 			//end custom gravatar_deafult code
-			$gravatar_default = $_POST['gravatar_default'];
-			$exclude_pages = $_POST['exclude_pages'];
-			//write a comma seperated list of pages to exclude
-			$exclude_pages_count = count($exclude_pages);
-			$i = 0;
-			if (!empty($exclude_pages)) {
-				foreach($exclude_pages as $page_id) {
-					$i++;
-					$exclude_page_list .= $page_id ;
-					if($i<$exclude_pages_count){
-						$exclude_page_list .= ',';
+			if(isset($_POST['gravatar_default'])) {
+				$gravatar_default = $_POST['gravatar_default'];
+			} else {
+				$gravatar_default = ''; 
+			}
+			if(isset($_POST['exclude_pages'])) {
+				$exclude_pages = $_POST['exclude_pages'];
+				//write a comma seperated list of pages to exclude
+				$exclude_pages_count = count($exclude_pages);
+				$i = 0;
+				if (!empty($exclude_pages)) {
+					foreach($exclude_pages as $page_id) {
+						$i++;
+						$exclude_page_list .= $page_id ;
+						if($i<$exclude_pages_count){
+							$exclude_page_list .= ',';
+						}
 					}
 				}
+			} else {
+				$exclude_page = ''; 
+				$exclude_page_list = '';
 			}
 			setAdminOptions(1, $fb_api_key, $fb_secret, $fb_app_url,$fb_admin_target,$fb_page_target,
 							$require_email,$give_credit,$enable_share,
