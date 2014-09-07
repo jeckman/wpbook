@@ -31,7 +31,7 @@ if(isset($_REQUEST['is_permissions'])) { // we're looking for extended permissio
 	<p>To correct any of these (or if you see no further info below), <a href="
 	<?php
 	$my_permissions_url = 'https://www.facebook.com/dialog/oauth?client_id=' . $api_key
-	. '&redirect_uri='. $proto .'://apps.facebook.com/' . $app_url .'/&scope=read_stream,publish_stream,manage_pages,user_groups';
+	. '&redirect_uri='. $proto .'://apps.facebook.com/' . $app_url .'/&scope=read_stream,publish_actions,manage_pages,user_groups';
 	echo $my_permissions_url;
 	?>" target="_top">Grant or re-grant permissions for your userid.</a> (This is required if you intend to publish to your personal wall OR any fan pages.)</p>
 	<?php  // try catch wrapped call to FB API /me to get logged in users ID
@@ -55,50 +55,23 @@ if(isset($_REQUEST['is_permissions'])) { // we're looking for extended permissio
 		}
 		?>
 		<p>FB profile <?php echo $user_profile['id']; ?> has granted these permissions:
-  		<?php // todo - run these with current user id
-  	  	// need to set some permissions checks here
-  	  	$fql = 'SELECT read_stream,publish_stream,publish_actions,manage_pages,user_groups FROM permissions WHERE uid='. $user_profile['id'];
-    	$params = array(
-                    'method' => 'fql.query',
-                    'query' => $fql,
-                    );
-    	try {
-      	  $my_permissions = $facebook->api($params);
-    	} catch (FacebookApiException $e) {
-      	  	if($wpbook_show_errors) {
-      	  		$wpbook_message = 'Caught exception in getting permissions for user: ' .  $e->getMessage() .'Error code: '. $e->getCode();
-        		wp_die($wpbook_message,'WPBook Error');
-      		} // end if for show errors
-    	}
-    	?>
-		<ul>
-			<li>read_stream - <strong><?php
-				if($my_permissions[0][read_stream] == 1)
-					echo 'yes';
-				else
-					echo 'no';
-				?></strong></li>
-			<li>publish_stream - <strong><?php
-				if($my_permissions[0][publish_stream] == 1)
-					echo 'yes';
-				else
-					echo 'no';
-				?></strong></li>
-			<li>manage_pages - <strong><?php
-				if($my_permissions[0][manage_pages] ==1)
-					echo 'yes';
-				else
-					echo 'no';
-				?></strong></li>
-			<li>user_groups - <strong><?php
-				if($my_permissions[0][user_groups] == 1)
-					echo 'yes';
-				else
-					echo 'no';
-				?></strong></li>
-		</ul>
-		</p>
-		<?php
+  		<?php 
+  	  	// v2.1 of the API doesn't allow for FQL. Will need to convert to graph calls. 
+  	  	try {
+  	  	  $my_permissions = $facebook->api('/'.$user_profile['id'] .'/permissions','GET');
+  	  	} catch (FacebookApiException $e) {
+  	  	  if(WPBOOKDEBUG) {
+			  $wpbook_message = 'Caught exception checking permissions: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+			  $fp = @fopen($debug_file, 'a');
+			  $debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+			  fwrite($fp, $debug_string);
+		  } // end if debug
+  	  	}
+  	  	echo '<ul>'; 
+  	  	foreach($my_permissions['data'] as $wpbook_permission) {
+  	  		echo '<li>' . $wpbook_permission['permission'] .' - '. $wpbook_permission['status'] .' </li>';	  	
+  	  	}
+  		echo '</ul></ul></p>';  
   	  	$access_token = get_option('wpbook_user_access_token','');
 		if($access_token != '') {
 			echo '<p>An access token for this user has been stored.</p>';
