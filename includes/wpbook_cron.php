@@ -255,185 +255,132 @@ function wpbook_import_comments() {
             $my_timestamp = $my_timestamp_results['meta_value'];
             
             /* 
-             * now we fetch comments since that timestamp, using FQL
-             * which I've found the most reliable
+             * Newer Facebook apps get v2 of the API, and can't do FQL
+             * Need to replace these with graph API calls 
              */
-            $pos = strpos($mp->meta_value, '_');
-            if ($pos === false) // this accounts for notes, which are objects not posts
-              $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE object_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC";
-            else
-              $fbsql="SELECT time,text,fromid,xid,post_id FROM comment WHERE post_id='$mp->meta_value' AND time > '$my_timestamp' ORDER BY time ASC";
-            
-            if(WPBOOKDEBUG) {
-              $fp = @fopen($debug_file, 'a');
-              $debug_string=date("Y-m-d H:i:s",time())." : FBcomments, fbsql is $fbsql \n";
-              fwrite($fp, $debug_string);
-            }
-            $params = array(
-                            'method' => 'fql.query',
-                            'access_token' => $access_token,
-                            'query' => $fbsql,
-                            );
             try {
-              $fbcommentslist=$facebook->api($params);
+            	$fbcommentslist = $facebook->api('/'.$mp->meta_value.'/comments?filter=stream&summary=1','GET'); 
             } catch (FacebookApiException $e) {
-              if(WPBOOKDEBUG) {
-                $fp = @fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : Caught exception: ". $e->getMessage() ." Error code: ". $e->getCode() ."\n";
-                fwrite($fp, $debug_string);
-              }
-              return;
+            	if(WPBOOKDEBUG) {
+              		$fp = @fopen($debug_file, 'a');
+              		$debug_string=date("Y-m-d H:i:s",time())." : Exception getting comments for $mp->meta_value Error: ". $e->getMessage() ." Error code: ". $e->getCode() ."\n";
+              	fwrite($fp, $debug_string);
+            	}
             }
             if(WPBOOKDEBUG) {
               $fp = @fopen($debug_file, 'a');
-              $debug_string=date("Y-m-d H:i:s",time())." : FBcommentslist is ". print_r($fbcommentslist,true) . "\n";
+              $debug_string=date("Y-m-d H:i:s",time())." : Comments were " . print_r($fbcommentslist,true) . " \n";
+              $debug_string .= print_r($fbcommentslist);
               fwrite($fp, $debug_string);
             }
-          } //end of comment method
+            
+            
+          } //end of getting comments list
           
           // now we act on the fetched comments
           if (is_array($fbcommentslist)) {
             if(WPBOOKDEBUG) {
               $fp = @fopen($debug_file, 'a');
-              $debug_string=date("Y-m-d H:i:s",time())." : Number of comments for this post- " . count($fbcommentslist) . " \n";
+              $debug_string=date("Y-m-d H:i:s",time())." : Number of comments for this post- " . $fbcommentslist['summary']['total_count'] . " \n";
               $debug_string .= print_r($fbcommentslist);
               fwrite($fp, $debug_string);
             }
-            foreach ($fbcommentslist as $comment) {
+            foreach ($fbcommentslist['data'] as $comment) {
               //sleep(30); // maybe posting these too quickly?
               if(WPBOOKDEBUG) {
                 $fp = @fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : Inside comment, comment[time] is $comment[time], comment[fromid] is $comment[fromid] \n";
+                $debug_string=date("Y-m-d H:i:s",time())." : Inside comment, comment[time] is ". $comment['created_time'] .", comment[from] is ". $comment['from']['name'] ."\n";
                 fwrite($fp, $debug_string);
               }
-              $fbsql = "SELECT name,url FROM profile WHERE id = '$comment[fromid]'";
+              $local_time = $comment[time] + (get_option('gmt_offset') * 3600);
               if(WPBOOKDEBUG) {
                 $fp = @fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : Getting author info, fbsql is $fbsql \n";
+                $debug_string=date("Y-m-d H:i:s",time())." : comment[time] was ". $comment['created_time'] .", gmt offset is ". get_option('gmt_offset') .", local_time is $local_time   \n";
                 fwrite($fp, $debug_string);
               }
-              $params = array(
-                              'method' => 'fql.query',
-                              'access_token' => $access_token,
-                              'query' => $fbsql,
+              $time = date("Y-m-d H:i:s",$local_time);
+              $data = array(
+                            'comment_post_ID' => $wordpress_post_id,
+                            'comment_author' => $comment['from']['name'],
+                            'comment_author_email' => $wpbook_comment_email,
+                            'comment_author_url' => 'https://www.facebook.com/'. $comment['from']['id'],
+                            'comment_content' => $comment['message'],
+                            'comment_type' => '',
+                            'comment_parent' => 0,
+                            'comment_author_IP' => '127.0.0.1',
+                            'comment_agent' => 'WPBook Comment Import',
+                            'comment_date' => $time,
+                            'comment_approved' => $wpbook_comment_approval,
+                            'user_ID' => ''
                               );
-              try {
-                $fbuserinfo=$facebook->api($params);
-              } catch (FacebookApiException $e) {
+              /* I'd like to use wp_new_comment here, but:
+               *   - It ignores the timestamp passed in and uses now instead
+               *   - It calls wp_allow_comment which in turn invokes comment flood throttle
+               * So instead I use wp_insert_comment but replicate some of the filtering
+               *           $my_id = wp_new_comment($data); 
+               */
+              $data = apply_filters('preprocess_comment', $data); // filtering normally done by wp_new_comment
+              $data['comment_parent'] = isset($data['comment_parent']) ? absint($data['comment_parent']) : 0;
+              $parent_status = ( 0 < $data['comment_parent'] ) ? wp_get_comment_status($data['comment_parent']) : '';
+              $data['comment_parent'] = ( 'approved' == $parent_status || 'unapproved' == $parent_status ) ? $data['comment_parent'] : 0;
+              if(WPBOOKDEBUG) {
                 $fp = @fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : Caught exception getting info about comment author: ". $e->getMessage() ." Error code: ". $e->getCode() ."\n";
+                $debug_string=date("Y-m-d H:i:s",time())." : About to call wp_filter_comment on comment $my_id, approval $wpbook_comment_approval \n";
                 fwrite($fp, $debug_string);
-                return;
               }
-              if (is_array($fbuserinfo)) {
-                if(WPBOOKDEBUG) {
-                  $fp = @fopen($debug_file, 'a');
-                  $debug_string=date("Y-m-d H:i:s",time())." : fbuserinfo is an array, count is " . count($fbuserinfo) . "\n";
-                  fwrite($fp, $debug_string);
-                }
-                foreach ($fbuserinfo as $fb_user) {
-                  if($fb_user[url] == '') {
-                    // sometimes url doesn't come - not sure why
-                    // do I need to worry about pages here? I think they always pass a url
-                    $fb_user[url] = 'http://www.facebook.com/profile.php?id=' . $comment[fromid];
-                  }
-                  if(WPBOOKDEBUG) {
-                    $fp = @fopen($debug_file, 'a');
-                    $debug_string=date("Y-m-d H:i:s",time())." : In fb_user, name is $fb_user[name], url is $fb_user[url] \n";
-                    fwrite($fp, $debug_string);
-                  }
-                  $local_time = $comment[time] + (get_option('gmt_offset') * 3600);
-                  if(WPBOOKDEBUG) {
-                    $fp = @fopen($debug_file, 'a');
-                    $debug_string=date("Y-m-d H:i:s",time())." : comment[time] was $comment[time], gmt offset is ". get_option('gmt_offset') .", local_time is $local_time   \n";
-                    fwrite($fp, $debug_string);
-                  }
-                  $time = date("Y-m-d H:i:s",$local_time);
-                  $data = array(
-                              'comment_post_ID' => $wordpress_post_id,
-                              'comment_author' => $fb_user[name],
-                              'comment_author_email' => $wpbook_comment_email,
-                              'comment_author_url' => $fb_user[url],
-                              'comment_content' => $comment[text],
-                              'comment_type' => '',
-                              'comment_parent' => 0,
-                              'comment_author_IP' => '127.0.0.1',
-                              'comment_agent' => 'WPBook Comment Import',
-                              'comment_date' => $time,
-                              'comment_approved' => $wpbook_comment_approval,
-                              'user_ID' => ''
-                              );
-                  /* I'd like to use wp_new_comment here, but:
-                   *   - It ignores the timestamp passed in and uses now instead
-                   *   - It calls wp_allow_comment which in turn invokes comment flood throttle
-                   * So instead I use wp_insert_comment but replicate some of the filtering
-                   *           $my_id = wp_new_comment($data); 
-                   */
-                  $data = apply_filters('preprocess_comment', $data); // filtering normally done by wp_new_comment
-                  $data['comment_parent'] = isset($data['comment_parent']) ? absint($data['comment_parent']) : 0;
-                  $parent_status = ( 0 < $data['comment_parent'] ) ? wp_get_comment_status($data['comment_parent']) : '';
-                  $data['comment_parent'] = ( 'approved' == $parent_status || 'unapproved' == $parent_status ) ? $data['comment_parent'] : 0;
-                  if(WPBOOKDEBUG) {
-                    $fp = @fopen($debug_file, 'a');
-                    $debug_string=date("Y-m-d H:i:s",time())." : About to call wp_filter_comment on comment $my_id, approval $wpbook_comment_approval \n";
-                    fwrite($fp, $debug_string);
-                  }
-                  if(WPBOOKDEBUG) {
-                    $fp = @fopen($debug_file, 'a');
-                    $debug_string=date("Y-m-d H:i:s",time())." : Unfiltered Data object: ". print_r($data,true) ." \n";
-                    fwrite($fp, $debug_string);
-                  }
-                  $data = wp_filter_comment($data);
-                  if(WPBOOKDEBUG) {
-                    $fp = @fopen($debug_file, 'a');
-                    $debug_string=date("Y-m-d H:i:s",time())." : Past wp_filter_comment, about to call wp_insert_comment on comment $my_id, approval $wpbook_comment_approval \n";
-                    fwrite($fp, $debug_string);
-                  }
-                  if(WPBOOKDEBUG) {
-                    $fp = @fopen($debug_file, 'a');
-                    $debug_string=date("Y-m-d H:i:s",time())." : Filtered Data object: ". print_r($data,true) ." \n";
-                    fwrite($fp, $debug_string);
-                  }
-                  $my_id = wp_insert_comment($data);  
-                  if(WPBOOKDEBUG) {
-                    $fp = @fopen($debug_file, 'a');
-                    $debug_string=date("Y-m-d H:i:s",time())." : Past wp_insert_comment, now calling do_action on comment $my_id, approval $wpbook_comment_approval \n";
-                    fwrite($fp, $debug_string);
-                  }
+              if(WPBOOKDEBUG) {
+                $fp = @fopen($debug_file, 'a');
+                $debug_string=date("Y-m-d H:i:s",time())." : Unfiltered Data object: ". print_r($data,true) ." \n";
+                fwrite($fp, $debug_string);
+              }
+              $data = wp_filter_comment($data);
+              if(WPBOOKDEBUG) {
+                $fp = @fopen($debug_file, 'a');
+                $debug_string=date("Y-m-d H:i:s",time())." : Past wp_filter_comment, about to call wp_insert_comment on comment $my_id, approval $wpbook_comment_approval \n";
+                fwrite($fp, $debug_string);
+              }
+              if(WPBOOKDEBUG) {
+                $fp = @fopen($debug_file, 'a');
+                $debug_string=date("Y-m-d H:i:s",time())." : Filtered Data object: ". print_r($data,true) ." \n";
+                fwrite($fp, $debug_string);
+              }
+              $my_id = wp_insert_comment($data);  
+              if(WPBOOKDEBUG) {
+                $fp = @fopen($debug_file, 'a');
+                $debug_string=date("Y-m-d H:i:s",time())." : Past wp_insert_comment, now calling do_action on comment $my_id, approval $wpbook_comment_approval \n";
+                fwrite($fp, $debug_string);
+              }
                   
-                  /* Seems like doing notification causes problems, so let's
-                   * disable it for now
-                   */ 
-                  //do_action('comment_post', $my_id, $data['comment_approved']); 
-                
-                  if(WPBOOKDEBUG) {
-                    $fp = @fopen($debug_file, 'a');
-                    $debug_string=date("Y-m-d H:i:s",time())." : Posted comment with timestamp $time, id $my_id, approval $wpbook_comment_approval \n";
-                    fwrite($fp, $debug_string);
-                  }
-                  if($mp->meta_key == '_wpbook_user_stream_id') {
-                    $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_user_stream_time'";
-                  } 
-                  if($mp->meta_key == '_wpbook_group_stream_id') {
-                    $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_group_stream_time'";
-                  } 
-                  if($mp->meta_key == '_wpbook_page_stream_id') {
-                    $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_page_stream_time'";
-                  }
-                  if(WPBOOKDEBUG) {
-                    $fp = @fopen($debug_file, 'a');
-                    $debug_string=date("Y-m-d H:i:s",time())." : About to update timestamp, SQL is $sql \n";
-                    fwrite($fp, $debug_string);
-                  }
-                  $update_result = $wpdb->query($sql);
-                  if(WPBOOKDEBUG) {
-                    $fp = @fopen($debug_file, 'a');
-                    $debug_string=date("Y-m-d H:i:s",time())." : Updated timestamp, rows affected $wpdb->num_rows \n";
-                    fwrite($fp, $debug_string);
-                  } 
-                } // end of foreach user
-              } // end of if fbuserinfo is array
-            } // end of new comment process for user stream
+              /* Seems like doing notification causes problems, so let's
+           	   * disable it for now
+               */ 
+              //do_action('comment_post', $my_id, $data['comment_approved']); 
+              if(WPBOOKDEBUG) {
+                $fp = @fopen($debug_file, 'a');
+                $debug_string=date("Y-m-d H:i:s",time())." : Posted comment with timestamp $time, id $my_id, approval $wpbook_comment_approval \n";
+                fwrite($fp, $debug_string);
+              }
+              if($mp->meta_key == '_wpbook_user_stream_id') {
+                $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_user_stream_time'";
+              } 
+              if($mp->meta_key == '_wpbook_group_stream_id') {
+                $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_group_stream_time'";
+              } 
+              if($mp->meta_key == '_wpbook_page_stream_id') {
+                $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_page_stream_time'";
+              }
+              if(WPBOOKDEBUG) {
+                $fp = @fopen($debug_file, 'a');
+                $debug_string=date("Y-m-d H:i:s",time())." : About to update timestamp, SQL is $sql \n";
+                fwrite($fp, $debug_string);
+              }
+              $update_result = $wpdb->query($sql);
+              if(WPBOOKDEBUG) {
+                $fp = @fopen($debug_file, 'a');
+                $debug_string=date("Y-m-d H:i:s",time())." : Updated timestamp, rows affected $wpdb->num_rows \n";
+                fwrite($fp, $debug_string);
+              } 
+            } // end of new comment process 
           } else {
             if(WPBOOKDEBUG) {
               $fp = @fopen($debug_file, 'a');
