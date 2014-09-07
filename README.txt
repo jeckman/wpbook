@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.6.9
+Stable tag: 2.7
 Tested up to: 4.0
 Requires at least: 2.9.0
 
@@ -101,6 +101,14 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
 
 == Changelog ==
 
+= 2.7 = 
+ * Updated Facebook SDK to 3.2.3. Would be nice to go to 4.0 at some point, but that would
+   exceed WordPress' own PHP requirements (5.4 would be required). 
+ * Rewrote the permissions checking logic to no longer rely on FQL which is no longer
+   supported in the API v2.1
+ * Rewrote the comment import logic to not use FQL
+ * Add https for global Facebook gravatar
+ 
 = 2.6.9 = 
  * Cleaned up line endings and admin notices for unset vars
 

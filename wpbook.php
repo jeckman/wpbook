@@ -2,12 +2,11 @@
 /*
 Plugin Name: WPBook
 Plugin URI: http://wpbook.net/
-Date: 2014, June 29th
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform.
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 2.6.9
-Stable tag: 2.6.9
+Version: 2.7
+Stable tag: 2.7
 */
 
 /*
@@ -1436,7 +1435,7 @@ function wpbook_get_facebook_avatar($avatar, $comment, $size="50") {
 	$default = $wpbookAdminOptions['gravatar_default'];
 	$rating=$wpbookAdminOptions['gravatar_rating'];
 	$size="50";
-	if(preg_match("@^(?:http://)?(?:www\.)?facebook@i",trim($author_url))){
+	if(preg_match("@^(?:https://)?(?:www\.)?facebook@i",trim($author_url))){
         $parse_author_url = (parse_url($author_url));
         $parse_author_url_q = $parse_author_url['query'];
             if(preg_match('/id[=]([0-9]*)/', $parse_author_url_q, $match)){
@@ -1455,7 +1454,7 @@ function wpbook_get_facebook_avatar($avatar, $comment, $size="50") {
                 $fb_id = $parse_author_url['path'];
               }
             }
-        $grav_url= "http://graph.facebook.com".$fb_id."/picture?type=square";
+        $grav_url= "https://graph.facebook.com".$fb_id."/picture?type=square";
         }
         else{
             $grav_url = "http://www.gravatar.com/avatar/" .

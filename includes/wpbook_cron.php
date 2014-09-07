@@ -298,13 +298,15 @@ function wpbook_import_comments() {
                 $debug_string=date("Y-m-d H:i:s",time())." : Inside comment, comment[time] is ". $comment['created_time'] .", comment[from] is ". $comment['from']['name'] ."\n";
                 fwrite($fp, $debug_string);
               }
-              $local_time = $comment[time] + (get_option('gmt_offset') * 3600);
+              $comment_time = strtotime($comment['created_time']); 
+              $local_time = strtotime($comment_time) + (get_option('gmt_offset') * 3600);
               if(WPBOOKDEBUG) {
                 $fp = @fopen($debug_file, 'a');
-                $debug_string=date("Y-m-d H:i:s",time())." : comment[time] was ". $comment['created_time'] .", gmt offset is ". get_option('gmt_offset') .", local_time is $local_time   \n";
+                $debug_string=date("Y-m-d H:i:s",time())." : comment[time] was $comment_time, gmt offset is ". get_option('gmt_offset') .", local_time is $local_time   \n";
                 fwrite($fp, $debug_string);
               }
               $time = date("Y-m-d H:i:s",$local_time);
+              
               $data = array(
                             'comment_post_ID' => $wordpress_post_id,
                             'comment_author' => $comment['from']['name'],
@@ -367,13 +369,13 @@ function wpbook_import_comments() {
                 fwrite($fp, $debug_string);
               }
               if($mp->meta_key == '_wpbook_user_stream_id') {
-                $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_user_stream_time'";
+                $sql="update $wpdb->postmeta set meta_value=$comment_time where post_id=$mp->post_id and meta_key='_wpbook_user_stream_time'";
               } 
               if($mp->meta_key == '_wpbook_group_stream_id') {
-                $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_group_stream_time'";
+                $sql="update $wpdb->postmeta set meta_value=$comment_time where post_id=$mp->post_id and meta_key='_wpbook_group_stream_time'";
               } 
               if($mp->meta_key == '_wpbook_page_stream_id') {
-                $sql="update $wpdb->postmeta set meta_value=$comment[time] where post_id=$mp->post_id and meta_key='_wpbook_page_stream_time'";
+                $sql="update $wpdb->postmeta set meta_value=$comment_time where post_id=$mp->post_id and meta_key='_wpbook_page_stream_time'";
               }
               if(WPBOOKDEBUG) {
                 $fp = @fopen($debug_file, 'a');
