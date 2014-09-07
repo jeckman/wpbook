@@ -108,6 +108,7 @@ http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-th
    supported in the API v2.1
  * Rewrote the comment import logic to not use FQL
  * Add https for global Facebook gravatar
+ * Rewrite comment import timestamp logic to account for new datetime format in graph API
  
 = 2.6.9 = 
  * Cleaned up line endings and admin notices for unset vars
