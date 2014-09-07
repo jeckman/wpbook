@@ -287,6 +287,12 @@ function wpbook_import_comments() {
             }
             foreach ($fbcommentslist['data'] as $comment) {
               //sleep(30); // maybe posting these too quickly?
+              if(strtotime($comment['created_time']) <= $my_timestamp) {
+              		// we don't need to process ones created before our last update
+              		// but these used to be stored in unix timestamp, now they are 
+              		// returned like 2014-08-03T14:13:56+0000
+              		continue; 
+              }
               if(WPBOOKDEBUG) {
                 $fp = @fopen($debug_file, 'a');
                 $debug_string=date("Y-m-d H:i:s",time())." : Inside comment, comment[time] is ". $comment['created_time'] .", comment[from] is ". $comment['from']['name'] ."\n";
