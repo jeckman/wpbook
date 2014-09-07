@@ -59,44 +59,26 @@ $facebook = new Facebook(array(
 	?>
 	<p>The Facebook profile ID you are currently logged in to Facebook as is <?php echo $user_profile['id']; ?>. You have defined <?php echo $target_admin; ?> as your Facebook user id in WPBook Settings.</p>
   <p>This user_id has granted these permissions:
-  <?php // need to set some permissions checks here
-  $fql = 'SELECT read_stream,publish_actions,publish_stream,manage_pages FROM permissions WHERE uid='. $user_profile['id'];
-    $params = array(
-                    'method' => 'fql.query',
-                    'query' => $fql,
-                    );
-    try {
-      $my_permissions = $facebook->api($params);
-    } catch (FacebookApiException $e) {
-      if($wpbook_show_errors) {
-        $wpbook_message = 'Caught exception in getting permissions for user: ' .  $e->getMessage() .'Error code: '. $e->getCode();
-        wp_die($wpbook_message,'WPBook Error');
-      } // end if for show errors
-    }
-    ?>
-<ul>
-<li>read_stream - <strong><?php
-  if($my_permissions[0][read_stream] == 1)
-  echo 'yes';
-  else
-  echo 'no';
-  ?></strong></li>
-<li>publish_stream - <strong><?php
-  if($my_permissions[0][publish_stream] == 1)
-  echo 'yes';
-  else
-  echo 'no';
-  ?></strong></li>
-<li>manage_pages - <strong><?php
-  if($my_permissions[0][manage_pages] ==1)
-  echo 'yes';
-  else
-  echo 'no';
-  ?></strong></li>
-</ul>
-</p>
-<p>This user <strong>
-<?php
+  <?php 
+  // v2.1 of the API doesn't allow for FQL. Will need to convert to graph calls. 
+  	  	try {
+  	  	  $my_permissions = $facebook->api('/'.$user_profile['id'] .'/permissions','GET');
+  	  	} catch (FacebookApiException $e) {
+  	  	  if(WPBOOKDEBUG) {
+			  $wpbook_message = 'Caught exception checking permissions: ' .  $e->getMessage() .'Error code: '. $e->getCode();  
+			  $fp = @fopen($debug_file, 'a');
+			  $debug_string=date("Y-m-d H:i:s",time())." :". $wpbook_message  ."\n";
+			  fwrite($fp, $debug_string);
+		  } // end if debug
+  	  	}
+  	  	echo '<ul>'; 
+  	  	foreach($my_permissions['data'] as $wpbook_permission) {
+  	  		echo '<li>' . $wpbook_permission['permission'] .' - '. $wpbook_permission['status'] .' </li>';	  	
+  	  	}
+  		echo '</ul></p>';  
+ 
+echo '<p>This user <strong>'; 
+
   $access_token = get_option('wpbook_user_access_token','');
   if(($access_token != '') && ($access_token != 'invalid'))
   	echo 'has';

@@ -71,7 +71,7 @@ if(isset($_REQUEST['is_permissions'])) { // we're looking for extended permissio
   	  	foreach($my_permissions['data'] as $wpbook_permission) {
   	  		echo '<li>' . $wpbook_permission['permission'] .' - '. $wpbook_permission['status'] .' </li>';	  	
   	  	}
-  		echo '</ul></ul></p>';  
+  		echo '</ul></p>';  
   	  	$access_token = get_option('wpbook_user_access_token','');
 		if($access_token != '') {
 			echo '<p>An access token for this user has been stored.</p>';
