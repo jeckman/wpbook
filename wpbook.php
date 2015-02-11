@@ -5,8 +5,8 @@ Plugin URI: http://wpbook.net/
 Description: Plugin to embed Wordpress Blog into Facebook Canvas using the Facebook Platform.
 Author: John Eckman
 Author URI: http://johneckman.com
-Version: 2.7
-Stable tag: 2.7
+Version: 2.7.1
+Stable tag: 2.7.1
 */
 
 /*

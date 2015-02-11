@@ -1,7 +1,7 @@
 === WPBook ===
 Contributors: johneckman, davelester, BandonRandon
 Tags: facebook, platform, application, blog, mirror
-Stable tag: 2.7
+Stable tag: 2.7.1
 Tested up to: 4.0
 Requires at least: 2.9.0
 
@@ -100,6 +100,10 @@ See:
 http://wordpress.org/support/topic/how-do-i-add-featured-image-support-to-any-theme
 
 == Changelog ==
+
+= 2.7.1 = 
+ * Added wp_nonce protection to admin form to prevent CSRF - thanks to Ryan Satterfield
+   from https://planetzuda.com/ for the report on the vulnerability
 
 = 2.7 = 
  * Updated Facebook SDK to 3.2.3. Would be nice to go to 4.0 at some point, but that would
