@@ -208,8 +208,11 @@ function wpbook_subpanel() {
 		$wpbookAdminOptions = wpbook_getAdminOptions();
 
 		// if we're posting
-		if (isset($_POST['fb_api_key']) && isset($_POST['fb_secret']) && isset($_POST['fb_app_url']) && isset($_POST['fb_admin_target'])
-				&& (!empty($_POST['fb_api_key']))  && (!empty($_POST['fb_secret'])) && (!empty($_POST['fb_app_url'])) && (!empty($_POST['fb_admin_target']))) {
+		if ( ! empty( $_POST ) && check_admin_referer( 'update_settings', 'wpbook_admin_nonce') 
+				&& isset($_POST['fb_api_key']) && isset($_POST['fb_secret']) && isset($_POST['fb_app_url']) 
+				&& isset($_POST['fb_admin_target']) && (!empty($_POST['fb_api_key']))  
+				&& (!empty($_POST['fb_secret'])) && (!empty($_POST['fb_app_url'])) 
+				&& (!empty($_POST['fb_admin_target']))) {
 			$fb_api_key = preg_replace("#[^0-9]#", "",$_POST['fb_api_key']);
 			$fb_secret = $_POST['fb_secret'];
 			$fb_app_url = $_POST['fb_app_url'];
@@ -462,6 +465,8 @@ function wpbook_subpanel() {
 			$flash = "Your settings have been saved. ";
 		} elseif (($wpbookAdminOptions['fb_api_key'] != "") && ($wpbookAdminOptions['fb_secret'] != "") && ($wpbookAdminOptions['fb_app_url'] != "")  && ($wpbookAdminOptions['fb_admin_target'] != "")){
 			$flash = "";
+		} elseif (! check_admin_referer( 'update_settings', 'wpbook_admin_nonce') ) {
+			$flash = "Admin nonce failed"; 
 		} else {
 			$flash = "Please complete all necessary fields";
 		} // end of posting complete
@@ -928,6 +933,7 @@ function wpbook_subpanel() {
 			</div> <!-- END App View Options -->
 
 			<?php
+			wp_nonce_field( 'update_settings', 'wpbook_admin_nonce' );
 			echo '<p><input type="submit" value="Save" class="button-primary"';
 			echo ' name="wpbook_save_button" /></form></p>';
 			echo'<div id="help">';
