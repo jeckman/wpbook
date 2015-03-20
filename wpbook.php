@@ -91,8 +91,9 @@ function wpbook_getAdminOptions() {
 		} else {
 		    $wpbookAdminOptions['proto'] = "http";
 		}
+		return $wpbookAdminOptions;	
 	}
-	return $wpbookAdminOptions;
+	return;
 }
 
 function setAdminOptions($wpbook_installation, $fb_api_key, $fb_secret,
@@ -206,13 +207,12 @@ function wpbook_subpanel() {
 		global $current_user;
 		get_currentuserinfo();
 		$wpbookAdminOptions = wpbook_getAdminOptions();
-
 		// if we're posting
-		if ( ! empty( $_POST ) && check_admin_referer( 'update_settings', 'wpbook_admin_nonce') 
-				&& isset($_POST['fb_api_key']) && isset($_POST['fb_secret']) && isset($_POST['fb_app_url']) 
+		if ( !empty($_POST)  && isset($_POST['fb_api_key']) && isset($_POST['fb_secret']) 
+				&& isset($_POST['fb_app_url']) 
 				&& isset($_POST['fb_admin_target']) && (!empty($_POST['fb_api_key']))  
 				&& (!empty($_POST['fb_secret'])) && (!empty($_POST['fb_app_url'])) 
-				&& (!empty($_POST['fb_admin_target']))) {
+				&& (!empty($_POST['fb_admin_target'])) && (check_admin_referer( 'update_settings', 'wpbook_admin_nonce'))) {
 			$fb_api_key = preg_replace("#[^0-9]#", "",$_POST['fb_api_key']);
 			$fb_secret = $_POST['fb_secret'];
 			$fb_app_url = $_POST['fb_app_url'];
@@ -465,8 +465,6 @@ function wpbook_subpanel() {
 			$flash = "Your settings have been saved. ";
 		} elseif (($wpbookAdminOptions['fb_api_key'] != "") && ($wpbookAdminOptions['fb_secret'] != "") && ($wpbookAdminOptions['fb_app_url'] != "")  && ($wpbookAdminOptions['fb_admin_target'] != "")){
 			$flash = "";
-		} elseif (! check_admin_referer( 'update_settings', 'wpbook_admin_nonce') ) {
-			$flash = "Admin nonce failed"; 
 		} else {
 			$flash = "Please complete all necessary fields";
 		} // end of posting complete
@@ -479,8 +477,8 @@ function wpbook_subpanel() {
 		//set the "smart" defaults on install this only works once the page has been refeshed
 			if ($wpbookAdminOptions['wpbook_installation'] != 1) {
 				$gravatar_default = WP_PLUGIN_URL .'/wpbook/theme/default/gravatar_default.gif';
-				setAdminOptions(1, null,null,null,null,null,true,true,true,true,top,null,null,"F j, Y","g:i a",
-								true,null,null,null,disabled,null,"g",$gravatar_default,null,null,null,null,true,true,10,
+				setAdminOptions(1, null,null,null,null,null,true,true,true,true,"top",null,null,"F j, Y","g:i a",
+								true,null,null,null,"disabled",null,"g",$gravatar_default,null,null,null,null,true,true,10,
 								false,false,false,false,false,false,7,"facebook@openparenthesis.org",null,null,null,false,false,null,false,null);
 			}
 			if ($flash != '')
